@@ -20,7 +20,7 @@ class SaveUserAnswer
 
         $exam = Exam::find($data['exam_id']);
         $showUrl = $exam->male_user_id && $exam->female_user_id ? false : true;
-        $this->saveAnswer($user, $data['question_id'],$data['answer'],$exam,$data['is_important']);
+        $this->saveAnswer($user, $data['question_id'], $data['answer'], $exam, $data['is_important']);
 
         $nextQuestion = Question::where('id', '>', $data['question_id'])->first();
 
@@ -55,7 +55,7 @@ class SaveUserAnswer
     private function handleQuestionsSession(User $user, int $questionsCount, Exam $exam): void
     {
         session(['currentQuestion' => session('currentQuestion') + 1]);
-        if(session('currentQuestion') > $questionsCount){
+        if (session('currentQuestion') > $questionsCount) {
             session()->put('currentQuestion', -1);
             $exam->update([
                 $user->gender . '_finished' => true,

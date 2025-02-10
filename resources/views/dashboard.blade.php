@@ -25,7 +25,6 @@
                             @csrf
                             <input type="hidden" name="token" value="{{ request('token') }}">
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                @if (!auth()->user()->gender)
                                 <div class="col-span-full md:col-span-1">
                                     <x-input-label for="gender" value="النوع" class="text-lg text-purple-900 mb-2" />
                                     <select id="gender" required name="gender"
@@ -35,7 +34,6 @@
                                     </select>
                                     <x-input-error class="mt-2" :messages="$errors->get('gender')" />
                                 </div>
-                                @endif
                                 <div>
                                     <x-input-label for="age" value="العمر" class="text-lg text-purple-900 mb-2" />
                                     <input id="age" required name="age" type="text"

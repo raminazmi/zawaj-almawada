@@ -2,11 +2,9 @@
     <title>موقع زواج المودة</title>
 </head>
 <x-app-layout>
-    <!-- الحاوية الرئيسية مع خلفية فاتحة وهامش سفلي -->
     <div class="min-h-screen pb-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            <!-- قسم الهيدر الخاص بالصفحة -->
             <div class="text-center mb-8">
                 <div
                     class="inline-flex items-center bg-white px-4 py-2 gap-2 rounded-full shadow-lg border border-purple-200">
@@ -17,17 +15,6 @@
                 </div>
             </div>
 
-            <!-- (اختياري) زر إضافة عضو، يمكن تفعيله إذا رغبت -->
-            <!--
-            <div class="mb-6 flex justify-end">
-                <a href="{{ route('admin.users.create') }}"
-                   class="px-4 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 transition-all">
-                    إضافة عضو
-                </a>
-            </div>
-            -->
-
-            <!-- بطاقة عرض الأعضاء -->
             <div class="bg-white rounded-3xl shadow-xl border border-purple-100 overflow-hidden">
                 <div class="p-6">
                     <div class="overflow-x-auto">
@@ -77,7 +64,6 @@
                         </table>
                     </div>
 
-                    <!-- ترقيم الصفحات -->
                     <div class="mt-6">
                         {{ $users->links('pagination::tailwind') }}
                     </div>
@@ -87,32 +73,26 @@
         </div>
     </div>
 
-    <!-- تضمين مكتبة SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function(){
-        // تحديد جميع النماذج التي تحمل صنف delete-member
         const deleteForms = document.querySelectorAll('.delete-member');
         
         deleteForms.forEach(form => {
             form.addEventListener('submit', function(e) {
-                // منع الإرسال الافتراضي للنموذج
                 e.preventDefault();
-                
-                // عرض نافذة التأكيد
-                Swal.fire({
+                                Swal.fire({
                     title: 'هل أنت متأكد؟',
                     text: "سيتم حذف هذا العضو!",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#ef4444', // Tailwind red-500
-                    cancelButtonColor: '#6b7280',  // Tailwind gray-500
+                    confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#6b7280',
                     confirmButtonText: 'حذف',
                     cancelButtonText: 'إلغاء'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // في حالة التأكيد، يتم إرسال النموذج
                         form.submit();
                     }
                 });

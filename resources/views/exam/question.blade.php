@@ -13,11 +13,11 @@
     </div>
     <div class="flex flex-col items-center justify-center mt-6 space-y-4">
         <button type="button" data-id="{{ $question->id }}" data-answer="1"
-            class="action__btn w-[100%] md:w-80 py-2 text-md flex justify-center items-center border border-transparent rounded-xl font-semibold text-white uppercase tracking-wide transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-400 bg-green-600 scale-105 shadow-lg">
+            class="action__btn w-[100%] hover:scale-105 md:w-80 py-2 text-md flex justify-center items-center border border-transparent rounded-xl font-semibold text-white uppercase tracking-wide transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-400 bg-green-600 scale-100 shadow-lg">
             ✅ نعم
         </button>
         <button type="button" data-id="{{ $question->id }}" data-answer="0"
-            class="action__btn w-[100%] md:w-80 py-2 text-md flex justify-center items-center border border-transparent rounded-xl font-semibold text-white uppercase tracking-wide transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-red-400 bg-red-600 scale-105 shadow-lg">
+            class="action__btn w-[100%]  hover:scale-105 md:w-80 py-2 text-md flex justify-center items-center border border-transparent rounded-xl font-semibold text-white uppercase tracking-wide transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-red-400 bg-red-600 scale-100 shadow-lg">
             ❌ لا
         </button>
     </div>

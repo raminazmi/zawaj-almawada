@@ -103,12 +103,16 @@
           يساعدك هذا المقياس على معرفة مدى التوافق بينك وبين خطيبتك، مما يساعد في بناء علاقة متينة وفهم أعمق
           لشخصياتكما.
         </p>
-        <a href="{{ route('auth.google') }}" class="inline-block">
-          <button
-            class="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-3xl transition-colors text-sm sm:text-base">
-            اجراء اختبار
-          </button>
-        </a>
+        @auth
+        <a href="{{ route('dashboard') }}" class="inline-block">
+          @else
+          <a href="{{ route('login') }}" class="inline-block">
+            @endauth
+            <button
+              class="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-3xl transition-colors text-sm sm:text-base">
+              اجراء اختبار
+            </button>
+          </a>
       </div>
       <div class="w-full lg:w-1/2 flex justify-center">
         <img src="/assets/images/2.png" class="w-64 sm:w-80 lg:w-96 h-auto" alt="marriage compatibility test">

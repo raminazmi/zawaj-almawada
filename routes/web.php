@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Dashbaord\DashboardController;
 use App\Http\Controllers\Admin\Question\QuestionController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Exam\ExamController;
 use App\Http\Controllers\Exam\UserExamController;
@@ -16,18 +17,19 @@ use App\Http\Middleware\AuthUser;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/',[HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index']);
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 
-Route::controller(GoogleController::class)->group(function(){
+Route::controller(GoogleController::class)->group(function () {
     Route::get('auth/google', 'redirectToGoogle')->name('auth.google');
-    Route::get('auth/google/callback', 'handleGoogleCallback');
+    Route::get('auth/google/callback', 'handleGoogleCallback');;
 });
 
-
+Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
+Route::post('/register', [RegisteredUserController::class, 'store']);
 
 Route::middleware('auth')->group(function () {
-    Route::middleware(AuthUser::class)->group(function(){
+    Route::middleware(AuthUser::class)->group(function () {
 
         Route::get('/dashboard', function () {
             return view('dashboard');
@@ -35,8 +37,8 @@ Route::middleware('auth')->group(function () {
 
         Route::post('update-gender', [GenderController::class, 'update'])->name('gender.update');
 
-        Route::get('exam',[ExamController::class, 'index'])->name('exam.index');
-        Route::post('exam/save-answer',[ExamController::class, 'saveUserAnswer'])->name('exam.save-answer');
+        Route::get('exam', [ExamController::class, 'index'])->name('exam.index');
+        Route::post('exam/save-answer', [ExamController::class, 'saveUserAnswer'])->name('exam.save-answer');
 
         Route::get('my-exams', [UserExamController::class, 'index'])->name('exam.user.index');
         Route::get('my-exams/{id}', [UserExamController::class, 'show'])->name('exam.user.show');
@@ -44,21 +46,15 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::prefix('admin')->name('admin.')->group(function(){
-    Route::get('login',[LoginController::class, 'showLoginForm'])->name('login-form');
-    Route::post('login',[LoginController::class, 'login'])->name('login');
-    Route::post('logout',[LoginController::class, 'logout'])->name('logout');
-    Route::middleware(AuthAdmin::class)->group(function(){
-        Route::get('dashboard',[DashboardController::class, 'index'])->name('dashboard');
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('login', [LoginController::class, 'showLoginForm'])->name('login-form');
+    Route::post('login', [LoginController::class, 'login'])->name('login');
+    Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+    Route::middleware(AuthAdmin::class)->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('questions', QuestionController::class);
         Route::resource('users', UserController::class);
     });
-
 });
 
-require __DIR__.'/auth.php';
-
-
-
-
-
+require __DIR__ . '/auth.php';
