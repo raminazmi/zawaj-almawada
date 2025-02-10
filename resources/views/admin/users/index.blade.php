@@ -31,6 +31,27 @@
                                         البريد الالكتروني
                                     </th>
                                     <th class="py-4 px-2 text-center text-md font-semibold">
+                                        الجنس
+                                    </th>
+                                    <th class="py-4 px-2 text-center text-md font-semibold">
+                                        العمر
+                                    </th>
+                                    <th class="py-4 px-2 text-center text-md font-semibold">
+                                        الهاتف
+                                    </th>
+                                    <th class="py-4 px-2 text-center text-md font-semibold">
+                                        الدولة
+                                    </th>
+                                    <th class="py-4 px-2 text-center text-md font-semibold">
+                                        الوزن
+                                    </th>
+                                    <th class="py-4 px-2 text-center text-md font-semibold">
+                                        الطول
+                                    </th>
+                                    <th class="py-4 px-2 text-center text-md font-semibold">
+                                        لون البشرة
+                                    </th>
+                                    <th class="py-4 px-2 text-center text-md font-semibold">
                                         التحكم
                                     </th>
                                 </tr>
@@ -39,13 +60,34 @@
                                 @foreach ($users as $user)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
-                                        {{ $loop->iteration }}
+                                        {{ $loop->iteration ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-normal text-sm text-gray-900 text-center">
-                                        {{ $user->name }}
+                                        {{ $user->name ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-normal text-sm text-gray-900 text-center">
-                                        {{ $user->email }}
+                                        {{ $user->email ?? '-' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-900 text-center">
+                                        {{ $user->gender ?? '-' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-900 text-center">
+                                        {{ $user->age ?? '-' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-900 text-center">
+                                        {{ $user->phone ?? '-' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-900 text-center">
+                                        {{ $user->country ?? '-' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-900 text-center">
+                                        {{ $user->weight ?? '-' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-900 text-center">
+                                        {{ $user->height ?? '-' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-900 text-center">
+                                        {{ $user->skin_color ?? '-' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center space-x-2">
                                         <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"

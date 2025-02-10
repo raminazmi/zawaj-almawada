@@ -1,9 +1,7 @@
 <nav x-data="{ open: false }" class="bg-pink-100 border-b border-pink-200 shadow-sm">
-    <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
-                <!-- Logo -->
                 <div class="shrink-0">
                     <a href="{{ route('dashboard') }}" class="hover:opacity-90 transition-opacity flex items-center">
                         <img src="/assets/images/logo.png" class="w-22 h-16" alt="logo">
@@ -11,12 +9,7 @@
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex gap-4">
-                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')"
-                        class="text-lg transition-colors">
-                        لوحة التحكم
-                    </x-nav-link>
                     <x-nav-link :href="route('admin.questions.index')"
                         :active="request()->routeIs('admin.questions.index')" class="text-lg transition-colors">
                         الأسئلة
@@ -28,7 +21,6 @@
                 </div>
             </div>
 
-            <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -55,7 +47,6 @@
                 </x-dropdown>
             </div>
 
-            <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open"
                     class="inline-flex items-center justify-center p-2 rounded-lg text-gray-900 hover:text-purple-700 hover:bg-pink-200 focus:outline-none transition-all duration-300">
@@ -71,15 +62,8 @@
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <div class="pt-2 pb-3 space-y-1">
-                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                    لوحة التحكم
-                </x-responsive-nav-link>
-            </div>
-
             <div class="pt-2 pb-3 space-y-1">
                 <x-responsive-nav-link :href="route('admin.questions.index')"
                     :active="request()->routeIs('admin.questions.index')">
@@ -96,8 +80,6 @@
 
         </div>
 
-
-        <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-pink-200">
             <div class="px-4">
                 <div class="font-medium text-base text-purple-900">{{ Auth::user()->name }}</div>

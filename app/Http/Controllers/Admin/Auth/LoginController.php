@@ -23,7 +23,7 @@ class LoginController extends Controller
         );
 
         if (Auth::attempt($credentials)) {
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.questions.index');
         }
 
         return back()->withInput($request->only('email'));
@@ -32,10 +32,10 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-        
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
         return redirect()->route('admin.login');
     }
 }
