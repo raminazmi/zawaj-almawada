@@ -38,10 +38,7 @@ class InitExamAction
         }
 
         if (request()->token) {
-            $this->abortInvalidUser();
-
             $this->updateGender();
-
             $this->updateExamUserId();
         }
         session(['currentQuestion' => $currentQuestion ?? 1]);

@@ -3,7 +3,7 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <div class="shrink-0">
-                    <a href="{{ route('dashboard') }}" class="hover:opacity-90 transition-opacity flex items-center">
+                    <a href="{{ route('index') }}" class="hover:opacity-90 transition-opacity flex items-center">
                         <img src="/assets/images/logo.png" class="w-22 h-16" alt="logo">
                         <span class="text-2xl font-bold text-purple-900 ml-4 font-serif">زواج المودة</span>
                     </a>

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -19,7 +20,7 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register'); // resources/views/auth/register.blade.php
+        return view('auth.register');
     }
 
     /**
@@ -38,6 +39,15 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // **حفظ previous_url في session قبل تسجيل الحساب**
+        if (!session()->has('previous_url')) {
+            $previousUrl = url()->previous();
+            if (Str::contains($previousUrl, '/exam?token=')) {
+                session(['previous_url' => $previousUrl]);
+            }
+        }
+
+        // **إنشاء المستخدم**
         $user = User::create([
             'name'     => $request->name,
             'gender'   => $request->gender,
@@ -48,6 +58,11 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
+
+        if (session()->has('previous_url')) {
+            $redirectUrl = session('previous_url');
+            return redirect($redirectUrl);
+        }
 
         Auth::login($user);
 

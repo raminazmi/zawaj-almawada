@@ -1,26 +1,26 @@
 <x-guest-layout>
     <div class="w-full max-w-md space-y-8">
         {{-- Google Login --}}
-        <div class="text-center">
+        {{-- <div class="text-center">
             <a href="{{ route('auth.google') }}"
                 class="inline-flex items-center justify-center gap-2 w-full px-6 py-3 border-2 border-purple-100 rounded-xl text-purple-900 bg-white hover:bg-purple-50 transition-all duration-300 shadow-sm">
                 <img src="{{ asset('assets/images/google.png') }}" class="w-6 h-6 mr-3" alt="Google">
                 تسجيل الدخول بواسطة جوجل
             </a>
-        </div>
+        </div> --}}
 
         {{-- Separator --}}
-        <div class="relative">
+        {{-- <div class="relative">
             <div class="absolute inset-0 flex items-center">
                 <div class="w-full border-t border-purple-100"></div>
             </div>
             <div class="relative flex justify-center text-sm">
                 <span class="px-2 bg-white text-purple-500">أو</span>
             </div>
-        </div>
+        </div> --}}
 
         {{-- Login Form --}}
-        <div class="bg-white p-8 rounded-2xl shadow-sm border border-purple-100">
+        <div class="bg-white p-2 pt-0 rounded-2xl">
             <h2 class="text-center text-2xl font-bold text-purple-900 mb-8">
                 تسجيل دخول
             </h2>

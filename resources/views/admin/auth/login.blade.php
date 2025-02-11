@@ -13,7 +13,9 @@
 
     <form method="POST" action="{{ route('admin.login') }}">
         @csrf
-
+        <h2 class="text-center text-2xl font-bold text-purple-900 mb-8">
+            تسجيل دخول
+        </h2>
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('الإيميل')" />

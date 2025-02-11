@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Illuminate\Support\Str;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -16,6 +17,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
+        $previousUrl = url()->previous();
+        if (Str::contains($previousUrl, '/exam?token=')) {
+            session(['previous_url' => $previousUrl]);
+        }
         return view('auth.login');
     }
 
@@ -25,11 +30,15 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
-
+        $previousUrl = url()->previous();
+        if (Str::contains($previousUrl, '/exam?token=')) {
+            session(['previous_url' => $previousUrl]);
+            return redirect($previousUrl);
+        }
         return redirect()->intended(route('dashboard', absolute: false));
     }
+
 
     /**
      * Destroy an authenticated session.

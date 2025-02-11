@@ -4,14 +4,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>موقع زواج المودة</title>
-  <link href="https://cdn.jsdelivr.net/npm/samim-font@4.0.5/dist/font-face.min.css" rel="stylesheet">
+  <title>زواج المودة</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700&display=swap" rel="stylesheet">
   @vite(['resources/css/app.css', 'resources/js/app.js'])
   <style>
+    @font-face {
+      font-family: 'Samim';
+      src: url('/assets/fonts/alfont_com_ArbFONTS-Samim.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    .font-samim {
+      font-family: 'Samim', sans-serif;
+    }
+
+    body {
+      font-family: 'Samim', sans-serif;
+      line-height: 1.6;
+    }
+
     .custom-underline {
       position: relative;
       text-decoration: none;
@@ -38,51 +53,13 @@
 
 <body class="bg-gray-50">
   @if(auth()->check())
-  @include('layouts.navigation')
+  @if(auth()->user()->is_admin)
+  @include('admin.navigation')
   @else
-  <header class="bg-pink-100 text-white py-2 px-4 sm:px-8 lg:px-24">
-    <div class="container mx-auto flex justify-between items-center">
-      <div class="shrink-0">
-        <a href="{{ route('dashboard') }}" class="hover:opacity-90 transition-opacity flex items-center">
-          <img src="/assets/images/logo.png" class="w-22 h-16" alt="logo">
-          <span class="text-2xl font-bold text-purple-900 ml-4" style="font-family: 'Tajawal', sans-serif;">زواج
-            المودة</span>
-        </a>
-      </div>
-      <nav class="hidden lg:flex">
-        <ul class="flex text-base">
-          <li><a href="#" class="text-gray-900 hover:text-gray-700 custom-underline ml-5">الرئيسية</a></li>
-          <li><a href="#" class="text-gray-900 hover:text-gray-700 custom-underline ml-5">الكتب</a></li>
-          <li><a href="#" class="text-gray-900 hover:text-gray-700 custom-underline ml-5">مقياس التوافق الزواجي</a></li>
-          <li><a href="#" class="text-gray-900 hover:text-gray-700 custom-underline ml-5">الدورات</a></li>
-          <li><a href="#" class="text-gray-900 hover:text-gray-700 custom-underline ml-5">خدمات الأعراس</a></li>
-          <li><a href="#" class="text-gray-900 hover:text-gray-700 custom-underline ml-5">تقديم طلبات الزواج</a></li>
-        </ul>
-      </nav>
-
-      <a href="{{ route('contact') }}"
-        class="hidden lg:block bg-yellow-600 hover:bg-yellow-700 text-white text-base px-8 py-3 rounded-3xl transition-colors">
-        تواصل معنا
-      </a>
-
-      <button id="menu-toggle" class="lg:hidden focus:outline-none">
-        <svg class="w-6 h-6 text-green-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-        </svg>
-      </button>
-    </div>
-
-    <div id="mobile-menu" class="lg:hidden hidden mt-4 px-4 mb-4">
-      <ul class="flex flex-col text-lg">
-        <li><a href="#" class="text-black hover:text-gray-900 custom-underline py-2">الرئيسية</a></li>
-        <li><a href="#" class="text-black hover:text-gray-900 custom-underline py-2">الكتب</a></li>
-        <li><a href="#" class="text-black hover:text-gray-900 custom-underline py-2">مقياس التوافق الزواجي</a></li>
-        <li><a href="#" class="text-black hover:text-gray-900 custom-underline py-2">الدورات</a></li>
-        <li><a href="#" class="text-black hover:text-gray-900 custom-underline py-2">خدمات الأعراس</a></li>
-        <li><a href="#" class="text-black hover:text-gray-900 custom-underline py-2">تقديم طلبات الزواج</a></li>
-      </ul>
-    </div>
-  </header>
+  @include('layouts.navigation')
+  @endif
+  @else
+  @include('home.navigation')
   @endif
 
   <main class="container mx-auto px-4 sm:px-8 lg:px-16">

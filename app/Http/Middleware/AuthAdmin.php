@@ -17,7 +17,7 @@ class AuthAdmin
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
-        if(!$user || !$user->is_admin){
+        if (!$user || !$user->is_admin) {
             abort(403);
         }
         return $next($request);
