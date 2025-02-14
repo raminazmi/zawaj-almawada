@@ -17,7 +17,7 @@ class QuestionController extends Controller
 
     public function create()
     {
-        return view('admin.questions.create',[
+        return view('admin.questions.create', [
             'answers' => $this->getAnswers()
         ]);
     }
@@ -29,7 +29,7 @@ class QuestionController extends Controller
             'female_question' => 'required',
             'correct_answers' => 'required|array',
         ]);
-        $wrongAnswers = array_diff($this->getAnswers(),$request->correct_answers);
+        $wrongAnswers = array_diff($this->getAnswers(), $request->correct_answers);
         Question::create([
             'male_question' => $request->male_question,
             'female_question' => $request->female_question,
@@ -41,7 +41,7 @@ class QuestionController extends Controller
     public function edit($id)
     {
         $question = Question::findOrFail($id);
-        return view('admin.questions.edit',[
+        return view('admin.questions.edit', [
             'question' => $question,
             'answers' => $this->getAnswers()
         ]);
@@ -54,7 +54,7 @@ class QuestionController extends Controller
             'female_question' => 'required',
             'correct_answers' => 'required|array',
         ]);
-        $wrongAnswers = array_diff($this->getAnswers(),$request->correct_answers);
+        $wrongAnswers = array_diff($this->getAnswers(), $request->correct_answers);
         $question = Question::findOrFail($id);
         $question->update([
             'male_question' => $request->male_question,
@@ -72,11 +72,12 @@ class QuestionController extends Controller
     }
 
 
-    private function getAnswers(): array{
+    private function getAnswers(): array
+    {
         return [
             'نعم / نعم' => '11',
-            'نعم / لا' => '01',
-            'لا / نعم' => '10',
+            'لا / نعم' => '01',
+            'نعم / لا' => '10',
             'لا / لا' => '00',
         ];
     }

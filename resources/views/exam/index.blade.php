@@ -15,7 +15,7 @@
                 $token = request('token') ?? request()->route('token');
                 @endphp
 
-                @if($token)
+                @if ($token)
                 <div id="usage_section" class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-4">
                     <div class="bg-white overflow-hidden shadow-sm rounded-lg p-8">
                         <div class="bg-pink-50 rounded-2xl p-8 mb-8 border border-pink-200">
@@ -25,11 +25,10 @@
                                         <i class="fas fa-exclamation-circle ml-2"></i>
                                         قسم الاستخدام:
                                     </span>
-                                    <p class="text-gray-700 leading-relaxed text-lg">
+                                    <p class="text-gray-700 leading-relaxed text-lg text-start">
                                         حتى أكون صادقاً أمام الله وأمام الطرف الآخر، أقسم بالله العظيم أن أجيب بصدق تام
-                                        على كل عبارات المقياس،
-                                        <br>
-                                        كما أقسم ألا أنسخ أو أصور أو استخدام المقياس في أي موضع آخر دون أذن صاحبه.
+                                        على كل عبارات المقياس، كما أقسم ألا أنسخ أو أصور أو استخدام المقياس في أي موضع
+                                        آخر دون أذن صاحبه.
                                     </p>
                                 </span>
                                 <label for="swearCheckbox"
@@ -42,7 +41,7 @@
                         </div>
 
                         <div class="text-center">
-                            <a id="startTestButton" href="{{ route('exam.index', ['token' => $token]) }}"
+                            <a id="startVideoButton"
                                 class="inline-flex items-center px-4 py-2 bg-yellow-500 hover:bg-yellow-700 text-white text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
                                 <i class="fas fa-play-circle ml-2"></i>
                                 ابدأ الاختبار الآن
@@ -54,10 +53,39 @@
             </div>
         </div>
 
-        <div id="questions_section" style="{{ $token ? 'display:none;' : '' }}">
+        <div id="questions_section">
             <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
                 <div id="questions_container" class="bg-white overflow-hidden shadow-sm rounded-lg py-4">
                     @include('exam.question')
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="videoModal" onclick="closeModal()"
+        class="hidden fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-75">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl overflow-hidden shadow-xl w-full max-w-4xl relative">
+                <button onclick="closeModal()" class="absolute top-4 left-4 text-gray-500 hover:text-gray-700 z-50">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+
+                <div class="aspect-w-16 aspect-h-9">
+                    <iframe id="tutorialVideo" class="w-full h-96"
+                        data-src="https://www.youtube.com/embed/dOCXj51ytPg?autoplay=1&controls=1&modestbranding=1&rel=0"
+                        src="" frameborder="0"
+                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <div
+                    class="bg-gradient-to-r from-purple-50 to-pink-50 p-4 text-center md:text-end md:flex md:justify-between md:items-center md:flex-wrap ">
+                    <h1 class="mb-3 md:mb-0"> مقطع يوضح كيفية استخدام مقياس التوافق الزواجي </h1>
+                    <a id="startTestButton" href="{{ route('exam.index', ['token' => $token]) }}"
+                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-md font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        الاستمرار إلى الاختبار
+                        <i class="fas fa-arrow-circle-left mr-2"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -67,7 +95,7 @@
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
         <script>
-            function getImportant(){
+            function getImportant() {
                 return $('#is_important').is(':checked');
             }
 
@@ -78,7 +106,7 @@
                 $.ajax({
                     url: "{{ route('exam.save-answer') }}",
                     type: "POST",
-                    beforeSend: function(){
+                    beforeSend: function() {
                         $('.action__btn').attr('disabled', true);
                     },
                     data: {
@@ -97,20 +125,57 @@
                 });
             });
 
-            document.addEventListener("DOMContentLoaded", function () {
-                let usageSection = document.getElementById("usage_section"); 
+            document.addEventListener("DOMContentLoaded", function() {
+                const startVideoButton = document.getElementById("startVideoButton");
+                const startTestButton = document.getElementById("startTestButton");
+                const swearCheckbox = document.getElementById("swearCheckbox");
+
+                if (startVideoButton) {
+                    startVideoButton.addEventListener("click", function(e) {
+                        if (!swearCheckbox?.checked) {
+                            alert('يجب عليك الضغط على "أقسم" قبل بدء الاختبار.');
+                            return;
+                        }
+                        showVideoModal();
+                    });
+                } else if (startTestButton) {
+                    startTestButton.addEventListener("click", function(e) {
+                        e.preventDefault();
+                        closeModal();
+                    });
+                }
+            });
+
+            document.addEventListener("DOMContentLoaded", function() {
+                let usageSection = document.getElementById("usage_section");
                 let questionsSection = document.getElementById("questions_section");
 
                 if (usageSection) {
                     questionsSection.style.display = "none";
                     let startButton = document.getElementById("startTestButton");
-                    startButton.addEventListener("click", function (e) {
+                    startButton.addEventListener("click", function(e) {
                         e.preventDefault();
                         usageSection.style.display = "none";
                         questionsSection.style.display = "block";
                     });
                 }
             });
+
+            function showVideoModal() {
+                const modal = document.getElementById('videoModal');
+                const video = document.getElementById('tutorialVideo');
+                modal.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+                video.src = video.getAttribute('data-src');
+            }
+
+            function closeModal() {
+                const modal = document.getElementById('videoModal');
+                const video = document.getElementById('tutorialVideo');
+                modal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+                video.src = '';
+            }
         </script>
     </slot>
 </x-app-layout>

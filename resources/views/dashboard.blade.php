@@ -1,7 +1,9 @@
+@php
+$token = request('token') ?? request()->route('token');
+@endphp
 <x-app-layout>
     <div class="min-h-screen">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Header Section -->
             <div class="text-center mb-12">
                 <h2
                     class="font-bold text-4xl bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
@@ -10,11 +12,9 @@
                 <p class="mt-4 text-lg text-purple-700">أجب بصدق لتحصل على نتائج دقيقة</p>
             </div>
 
-            <!-- Main Content Card -->
             <div class="bg-white rounded-3xl shadow-2xl border border-purple-100 overflow-hidden">
                 <div class="p-8">
                     @if (!auth()->user()->age)
-                    <!-- Personal Information Form -->
                     <div class="max-w-3xl mx-auto">
                         <div class="mb-8 text-center">
                             <h3 class="text-2xl font-bold text-purple-900 mb-4">المعلومات الشخصية</h3>
@@ -25,15 +25,6 @@
                             @csrf
                             <input type="hidden" name="token" value="{{ request('token') }}">
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                <div class="col-span-full md:col-span-1">
-                                    <x-input-label for="gender" value="النوع" class="text-lg text-purple-900 mb-2" />
-                                    <select id="gender" required name="gender"
-                                        class="block w-full rounded-xl border-pink-300 focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-300 hover:border-purple-400 text-lg py-3">
-                                        <option value="male">ذكر</option>
-                                        <option value="female">أنثى</option>
-                                    </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('gender')" />
-                                </div>
                                 <div>
                                     <x-input-label for="age" value="العمر" class="text-lg text-purple-900 mb-2" />
                                     <input id="age" required name="age" type="text"
@@ -76,7 +67,6 @@
                         </form>
                     </div>
                     @else
-                    <!-- Test Start Section -->
                     <div class="max-w-3xl mx-auto">
                         <div class="bg-pink-50 rounded-2xl p-8 mb-8 border border-pink-200">
                             <h2 class="flex flex-col items-start">
@@ -86,11 +76,9 @@
                                         قسم الاستخدام:
                                     </span>
                                     <p class="text-gray-700 leading-relaxed text-lg">
-                                        حتى أكون صادقاً أمام الله وأمام الطرف الآخر، أقسم بالله العظيم أن أجيب بصدق
-                                        تام
-                                        على كل عبارات المقياس،
-                                        <br>
-                                        كما أقسم ألا أنسخ أو أصور أو استخدام المقياس في أي موضع آخر دون أذن صاحبه.
+                                        حتى أكون صادقاً أمام الله وأمام الطرف الآخر، أقسم بالله العظيم أن أجيب بصدق تام
+                                        على كل عبارات المقياس، كما أقسم ألا أنسخ أو أصور أو استخدام المقياس في أي موضع
+                                        آخر دون أذن صاحبه.
                                     </p>
                                 </span>
                                 <label for="swearCheckbox"
@@ -102,16 +90,12 @@
                             </h2>
                         </div>
 
-                        @php
-                        $token = request('token') ?? request()->route('token');
-                        @endphp
-
                         <div class="text-center">
-                            <a id="startTestButton" href="{{ route('exam.index', ['token' => $token]) }}"
+                            <button id="startTestButton" type="button"
                                 class="inline-flex items-center px-4 py-2 bg-yellow-500 hover:bg-yellow-700 text-white text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
                                 <i class="fas fa-play-circle ml-2"></i>
                                 ابدأ الاختبار الآن
-                            </a>
+                            </button>
                         </div>
                     </div>
                     @endif
@@ -120,12 +104,72 @@
         </div>
     </div>
 
+    <div id="videoModal" onclick="closeModal()"
+        class="hidden fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-75">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl overflow-hidden shadow-xl w-full max-w-4xl relative">
+                <div id="videoContainer" class="aspect-w-16 aspect-h-9">
+                    <iframe id="tutorialVideo" class="w-full h-96"
+                        data-src="https://www.youtube.com/embed/dOCXj51ytPg?autoplay=1&controls=1&modestbranding=1&rel=0"
+                        src="" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+
+                <div onclick="event.stopPropagation()"
+                    class="bg-gradient-to-r from-purple-50 to-pink-50 p-4 text-center md:text-end md:flex md:justify-between md:items-center md:flex-wrap ">
+                    <h1 class="mb-3 md:mb-0"> مقطع يوضح كيفية استخدام مقياس التوافق الزواجي </h1>
+                    <button id="continueTestButton" type="button"
+                        data-href="{{ route('exam.index', ['token' => $token]) }}"
+                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-md font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        الاستمرار إلى الاختبار
+                        <i class="fas fa-arrow-circle-left mr-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        document.getElementById('startTestButton')?.addEventListener('click', function(event) {
-            const swearCheckbox = document.getElementById('swearCheckbox');
-            if (!swearCheckbox?.checked) {
-                event.preventDefault();
-                alert('يجب عليك الضغط على "أقسم" قبل بدء الاختبار.');
+        function showVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('tutorialVideo');
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+            video.src = video.getAttribute('data-src');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('tutorialVideo');
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+            video.src = '';
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const startTestButton = document.getElementById("startTestButton");
+            if (startTestButton) {
+                startTestButton.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const swearCheckbox = document.getElementById('swearCheckbox');
+                    if (!swearCheckbox?.checked) {
+                        alert('يجب عليك الضغط على "أقسم" قبل بدء الاختبار.');
+                        return;
+                    }
+                    showVideoModal();
+                });
+            }
+
+            const continueTestButton = document.getElementById("continueTestButton");
+            if (continueTestButton) {
+                continueTestButton.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    window.location.href = continueTestButton.getAttribute('data-href');
+                    player.mute();
+                    player.stopVideo();
+                    player.destroy();
+                });
             }
         });
     </script>

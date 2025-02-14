@@ -72,7 +72,7 @@
         }
 
         .gradient-background {
-            background: linear-gradient(135deg, #fce7f3 0%, #fff1f2 100%);
+            background-color: #f9fafb;
         }
 
         .form-input {

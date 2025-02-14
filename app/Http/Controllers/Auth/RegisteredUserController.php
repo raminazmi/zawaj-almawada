@@ -39,7 +39,6 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // **حفظ previous_url في session قبل تسجيل الحساب**
         if (!session()->has('previous_url')) {
             $previousUrl = url()->previous();
             if (Str::contains($previousUrl, '/exam?token=')) {
@@ -47,7 +46,6 @@ class RegisteredUserController extends Controller
             }
         }
 
-        // **إنشاء المستخدم**
         $user = User::create([
             'name'     => $request->name,
             'gender'   => $request->gender,
@@ -58,13 +56,13 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
+        Auth::login($user);
 
         if (session()->has('previous_url')) {
             $redirectUrl = session('previous_url');
             return redirect($redirectUrl);
         }
 
-        Auth::login($user);
 
         return redirect(route('dashboard'));
     }

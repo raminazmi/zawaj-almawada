@@ -56,7 +56,7 @@
                 </div>
 
                 <x-primary-button
-                    class="w-full justify-center bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 rounded-xl py-3">
+                    class="w-full justify-center bg-[#d4b341] hover:bg-yellow-700 focus:ring-purple-500 rounded-xl py-3">
                     {{ __('تسجيل الدخول') }}
                 </x-primary-button>
 

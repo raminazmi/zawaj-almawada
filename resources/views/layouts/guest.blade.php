@@ -35,11 +35,15 @@
         th {
             font-family: 'Samim', sans-serif;
         }
+
+        body {
+            background-color: #f9fafb;
+        }
     </style>
 </head>
 
 <body class="font-sans text-gray-900 antialiased">
-    <div class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-purple-50 to-pink-50">
+    <div class="min-h-screen flex items-center justify-center p-4">
         <div
             class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-lg border border-purple-100 overflow-hidden rounded-2xl">
             <div class="flex flex-col justify-center items-center my-3">
