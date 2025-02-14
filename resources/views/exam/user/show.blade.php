@@ -1,7 +1,6 @@
 <x-app-layout>
     <div class="min-h-screen">
         <div class="max-w-4xl mx-auto px-4 pb-2">
-            <!-- Header Section -->
             <div class="text-center mb-8">
                 <div
                     class="inline-flex items-center bg-white px-4 py-2 gap-2 rounded-full shadow-lg border border-purple-200">
@@ -16,9 +15,7 @@
                 </div>
             </div>
 
-            <!-- Main Report Card -->
             <div class="bg-white rounded-3xl shadow-xl border border-purple-100 overflow-hidden">
-                <!-- Compatibility Section -->
                 <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-6 py-4 text-center">
                     <h3 class="text-white text-lg font-semibold mb-2">نسبة التوافق الكلية</h3>
                     <div class="inline-block bg-white/20 py-2 px-4 rounded-full">
@@ -32,9 +29,7 @@
                     </div>
                 </div>
 
-                <!-- Detailed Stats -->
                 <div class="p-6 space-y-6">
-                    <!-- Critical Questions -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-purple-50 p-4 rounded-xl">
                             <div class="flex items-center mb-2">
@@ -75,7 +70,6 @@
                         </div>
                     </div>
 
-                    <!-- البيانات الشخصية -->
                     @php
                     $maleAge = optional($exam->male)->age ?? 'لا يوجد معلومات';
                     $femaleAge = optional($exam->female)->age ?? 'لا يوجد معلومات';
@@ -87,7 +81,6 @@
                     $femaleSkinColor = optional($exam->female)->skin_color ?? 'لا يوجد معلومات';
                     @endphp
 
-                    <!-- Personal Info Grid -->
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
                         <div class="bg-white p-3 rounded-lg border border-purple-100">
                             <div class="text-sm text-purple-600 mb-1">العمر</div>
@@ -115,7 +108,6 @@
                         </div>
                     </div>
 
-                    <!-- Test Link Section -->
                     <div class="bg-blue-50 p-4 rounded-xl">
                         <div class="flex items-center mb-3">
                             <svg class="w-5 h-5 text-blue-600 ml-2" fill="currentColor" viewBox="0 0 20 20">
@@ -123,7 +115,13 @@
                                     d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z"
                                     clip-rule="evenodd" />
                             </svg>
-                            <h4 class="font-semibold text-blue-900">رابط المشاركة</h4>
+                            <h4 class="font-semibold text-blue-900">رابط المشاركة
+                                @if(auth()->user()->gender === "male")
+                                للمخطوبة
+                                @else
+                                للمخطوب
+                                @endif
+                            </h4>
                         </div>
                         <div class="flex items-center bg-white px-4 py-2 rounded-lg border border-blue-200">
                             <span id="exam-link" class="truncate text-blue-600">{{ route('exam.index', ['token' =>
@@ -136,7 +134,6 @@
                         </div>
                     </div>
 
-                    <!-- Warning Alert -->
                     <div class="bg-red-50 p-4 rounded-xl border border-red-200">
                         <div class="flex items-start">
                             <svg class="w-5 h-5 text-red-600 mt-1 ml-2" viewBox="0 0 20 20" fill="currentColor">

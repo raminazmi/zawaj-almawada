@@ -7,21 +7,22 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Exam extends Model
 {
-    public function calculateScore(){
-        if(!$this->male_finished || !$this->female_finished){
+    public function calculateScore()
+    {
+        if (!$this->male_finished || !$this->female_finished) {
             return 0;
         }
 
         $maleAnswers = UserAnswer::where('exam_id', $this->id)->whereNotNull('male_answer')->get();
         $femaleAnswers = UserAnswer::where('exam_id', $this->id)->whereNotNull('female_answer')->get();
 
-        if($maleAnswers->count() != $femaleAnswers->count()){
+        if ($maleAnswers->count() != $femaleAnswers->count()) {
             return 0;
         }
         $score = 0;
-        foreach($maleAnswers as $key => $maleAnswer){
+        foreach ($maleAnswers as $key => $maleAnswer) {
             $answerSequence = $maleAnswer->male_answer . $femaleAnswers[$key]->female_answer;
-            if(!in_array($answerSequence,$maleAnswer->question->wrong_answers)){
+            if (!in_array($answerSequence, $maleAnswer->question->wrong_answers)) {
                 $score++;
             }
         }
@@ -75,36 +76,41 @@ class Exam extends Model
     //     ];
     // }
 
-    public function importantScore($gender = null){
-        $gender = $gender ?? auth()->user()->gender;
-        $otherGender = $gender == 'male' ? 'female' : 'male';
-        $genderAnswers = UserAnswer::where('exam_id', $this->id)
-                            ->whereNotNull($gender . '_answer')
-                            ->where('important', true)
-                            ->get();
-       
-        $otherGenderAnsers = UserAnswer::where('exam_id', $this->id)
-                                        ->whereNotNull($otherGender . '_answer')
-                                        ->get();
+    public function importantScore($gender = null)
+    {
+        $maleImportantAnswers = UserAnswer::where('exam_id', $this->id)
+            ->whereNotNull('male_answer')
+            ->where('important', true)
+            ->get();
+        $femaleImportantAnswers = UserAnswer::where('exam_id', $this->id)
+            ->whereNotNull('female_answer')
+            ->where('important', true)
+            ->get();
 
-        $score = 0;
-        if($genderAnswers->count() == 0 ||  $otherGenderAnsers->count() == 0){
+        if ($maleImportantAnswers->count() == 0 || $femaleImportantAnswers->count() == 0) {
             return [
                 'total' => 0,
                 'score' => 0
             ];
         }
-        foreach($genderAnswers as $genderAnswer){
-            $answerSequence = $genderAnswer->{$gender . '_answer'} . $otherGenderAnsers->where('question_id', $genderAnswer->question_id)->first()->{$otherGender . '_answer'};
-            if(in_array($answerSequence,$genderAnswer->question->wrong_answers)){
-                $score++;
+
+        $score = 0;
+        foreach ($maleImportantAnswers as $maleAnswer) {
+            $femaleAnswer = $femaleImportantAnswers->where('question_id', $maleAnswer->question_id)->first();
+            if ($femaleAnswer) {
+                $answerSequence = $maleAnswer->male_answer . $femaleAnswer->female_answer;
+                if (in_array($answerSequence, $maleAnswer->question->wrong_answers)) {
+                    $score++;
+                }
             }
         }
+
         return [
-            'total' => $genderAnswers->count(),
+            'total' => $maleImportantAnswers->count(),
             'score' => $score
         ];
     }
+
 
     public function answers(): HasMany
     {
@@ -112,10 +118,12 @@ class Exam extends Model
     }
 
 
-    public function male(){
+    public function male()
+    {
         return $this->belongsTo(User::class, 'male_user_id');
     }
-    public function female(){
+    public function female()
+    {
         return $this->belongsTo(User::class, 'female_user_id');
     }
 }
