@@ -157,38 +157,40 @@
   </section>
 
   <section class="py-12 px-4 sm:px-8 lg:px-16 space-y-8">
-    <h2 class="section-title text-3xl font-bold text-purple-900 mb-12">
-      أهداف الإختبار
-    </h2>
-    <p class="text-gray-700 text-sm sm:text-base leading-relaxed">
-      يهدف هذا المقياس إلى تقييم درجة التوافق بين الشريكين قبل الزواج من خلال استكشاف الجوانب النفسية
-      والاجتماعية والسلوكية.
-    </p>
-    <div class="flex flex-col gap-4 text-purple-900">
-      <div class="flex items-center gap-2">
-        <i class="fas fa-clock text-lg text-purple-600"></i>
-        <span class="font-semibold">مدة الاختبار:</span>
-        <span>12 دقيقة</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <i class="fas fa-question-circle text-lg text-purple-600"></i>
-        <span class="font-semibold">عدد الأسئلة:</span>
-        <span>120 سؤالاً</span>
+    <div class="container mx-auto px-4">
+      <h2 class="section-title text-3xl font-bold text-purple-900 mb-12">
+        أهداف الاختبار
+      </h2>
+      <p class="text-gray-700 text-sm sm:text-base leading-relaxed">
+        يهدف هذا المقياس إلى تقييم درجة التوافق بين الشريكين قبل الزواج من خلال استكشاف الجوانب النفسية
+        والاجتماعية والسلوكية.
+      </p>
+      <div class="flex flex-col gap-4 text-purple-900 mt-4">
+        <div class="flex items-center gap-2">
+          <i class="fas fa-clock text-lg text-purple-600"></i>
+          <span class="font-semibold">مدة الاختبار:</span>
+          <span>12 دقيقة</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <i class="fas fa-question-circle text-lg text-purple-600"></i>
+          <span class="font-semibold">عدد الأسئلة:</span>
+          <span>120 سؤالاً</span>
+        </div>
       </div>
     </div>
   </section>
 
   <section class="my-16 px-4 sm:px-8 lg:px-16">
     <div
-      class="rounded-3xl p-6 border-2 flex flex-col md:flex-row items-center md:justify-center md:gap-16 justify-between bg-cover bg-center min-h-[250px]"
+      class="rounded-3xl p-6 border-2 flex flex-col items-center justify-center gap-12 bg-cover bg-center min-h-[250px]"
       style="background-image: url('assets/images/frame.png');">
-      <div class="text-center md:text-right bg-white bg-opacity-80 p-4 rounded-lg">
+      <div class="text-center md:text-right bg-white bg-opacity-80 p-4 pb-0 rounded-lg">
         <h3 class="text-[#58306D] font-bold text-2xl mb-2">انضم الآن لعضوية الموقع</h3>
         <p class="text-[#58306D] text-sm sm:text-base leading-relaxed">
           احصل على كافة الخدمات مجاناً في المستقبل وحاليًا جرب مقياس التوافق الزواجي المميز.
         </p>
       </div>
-      <div class="mt-8 md:mt-0">
+      <div class="mt-2 md:mt-0">
         <a href="{{ route('register') }}"
           class="bg-[#d4b341] hover:bg-yellow-700 text-white px-6 py-3 rounded-3xl transition-colors text-sm sm:text-base">
           تسجيل عضوية

@@ -118,42 +118,68 @@
         </main>
 
         <!-- Footer -->
-        <footer class="bg-pink-100 border-t border-pink-200 py-8 px-4 sm:px-8 lg:px-24">
-            <div class="container mx-auto">
-                <div class="flex flex-col lg:flex-row justify-between items-center gap-4">
-                    <div class="flex flex-col items-center mb-8 text-center">
-                        <a href="{{ route('exam.index') }}" class="hover:opacity-90 transition-opacity">
-                            <img src="/assets/images/logo.png" class="lg:w-32 lg:h-36" alt="logo">
-                            <span class="text-3xl font-bold text-purple-900 font-serif ">زواج المودة</span>
-                        </a>
-                        <p class="text-gray-900 mt-4 max-w-2xl">
-                            منصة إلكترونية متخصصة في تقديم خدمات الزواج الشرعي وفقًا للتعاليم الإسلامية، تهدف إلى تسهيل
-                            عملية البحث عن شريك الحياة المناسب بطريقة آمنة ومحترمة
+        <footer class="bg-purple-900 text-white pt-12 ">
+            <div class="container mx-auto px-12">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-14 border-b border-purple-800 pb-12">
+                    <div class="md:col-span-2">
+                        <h4 class="text-xl font-bold mb-6">عن الموقع</h4>
+                        <p class="text-gray-300">
+                            هو منصة إلكترونية يديرها د.حمود النوفلي من سلطنة عمان، ويقدم فيها خدمات مجانية في كل ما
+                            يحتاج له
+                            الشباب
+                            المقبلين على
+                            الزواج والمتزوجين حديثاً، من تأهيل واستشارات وخدمات ومقاييس ودورات وكتب تمكنهم من بناء حياة
+                            أسرية
+                            سعيدة
+                            بعيداً عن
+                            المشكلات والتفكك الاسري.
                         </p>
                     </div>
-                    <div class="text-center lg:text-right">
-                        <h3 class="text-lg font-semibold text-purple-900 mb-4">تواصل معنا</h3>
-                        <div class="flex gap-4">
-                            <a href="#" class="text-purple-900 hover:text-purple-700 transition-colors">
-                                <i class="fab fa-facebook text-2xl"></i>
+
+                    <div>
+                        <h4 class="text-xl font-bold mb-6">روابط سريعة</h4>
+                        <ul class="space-y-3">
+                            <li><a href="#" class="hover:text-[#d4b341] transition-colors">الشروط والأحكام</a></li>
+                            <li><a href="#" class="hover:text-[#d4b341] transition-colors">الأسئلة الشائعة</a></li>
+                            <li><a href="#" class="hover:text-[#d4b341] transition-colors">المدونة</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xl font-bold mb-6">تواصل معنا</h4>
+                        <ul class="space-y-3">
+                            <li class="flex items-center">
+                                <i class="fas fa-phone ml-2 text-[#d4b341]"></i>
+                                +968 1234 5678
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-envelope ml-2 text-[#d4b341]"></i>
+                                info@mawaddah.com
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xl font-bold mb-6">تابعنا</h4>
+                        <div class="flex space-x-2 gap-4">
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-instagram"></i>
                             </a>
-                            <a href="#" class="text-purple-900 hover:text-purple-700 transition-colors">
-                                <i class="fab fa-twitter text-2xl"></i>
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-twitter"></i>
                             </a>
-                            <a href="#" class="text-purple-900 hover:text-purple-700 transition-colors">
-                                <i class="fab fa-instagram text-2xl"></i>
-                            </a>
-                            <a href="#" class="text-purple-900 hover:text-purple-700 transition-colors">
-                                <i class="fab fa-youtube text-2xl"></i>
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-youtube"></i>
                             </a>
                         </div>
                     </div>
                 </div>
+
+                <div class="py-4 text-center text-white">
+                    جميع الحقوق محفوظة © زواج المودة 2025
+                </div>
             </div>
         </footer>
-        <div class="text-center bg-purple-900 text-white py-2">
-            جميع الحقوق محفوظة © زواج المودة 2025
-        </div>
     </div>
 
     {{ $scripts ?? '' }}
