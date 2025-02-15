@@ -55,6 +55,7 @@ class RegisteredUserController extends Controller
             'phone.max'        => 'يجب ألا يتجاوز رقم الهاتف 20 حرفاً',
             'password.required'   => 'كلمة المرور مطلوبة',
             'password.confirmed'  => 'كلمة المرور غير متطابقة',
+            'password.min' => 'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.',
         ]);
 
 
