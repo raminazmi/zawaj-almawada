@@ -24,11 +24,14 @@ class UserExamController extends Controller
         $score = $exam->calculateScore();
         $maleImportantScore = $exam->importantScore('male');
         $femaleImportantScore = $exam->importantScore('female');
+        $totalImportant = $maleImportantScore['total'] + $femaleImportantScore['total'];
+
         return view('exam.user.show', [
             'exam' => $exam,
             'score' => $score,
             'maleImportantScore' => $maleImportantScore,
-            'femaleImportantScore' => $femaleImportantScore
+            'femaleImportantScore' => $femaleImportantScore,
+            'totalImportant' => $totalImportant
         ]);
     }
 

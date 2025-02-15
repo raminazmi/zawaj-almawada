@@ -37,7 +37,26 @@ class RegisteredUserController extends Controller
             'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone'    => ['nullable', 'string', 'max:20'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'name.required'    => 'الاسم المستعار مطلوب',
+            'name.string'      => 'يجب أن يكون الاسم نصاً',
+            'name.max'         => 'يجب ألا يتجاوز الاسم 255 حرفاً',
+            'gender.required'  => 'يرجى اختيار الجنس',
+            'gender.in'        => 'القيمة المختارة للجنس غير صحيحة. الرجاء اختيار "male" أو "female"',
+            'country.required' => 'الدولة مطلوبة',
+            'country.string'   => 'يجب أن تكون الدولة نصاً',
+            'country.max'      => 'يجب ألا تتجاوز الدولة 255 حرفاً',
+            'email.required'   => 'البريد الإلكتروني مطلوب',
+            'email.string'     => 'يجب أن يكون البريد الإلكتروني نصاً',
+            'email.email'      => 'يجب إدخال بريد إلكتروني صالح',
+            'email.max'        => 'يجب ألا يتجاوز البريد الإلكتروني 255 حرفاً',
+            'email.unique'     => 'هذا البريد الإلكتروني مستخدم من قبل',
+            'phone.string'     => 'يجب أن يكون رقم الهاتف نصاً',
+            'phone.max'        => 'يجب ألا يتجاوز رقم الهاتف 20 حرفاً',
+            'password.required'   => 'كلمة المرور مطلوبة',
+            'password.confirmed'  => 'كلمة المرور غير متطابقة',
         ]);
+
 
         if (!session()->has('previous_url')) {
             $previousUrl = url()->previous();

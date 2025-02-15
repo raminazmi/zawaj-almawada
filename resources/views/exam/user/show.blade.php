@@ -41,7 +41,7 @@
                                 <h4 class="font-semibold text-purple-900">أسئلة حاسمة للخاطب</h4>
                             </div>
                             <div class="text-lg font-medium text-gray-700">
-                                @if($score == 0)
+                                @if($maleImportantScore['total'] == 0)
                                 <span class="text-gray-400">بانتظار الإجابات</span>
                                 @else
                                 <span class="text-purple-600">{{ $maleImportantScore['score'] }}</span>
@@ -60,7 +60,7 @@
                                 <h4 class="font-semibold text-pink-900">أسئلة حاسمة للمخطوبة</h4>
                             </div>
                             <div class="text-lg font-medium text-gray-700">
-                                @if($score == 0)
+                                @if($femaleImportantScore['total'] == 0)
                                 <span class="text-gray-400">بانتظار الإجابات</span>
                                 @else
                                 <span class="text-pink-600">{{ $femaleImportantScore['score'] }}</span>
