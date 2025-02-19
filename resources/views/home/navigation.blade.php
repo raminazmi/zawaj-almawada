@@ -4,7 +4,7 @@
             <div class="flex items-center">
                 <a href="{{ route('index') }}" class="flex items-center hover:opacity-90 transition-opacity">
                     <img src="/assets/images/logo.png" class="h-16 w-16" alt="الموقع">
-                    <span class="text-2xl font-bold text-purple-800 ml-4" style="font-family: 'Tajawal', sans-serif;">
+                    <span class="text-2xl font-bold text-[#553566] ml-4" style="font-family: 'Tajawal', sans-serif;">
                         زواج المودة
                     </span>
                 </a>
@@ -14,7 +14,7 @@
                 <a href="{{ route('index') }}" class="nav-link mx-6 {{ request()->routeIs('index') ? 'active' : '' }}">
                     الرئيسية
                 </a>
-                <a href="#" class="nav-link">
+                <a href="{{ route('cv') }}"  class="nav-link">
                     السيرة الذاتية
                 </a>
                 <div class="relative" x-data="{ isOpen: false }" @click.away="isOpen = false">
@@ -47,11 +47,11 @@
                     </button>
                     <div x-show="isOpen" x-cloak
                         class="absolute bg-white shadow-lg mt-2 w-48 rounded-md border border-gray-200 z-50">
-                        <a href="#"
+                        <a  href={{ route('e-books') }}
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('ebooks') ? 'text-purple-700' : 'text-gray-900' }}">
                             الكتب الإلكترونية
                         </a>
-                        <a href="#"
+                        <a  href={{ route('printed-books') }}
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('printedBooks') ? 'text-purple-700' : 'text-gray-900' }}">
                             الكتب المطبوعة
                         </a>
@@ -88,6 +88,10 @@
                             </button>
                             <div x-show="subOpen" x-cloak
                                 class="absolute left-full top-0 bg-white shadow-lg mt-0 w-56 rounded-md border border-gray-200 z-50">
+                                <a href={{ route('add-activity') }}
+                                class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('weddingTents') ? 'text-purple-700' : 'text-gray-900' }}">
+                                اضف نشاطك
+                            </a>
                                 <a href="#"
                                     class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('weddingTents') ? 'text-purple-700' : 'text-gray-900' }}">
                                     محلات تأجير الخيام
@@ -152,7 +156,7 @@
                     </div>
                 </div>
             </div>
-            <a href="{{ route('contact') }}" class="gold-btn px-6 py-2 rounded-full hidden lg:flex items-center">
+            <a href="{{ route('contact') }}" class="gold-btn px-6 py-2 text-white rounded-full hidden lg:flex items-center">
                 تواصل معنا
             </a>
             <button @click="open = !open" class="lg:hidden text-gray-600">

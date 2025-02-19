@@ -150,11 +150,11 @@
                         <ul class="space-y-3">
                             <li class="flex items-center">
                                 <i class="fas fa-phone ml-2 text-[#d4b341]"></i>
-                                +968 1234 5678
+                                0096894128090
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-envelope ml-2 text-[#d4b341]"></i>
-                                info@mawaddah.com
+                                zawajmawadda@gmail.com
                             </li>
                         </ul>
                     </div>
@@ -165,7 +165,7 @@
                             <a href="#" class="social-icon">
                                 <i class="fab fa-instagram"></i>
                             </a>
-                            <a href="#" class="social-icon">
+                            <a href="https://x.com/molhim399?s=08" class="social-icon">
                                 <i class="fab fa-twitter"></i>
                             </a>
                             <a href="#" class="social-icon">

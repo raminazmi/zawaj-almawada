@@ -10,7 +10,6 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700&display=swap" rel="stylesheet">
   @vite(['resources/css/app.css', 'resources/js/app.js'])
-
   <style>
     @font-face {
       font-family: 'Samim';
@@ -141,8 +140,8 @@
           <div class="text-[#d4b341] text-4xl mb-4">
             <i class="fas fa-brain"></i>
           </div>
-          <h3 class="text-xl font-bold text-purple-900 mb-3">تحليل علمي</h3>
-          <p class="text-gray-700">تقييم دقيق للجوانب النفسية والاجتماعية</p>
+          <h3 class="text-xl font-bold text-purple-900 mb-3">شعار المقياس</h3>
+          <p class="text-gray-700">إذا احسنت الاختيار ستنعم بالاستقرار</p>
         </div>
 
         <div class="feature-card p-6 rounded-xl">
@@ -151,6 +150,45 @@
           </div>
           <h3 class="text-xl font-bold text-purple-900 mb-3">خصوصية تامة</h3>
           <p class="text-gray-700">بياناتك محمية وفق أعلى معايير الأمان</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="py-12 px-4 sm:px-8 lg:px-16 space-y-8">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-purple-900 mb-12 text-start section-title">
+        دليل استخدام المقياس
+      </h2>
+
+      <div class="space-y-6 text-gray-800">
+        <div class="p-6 bg-gray-100 rounded-xl">
+          <h3 class="text-xl font-bold text-purple-900 mb-2">أولاً:</h3>
+          <p>اجب بكل صدق وأمانة على كل سؤال، فإجابتك ستبقى سرية ولن يعرفها الطرف الآخر أبداً، وكذلك لن تُبلّغ أنت بإجاباته.</p>
+        </div>
+
+        <div class="p-6 bg-gray-100 rounded-xl">
+          <h3 class="text-xl font-bold text-purple-900 mb-2">ثانياً:</h3>
+          <p>اختر: (نعم أو لا) حسب الثابت والمستمر من الصفات والسلوك لديك، وليس الذي يحدث مرة وينتهي.</p>
+        </div>
+
+        <div class="p-6 bg-gray-100 rounded-xl">
+          <h3 class="text-xl font-bold text-purple-900 mb-2">ثالثاً:</h3>
+          <p>انتبه في دقة تحديد العبارة بحاسمة أو ليست حاسمة، فاختيارها كحاسمة تعني أنك لا تقبل بهذا الشخص زوجاً أو زوجة إذا كان ليس بينك وبينه توافق حول تلك النقطة. لذلك لا تضع صح على حاسمة إلا على النقطة التي تعتبرها خطاً أحمر ولا تقبلها في الطرف الآخر بأي حال كان.</p>
+        </div>
+
+        <div class="p-6 bg-gray-100 rounded-xl">
+          <h3 class="text-xl font-bold text-purple-900 mb-2">رابعاً:</h3>
+          <p>لا تتوقع أن تجد توافق يصل إلى 100%، فأعلى نسبة وصلت حتى الآن هي (91%) تقريباً، وحتى تأخذ قراراً سليماً عليك أن تنظر إلى نسبة التوافق، ومدى وجود عبارات حاسمة، فزيادة العبارات الحاسمة غير المتوافقة يعني وجود نقاط جوهرية لا يتنازل عنها أحد أو كلا الطرفين.</p>
+        </div>
+
+        <div class="p-6 bg-gray-100 rounded-xl">
+          <h3 class="text-xl font-bold text-purple-900 mb-2">خامساً:</h3>
+          <p>أنصحك بالاستماع للفيديو التوضيحي كاملاً قبل بدء استخدام المقياس.</p>
+        </div>
+
+        <div class="p-6 bg-gray-100 rounded-xl">
+          <h3 class="text-xl font-bold text-purple-900 mb-2">سادساً:</h3>
+          <p>المقياس له شهادة ملكية فكرية، ولا يسمح إطلاقاً بنقله أو تصوير عباراته أو استخدامه في أي دولة.</p>
         </div>
       </div>
     </div>
@@ -165,18 +203,7 @@
         يهدف هذا المقياس إلى تقييم درجة التوافق بين الشريكين قبل الزواج من خلال استكشاف الجوانب النفسية
         والاجتماعية والسلوكية.
       </p>
-      <div class="flex flex-col gap-4 text-purple-900 mt-4">
-        <div class="flex items-center gap-2">
-          <i class="fas fa-clock text-lg text-purple-600"></i>
-          <span class="font-semibold">مدة الاختبار:</span>
-          <span>12 دقيقة</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <i class="fas fa-question-circle text-lg text-purple-600"></i>
-          <span class="font-semibold">عدد الأسئلة:</span>
-          <span>120 سؤالاً</span>
-        </div>
-      </div>
+
     </div>
   </section>
 
@@ -227,11 +254,11 @@
           <ul class="space-y-3">
             <li class="flex items-center">
               <i class="fas fa-phone ml-2 text-[#d4b341]"></i>
-              +968 1234 5678
+              0096894128090
             </li>
             <li class="flex items-center">
               <i class="fas fa-envelope ml-2 text-[#d4b341]"></i>
-              info@mawaddah.com
+              zawajmawadda@gmail.com
             </li>
           </ul>
         </div>
@@ -242,8 +269,8 @@
             <a href="#" class="social-icon">
               <i class="fab fa-instagram"></i>
             </a>
-            <a href="#" class="social-icon">
-              <i class="fab fa-twitter"></i>
+            <a href="https://x.com/molhim399?s=08" class="social-icon">
+                <i class="fab fa-twitter"></i>
             </a>
             <a href="#" class="social-icon">
               <i class="fab fa-youtube"></i>

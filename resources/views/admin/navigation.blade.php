@@ -4,7 +4,7 @@
             <div class="flex items-center">
                 <a href="{{ route('index') }}" class="flex items-center hover:opacity-90 transition-opacity">
                     <img src="/assets/images/logo.png" class="h-16 w-16" alt="logo">
-                    <span class="text-2xl font-bold text-purple-800 ml-4" style="font-family: 'Tajawal', sans-serif;">
+                    <span class="text-2xl font-bold text-[#553566] ml-4" style="font-family: 'Tajawal', sans-serif;">
                         زواج المودة
                     </span>
                 </a>
