@@ -93,10 +93,10 @@
   @endif
 
   <section class="flex justify-center items-center flex-col gap-12 p-4 md:p-14 ">
-     <h2 class="font-bold text-purple-700 text-3xl  ">
-     السيرة الذاتية لمدير الموقع
-     </h2>
-     <img src="/assets/images/cv.png" alt="cv">
+    <h2 class="font-bold text-purple-700 text-3xl  ">
+      السيرة الذاتية لمدير الموقع
+    </h2>
+    <img src="/assets/images/cv.png" alt="cv">
   </section>
 
 
@@ -149,7 +149,7 @@
               <i class="fab fa-instagram"></i>
             </a>
             <a href="https://x.com/molhim399?s=08" class="social-icon">
-                <i class="fab fa-twitter"></i>
+              <i class="fab fa-twitter"></i>
             </a>
             <a href="#" class="social-icon">
               <i class="fab fa-youtube"></i>

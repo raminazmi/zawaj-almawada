@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+
+
+protected $casts = [
+
+];
 <html lang="ar" dir="rtl">
 
 <head>
@@ -154,41 +159,59 @@
       </div>
     </div>
   </section>
+
   <section class="py-12 px-4 sm:px-8 lg:px-16 space-y-8">
     <div class="container mx-auto px-4">
       <h2 class="text-3xl font-bold text-purple-900 mb-12 text-start section-title">
         دليل استخدام المقياس
       </h2>
 
-      <div class="space-y-6 text-gray-800">
-        <div class="p-6 bg-gray-100 rounded-xl">
-          <h3 class="text-xl font-bold text-purple-900 mb-2">أولاً:</h3>
-          <p>اجب بكل صدق وأمانة على كل سؤال، فإجابتك ستبقى سرية ولن يعرفها الطرف الآخر أبداً، وكذلك لن تُبلّغ أنت بإجاباته.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+        <div
+          class="p-4 md:p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-purple-50 hover:border-purple-100">
+          <h3 class="text-xl md:text-2xl font-semibold text-purple-800 mb-4">أولاً:</h3>
+          <p class="text-gray-700 leading-relaxed md:leading-loose">
+            اجب بكل صدق وأمانة على كل سؤال، فإجابتك ستبقى سرية ولن يعرفها الطرف الآخر أبداً، وكذلك لن تُبلّغ أنت
+            بإجاباته.
+          </p>
         </div>
-
-        <div class="p-6 bg-gray-100 rounded-xl">
-          <h3 class="text-xl font-bold text-purple-900 mb-2">ثانياً:</h3>
-          <p>اختر: (نعم أو لا) حسب الثابت والمستمر من الصفات والسلوك لديك، وليس الذي يحدث مرة وينتهي.</p>
+        <div
+          class="p-4 md:p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-purple-50 hover:border-purple-100">
+          <h3 class="text-xl md:text-2xl font-semibold text-purple-800 mb-4">ثانياً:</h3>
+          <p class="text-gray-700 leading-relaxed md:leading-loose">
+            اختر: (نعم أو لا) حسب الثابت والمستمر من الصفات والسلوك لديك، وليس الذي يحدث مرة وينتهي.
+          </p>
         </div>
-
-        <div class="p-6 bg-gray-100 rounded-xl">
-          <h3 class="text-xl font-bold text-purple-900 mb-2">ثالثاً:</h3>
-          <p>انتبه في دقة تحديد العبارة بحاسمة أو ليست حاسمة، فاختيارها كحاسمة تعني أنك لا تقبل بهذا الشخص زوجاً أو زوجة إذا كان ليس بينك وبينه توافق حول تلك النقطة. لذلك لا تضع صح على حاسمة إلا على النقطة التي تعتبرها خطاً أحمر ولا تقبلها في الطرف الآخر بأي حال كان.</p>
+        <div
+          class="p-4 md:p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-purple-50 hover:border-purple-100">
+          <h3 class="text-xl md:text-2xl font-semibold text-purple-800 mb-4">ثالثاً:</h3>
+          <p class="text-gray-700 leading-relaxed md:leading-loose">
+            انتبه في دقة تحديد العبارة بحاسمة أو ليست حاسمة، فاختيارها كحاسمة تعني أنك لا تقبل بهذا الشخص زوجاً أو زوجة
+            إذا كان ليس بينك وبينه توافق حول تلك النقطة.
+          </p>
         </div>
-
-        <div class="p-6 bg-gray-100 rounded-xl">
-          <h3 class="text-xl font-bold text-purple-900 mb-2">رابعاً:</h3>
-          <p>لا تتوقع أن تجد توافق يصل إلى 100%، فأعلى نسبة وصلت حتى الآن هي (91%) تقريباً، وحتى تأخذ قراراً سليماً عليك أن تنظر إلى نسبة التوافق، ومدى وجود عبارات حاسمة، فزيادة العبارات الحاسمة غير المتوافقة يعني وجود نقاط جوهرية لا يتنازل عنها أحد أو كلا الطرفين.</p>
+        <div
+          class="p-4 md:p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-purple-50 hover:border-purple-100">
+          <h3 class="text-xl md:text-2xl font-semibold text-purple-800 mb-4">رابعاً:</h3>
+          <p class="text-gray-700 leading-relaxed md:leading-loose">
+            لا تتوقع أن تجد توافق يصل إلى 100%، فأعلى نسبة وصلت حتى الآن هي (91%) تقريباً، وحتى تأخذ قراراً سليماً عليك
+            أن
+            تنظر إلى نسبة التوافق.
+          </p>
         </div>
-
-        <div class="p-6 bg-gray-100 rounded-xl">
-          <h3 class="text-xl font-bold text-purple-900 mb-2">خامساً:</h3>
-          <p>أنصحك بالاستماع للفيديو التوضيحي كاملاً قبل بدء استخدام المقياس.</p>
+        <div
+          class="p-4 md:p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-purple-50 hover:border-purple-100">
+          <h3 class="text-xl md:text-2xl font-semibold text-purple-800 mb-4">خامساً:</h3>
+          <p class="text-gray-700 leading-relaxed md:leading-loose">
+            أنصحك بالاستماع للفيديو التوضيحي كاملاً قبل بدء استخدام المقياس.
+          </p>
         </div>
-
-        <div class="p-6 bg-gray-100 rounded-xl">
-          <h3 class="text-xl font-bold text-purple-900 mb-2">سادساً:</h3>
-          <p>المقياس له شهادة ملكية فكرية، ولا يسمح إطلاقاً بنقله أو تصوير عباراته أو استخدامه في أي دولة.</p>
+        <div
+          class="p-4 md:p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-purple-50 hover:border-purple-100">
+          <h3 class="text-xl md:text-2xl font-semibold text-purple-800 mb-4">سادساً:</h3>
+          <p class="text-gray-700 leading-relaxed md:leading-loose">
+            المقياس له شهادة ملكية فكرية، ولا يسمح إطلاقاً بنقله أو تصوير عباراته أو استخدامه في أي دولة.
+          </p>
         </div>
       </div>
     </div>
@@ -270,7 +293,7 @@
               <i class="fab fa-instagram"></i>
             </a>
             <a href="https://x.com/molhim399?s=08" class="social-icon">
-                <i class="fab fa-twitter"></i>
+              <i class="fab fa-twitter"></i>
             </a>
             <a href="#" class="social-icon">
               <i class="fab fa-youtube"></i>
