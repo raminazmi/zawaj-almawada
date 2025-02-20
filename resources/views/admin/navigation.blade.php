@@ -17,6 +17,10 @@
                         class="text-lg transition-colors">
                         الأعضاء
                     </x-nav-link>
+                    <a href="{{route('admin.shops')}}"
+                        class="text-lg transition-colors">
+                        المحلات
+                </a>
                 </div>
             </div>
 
