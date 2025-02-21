@@ -127,23 +127,24 @@
                             </button>
                             <div x-show="subOpen" x-cloak
                                 class="absolute left-full top-0 bg-white shadow-lg mt-0 w-56 rounded-md border border-gray-200 z-50">
-                                <a href="#"
+                                <a href={{ route('doctor-counseling') }}
                                     class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('doctorConsultation') ? 'text-purple-700' : 'text-gray-900' }}">
                                     استشارة طبيب
                                 </a>
-                                <a href="#"
+                                <a href={{ route('legal-counseling')}}
                                     class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('legalConsultation') ? 'text-purple-700' : 'text-gray-900' }}">
                                     استشارة قانوني
                                 </a>
-                                <a href="#"
+
+                                <a href={{ route('family-counseling') }}
                                     class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('familyConsultation') ? 'text-purple-700' : 'text-gray-900' }}">
                                     استشارة أخصائي شؤون أسرية
                                 </a>
-                                <a href="#"
+                                <a  href={{ route('psychic-counseling')}}
                                     class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('psychologicalConsultation') ? 'text-purple-700' : 'text-gray-900' }}">
                                     استشارة أخصائي نفسي
                                 </a>
-                                <a href="#"
+                                <a  href={{ route('legitimate-counseling')}}
                                     class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('religiousConsultation') ? 'text-purple-700' : 'text-gray-900' }}">
                                     استشارة متخصص شرعي
                                 </a>
