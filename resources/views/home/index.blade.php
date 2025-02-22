@@ -1,9 +1,4 @@
 <!DOCTYPE html>
-
-
-protected $casts = [
-
-];
 <html lang="ar" dir="rtl">
 
 <head>
