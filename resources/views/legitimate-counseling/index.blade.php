@@ -85,35 +85,38 @@
     }
   </style>
 </head>
+
 <body>
-    @if(auth()->check())
-    @if(auth()->user()->is_admin)
-    @include('admin.navigation')
-    @else
-    @include('layouts.navigation')
-    @endif
-    @else
-    @include('home.navigation')
-    @endif
+  @if(auth()->check())
+  @if(auth()->user()->is_admin)
+  @include('admin.navigation')
+  @else
+  @include('layouts.navigation')
+  @endif
+  @else
+  @include('home.navigation')
+  @endif
   <section class="relative">
     <div class="bg-cover bg-center min-h-[550px] py-12" style="background-image: url('assets/images/frame.png');">
-    <div class="flex items-center justify-center min-h-screen">
-    <form action="https://api.web3forms.com/submit" method="POST" class="w-full max-w-md p-6 rounded-lg shadow-md mx-4">
-        <h2 class="text-2xl font-bold mb-4 text-center text-gray-700">طلب استشارة شرعية</h2>
-        <input type="hidden" name="access_key" value="f17d3654-79d0-4455-8d62-1ccd3d5e9900">
-        <div class="mb-4">
-            <label for="message" class="block text-gray-600 font-medium">اطرح هنا مشكلتك أو سؤالك</label>
+      <div class="flex items-center justify-center min-h-screen">
+        <form action="https://api.web3forms.com/submit" method="POST"
+          class="w-full max-w-md p-6 rounded-lg shadow-md mx-4">
+          <h2 class="text-2xl font-bold mb-4 text-center text-gray-700">طلب استشارة شرعية</h2>
+          <input type="hidden" name="access_key" value="f17d3654-79d0-4455-8d62-1ccd3d5e9900">
+          <div class="mb-4">
+            <label for="message" class="block text-gray-600 font-medium mb-2">اطرح هنا مشكلتك أو سؤالك</label>
             <textarea id="message" name="message" required rows="4"
-                class="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300"></textarea>
-        </div>
-        <input type="checkbox" name="botcheck" class="hidden">
+              class="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300"></textarea>
+          </div>
+          <input type="checkbox" name="botcheck" class="hidden">
 
-        <button type="submit" class="w-full bg-purple-900 text-white py-2 rounded-md hover:bg-blue-600 transition">
+          <button type="submit" class="w-full bg-purple-900 text-white py-2 rounded-md hover:bg-blue-600 transition">
             إرسال
-        </button>
-    </form></div>
-</div>
-</section>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
   <footer class="bg-purple-900 text-white pt-12 ">
     <div class="container mx-auto px-12">
       <div class="grid grid-cols-1 md:grid-cols-5 gap-14 border-b border-purple-800 pb-12">
@@ -171,13 +174,13 @@
       </div>
     </div>
   </footer>
-    <script>
-        $(document).ready(function() {
+  <script>
+    $(document).ready(function() {
           $('#menu-toggle').click(function() {
             $('#mobile-menu').slideToggle(300);
           });
         });
-      </script>
+  </script>
 </body>
-</html>
 
+</html>

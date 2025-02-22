@@ -88,32 +88,32 @@
                             </button>
                             <div x-show="subOpen" x-cloak
                                 class="absolute left-full top-0 bg-white shadow-lg mt-0 w-56 rounded-md border border-gray-200 z-50">
-                                <a href={{ route('add-activity') }}
+                                <a href={{ route('business-activities.create') }}
                                     class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('weddingTents') ? 'text-purple-700' : 'text-gray-900' }}">
                                     اضف نشاطك
                                 </a>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('weddingTents') ? 'text-purple-700' : 'text-gray-900' }}">
+                                <a href="{{ route('business-activities.show', 'محلات تأجير الخيام') }}"
+                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'محلات تأجير الخيام' ? 'text-purple-700' : 'text-gray-900' }}">
                                     محلات تأجير الخيام
                                 </a>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('halls') ? 'text-purple-700' : 'text-gray-900' }}">
+                                <a href="{{ route('business-activities.show', 'محلات تأجير القاعات') }}"
+                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'محلات تأجير القاعات' ? 'text-purple-700' : 'text-gray-900' }}">
                                     محلات تأجير القاعات
                                 </a>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('furniture') ? 'text-purple-700' : 'text-gray-900' }}">
+                                <a href="{{ route('business-activities.show', 'محلات الأثاث') }}"
+                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'محلات الأثاث' ? 'text-purple-700' : 'text-gray-900' }}">
                                     محلات الأثاث
                                 </a>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('weddingSupplies') ? 'text-purple-700' : 'text-gray-900' }}">
+                                <a href="{{ route('business-activities.show', 'مستلزمات الأعراس') }}"
+                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'مستلزمات الأعراس' ? 'text-purple-700' : 'text-gray-900' }}">
                                     مستلزمات الأعراس
                                 </a>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('designPhotography') ? 'text-purple-700' : 'text-gray-900' }}">
+                                <a href="{{ route('business-activities.show', 'محلات التصميم والتصوير') }}"
+                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'محلات التصميم والتصوير' ? 'text-purple-700' : 'text-gray-900' }}">
                                     محلات التصميم والتصوير
                                 </a>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('catering') ? 'text-purple-700' : 'text-gray-900' }}">
+                                <a href="{{ route('business-activities.show', 'مطاعم تقديم الولائم') }}"
+                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'مطاعم تقديم الولائم' ? 'text-purple-700' : 'text-gray-900' }}">
                                     مطاعم تقديم الولائم
                                 </a>
                             </div>
@@ -262,12 +262,34 @@
                             :class="{ 'rotate-180': subOpen }"></i>
                     </button>
                     <div x-show="subOpen" x-cloak class="pl-4 space-y-2">
-                        <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">محلات تأجير الخيام</a>
-                        <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">محلات تأجير القاعات</a>
-                        <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">محلات الأثاث</a>
-                        <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">مستلزمات الأعراس</a>
-                        <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">محلات التصميم والتصوير</a>
-                        <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">مطاعم تقديم الولائم</a>
+                        <a href={{ route('business-activities.create') }}
+                            class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('weddingTents') ? 'text-purple-700' : 'text-gray-900' }}">
+                            اضف نشاطك
+                        </a>
+                        <a href="{{ route('business-activities.show', 'محلات تأجير الخيام') }}"
+                            class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'محلات تأجير الخيام' ? 'text-purple-700' : 'text-gray-900' }}">
+                            محلات تأجير الخيام
+                        </a>
+                        <a href="{{ route('business-activities.show', 'محلات تأجير القاعات') }}"
+                            class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'محلات تأجير القاعات' ? 'text-purple-700' : 'text-gray-900' }}">
+                            محلات تأجير القاعات
+                        </a>
+                        <a href="{{ route('business-activities.show', 'محلات الأثاث') }}"
+                            class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'محلات الأثاث' ? 'text-purple-700' : 'text-gray-900' }}">
+                            محلات الأثاث
+                        </a>
+                        <a href="{{ route('business-activities.show', 'مستلزمات الأعراس') }}"
+                            class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'مستلزمات الأعراس' ? 'text-purple-700' : 'text-gray-900' }}">
+                            مستلزمات الأعراس
+                        </a>
+                        <a href="{{ route('business-activities.show', 'محلات التصميم والتصوير') }}"
+                            class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'محلات التصميم والتصوير' ? 'text-purple-700' : 'text-gray-900' }}">
+                            محلات التصميم والتصوير
+                        </a>
+                        <a href="{{ route('business-activities.show', 'مطاعم تقديم الولائم') }}"
+                            class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'مطاعم تقديم الولائم' ? 'text-purple-700' : 'text-gray-900' }}">
+                            مطاعم تقديم الولائم
+                        </a>
                     </div>
                 </div>
 

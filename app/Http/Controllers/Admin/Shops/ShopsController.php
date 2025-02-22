@@ -14,5 +14,4 @@ class ShopsController extends Controller
     {
         return view('admin.shops.index');
     }
-
 }

@@ -8,7 +8,7 @@
                         زواج المودة
                     </span>
                 </a>
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex gap-4">
+                <div class="hidden sm:-my-px sm:ms-10 sm:flex gap-6">
                     <x-nav-link :href="route('admin.questions.index')"
                         :active="request()->routeIs('admin.questions.index')" class="text-lg transition-colors">
                         الأسئلة
@@ -17,10 +17,10 @@
                         class="text-lg transition-colors">
                         الأعضاء
                     </x-nav-link>
-                    <a href="{{route('admin.shops')}}"
+                    <x-nav-link :href="route('admin.shops')" :active="request()->routeIs('admin.shops')"
                         class="text-lg transition-colors">
                         المحلات
-                </a>
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -71,6 +71,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
                 الأعضاء
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.shops')" :active="request()->routeIs('admin.shops')">
+                المحلات
             </x-responsive-nav-link>
         </div>
 

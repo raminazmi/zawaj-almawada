@@ -25,14 +25,14 @@ use App\Http\Controllers\PsychicCounseling\PsychicCounselingController;
 use App\Http\Middleware\AuthAdmin;
 use App\Http\Middleware\AuthUser;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\AddActivity\BusinessActivityController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::get( '/cv', [CvController::class, 'index'])->name('cv');
-Route::get( '/printed-books', [PrintedBookController::class, 'index'])->name('printed-books');
-Route::get( '/e-books', [EbooksController::class, 'index'])->name('e-books');
-Route::get( '/add-activity', [AddActivityController::class, 'index'])->name('add-activity');
+Route::get('/cv', [CvController::class, 'index'])->name('cv');
+Route::get('/printed-books', [PrintedBookController::class, 'index'])->name('printed-books');
+Route::get('/e-books', [EbooksController::class, 'index'])->name('e-books');
+Route::get('/add-activity', [AddActivityController::class, 'index'])->name('add-activity');
 Route::get('/family-counseling', [FamilyCounselingController::class, 'index'])->name('family-counseling');
 Route::get('/doctor-counseling', [DoctorCounselingController::class, 'index'])->name('doctor-counseling');
 Route::get('/legal-counseling', [LegalCounselingController::class, 'index'])->name('legal-counseling');
@@ -42,6 +42,10 @@ Route::controller(GoogleController::class)->group(function () {
     Route::get('auth/google', 'redirectToGoogle')->name('auth.google');
     Route::get('auth/google/callback', 'handleGoogleCallback');
 });
+Route::get('/business-activities/create', [BusinessActivityController::class, 'create'])->name('business-activities.create');
+Route::post('/business-activities', [BusinessActivityController::class, 'store'])->name('business-activities.store');
+Route::get('/business-activities/{type}', [BusinessActivityController::class, 'showByType'])->name('business-activities.show');
+
 
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
 Route::post('/register', [RegisteredUserController::class, 'store']);
@@ -73,8 +77,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('questions', QuestionController::class);
         Route::resource('users', UserController::class);
-        Route::get('Shops', [ShopsController::class, 'index'])->name('shops');
-
+        Route::resource('shops', BusinessActivityController::class);
+        Route::get('/shops', [BusinessActivityController::class, 'index'])->name('shops');
+        Route::post('/business-activities/{businessActivity}/status', [BusinessActivityController::class, 'updateStatus'])
+            ->name('business-activities.updateStatus');
     });
 });
 

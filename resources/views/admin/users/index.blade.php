@@ -16,7 +16,7 @@
             </div>
 
             <div class="bg-white rounded-3xl shadow-xl border border-purple-100 overflow-hidden">
-                <div class="p-6">
+                <div class="">
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gradient-to-r from-pink-400 to-purple-500 text-white">
