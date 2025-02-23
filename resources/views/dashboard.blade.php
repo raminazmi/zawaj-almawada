@@ -88,8 +88,9 @@ $token = request('token') ?? request()->route('token');
                                     <span class="text-xl font-bold text-purple-900">أُقسم</span>
                                 </label>
                             </h2>
-                        </div>
 
+
+                        </div>
                         <div class="text-center">
                             <button id="startTestButton" type="button"
                                 class="inline-flex items-center px-4 py-2 bg-yellow-500 hover:bg-yellow-700 text-white text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
@@ -97,6 +98,62 @@ $token = request('token') ?? request()->route('token');
                                 ابدأ الاختبار الآن
                             </button>
                         </div>
+                        <section class="py-12 px-4 sm:px-8 lg:px-16 space-y-8">
+                            <div class="container mx-auto px-4">
+                              <h2 class="text-3xl font-bold text-purple-900 mb-12 text-start section-title">
+                                دليل استخدام المقياس  <strong class="text-red-500">(مهم جدا )</strong>
+                              </h2>
+                              <div class="grid grid-cols-1 md:grid-cols-1 gap-6 lg:gap-8">
+                                <div
+                                  class="p-4 md:p-6 bg-white w-full rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-purple-50 hover:border-purple-100">
+                                  <h3 class="text-xl md:text-2xl font-semibold text-purple-800 mb-4">أولاً:</h3>
+                                  <p class="text-gray-700 leading-relaxed md:leading-loose">
+                                    اجب بكل صدق وأمانة على كل سؤال، فإجابتك ستبقى سرية ولن يعرفها الطرف الآخر أبداً، وكذلك لن تُبلّغ أنت
+                                    بإجاباته.
+                                  </p>
+                                </div>
+                                <div
+                                  class="p-4 md:p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-purple-50 hover:border-purple-100">
+                                  <h3 class="text-xl md:text-2xl font-semibold text-purple-800 mb-4">ثانياً:</h3>
+                                  <p class="text-gray-700 leading-relaxed md:leading-loose">
+                                    اختر: (نعم أو لا) حسب الثابت والمستمر من الصفات والسلوك لديك، وليس الذي يحدث مرة وينتهي.
+                                  </p>
+                                </div>
+                                <div
+                                  class="p-4 md:p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-purple-50 hover:border-purple-100">
+                                  <h3 class="text-xl md:text-2xl font-semibold text-purple-800 mb-4">ثالثاً:</h3>
+                                  <p class="text-gray-700 leading-relaxed md:leading-loose">
+                                    انتبه في دقة تحديد العبارة بحاسمة أو ليست حاسمة، فاختيارها كحاسمة تعني أنك لا تقبل بهذا الشخص زوجاً أو زوجة
+                                    إذا كان ليس بينك وبينه توافق حول تلك النقطة.
+                                  </p>
+                                </div>
+                                <div
+                                  class="p-4 md:p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-purple-50 hover:border-purple-100">
+                                  <h3 class="text-xl md:text-2xl font-semibold text-purple-800 mb-4">رابعاً:</h3>
+                                  <p class="text-gray-700 leading-relaxed md:leading-loose">
+                                    لا تتوقع أن تجد توافق يصل إلى 100%، فأعلى نسبة وصلت حتى الآن هي (91%) تقريباً، وحتى تأخذ قراراً سليماً عليك
+                                    أن
+                                    تنظر إلى نسبة التوافق.
+                                  </p>
+                                </div>
+                                <div
+                                  class="p-4 md:p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-purple-50 hover:border-purple-100">
+                                  <h3 class="text-xl md:text-2xl font-semibold text-purple-800 mb-4">خامساً:</h3>
+                                  <p class="text-gray-700 leading-relaxed md:leading-loose">
+                                    أنصحك بالاستماع للفيديو التوضيحي كاملاً قبل بدء استخدام المقياس.
+                                  </p>
+                                </div>
+                                <div
+                                  class="p-4 md:p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-purple-50 hover:border-purple-100">
+                                  <h3 class="text-xl md:text-2xl font-semibold text-purple-800 mb-4">سادساً:</h3>
+                                  <p class="text-gray-700 leading-relaxed md:leading-loose">
+                                    المقياس له شهادة ملكية فكرية، ولا يسمح إطلاقاً بنقله أو تصوير عباراته أو استخدامه في أي دولة.
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </section>
+
                     </div>
                     @endif
                 </div>

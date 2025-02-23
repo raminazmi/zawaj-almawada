@@ -145,13 +145,13 @@
         <div>
           <h4 class="text-xl font-bold mb-6">تابعنا</h4>
           <div class="flex space-x-2 gap-4">
-            <a href="#" class="social-icon">
+            <a href="https://www.instagram.com/hamoodalnoofli/" class="social-icon hover:-translate-y-1" target="_blank">
               <i class="fab fa-instagram"></i>
             </a>
-            <a href="https://x.com/molhim399?s=08" class="social-icon">
+            <a href="https://x.com/molhim399?s=08" class="social-icon hover:-translate-y-1">
               <i class="fab fa-twitter"></i>
             </a>
-            <a href="#" class="social-icon">
+            <a href="#" class="social-icon hover:-translate-y-1">
               <i class="fab fa-youtube"></i>
             </a>
           </div>
