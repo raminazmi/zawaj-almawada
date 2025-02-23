@@ -17,6 +17,12 @@
                 <a href={{ route('cv') }} class="nav-link {{ request()->routeIs('cv') ? 'active' : '' }}">
                     السيرة الذاتية
                 </a>
+                <div class="nav-link flex items-center gap-2"
+                >
+                <a href={{ route('business-activities.create') }}
+              >
+                أضف نشاطك التجاري   </a>
+            </div>
                 <div class="relative" x-data="{ isOpen: false }" @click.away="isOpen = false">
                     <button @click="isOpen = !isOpen" class="nav-link flex items-center gap-2">
                         المقاييس
@@ -88,10 +94,6 @@
                             </button>
                             <div x-show="subOpen" x-cloak
                                 class="absolute left-full top-0 bg-white shadow-lg mt-0 w-56 rounded-md border border-gray-200 z-50">
-                                <a href={{ route('business-activities.create') }}
-                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('weddingTents') ? 'text-purple-700' : 'text-gray-900' }}">
-                                    اضف نشاطك
-                                </a>
                                 <a href="{{ route('business-activities.show', 'محلات تأجير الخيام') }}"
                                     class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'محلات تأجير الخيام' ? 'text-purple-700' : 'text-gray-900' }}">
                                     محلات تأجير الخيام
@@ -204,7 +206,12 @@
         <a href="#" class="nav-link block py-2">
             <i class="fas fa-info ml-2"></i> السيرة الذاتية
         </a>
-
+        <div class="nav-link flex items-center gap-2"
+        >
+        <a href={{ route('business-activities.create') }}
+      >
+        أضف نشاطك التجاري   </a>
+    </div>
         <div x-data="{ isOpen: false }">
             <button @click="isOpen = !isOpen" class="nav-link block w-full text-left py-2 flex justify-between">
                 <div>
@@ -262,10 +269,6 @@
                             :class="{ 'rotate-180': subOpen }"></i>
                     </button>
                     <div x-show="subOpen" x-cloak class="pl-4 space-y-2">
-                        <a href={{ route('business-activities.create') }}
-                            class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('weddingTents') ? 'text-purple-700' : 'text-gray-900' }}">
-                            اضف نشاطك
-                        </a>
                         <a href="{{ route('business-activities.show', 'محلات تأجير الخيام') }}"
                             class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'محلات تأجير الخيام' ? 'text-purple-700' : 'text-gray-900' }}">
                             محلات تأجير الخيام
