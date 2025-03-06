@@ -97,12 +97,7 @@
 
 <body class="font-sans antialiased">
     <div class="min-h-screen gradient-background">
-        @if (auth()->user()->is_admin)
-        @include('admin.navigation')
-        @else
         @include('layouts.navigation')
-        @endif
-
         <!-- Page Heading -->
         @isset($header)
         <header class="bg-pink-100 shadow-lg border-b border-pink-200">
@@ -114,7 +109,7 @@
 
         <!-- Page Content -->
         <main class="bg-gradient-to-b from-purple-50 to-pink-50 py-12">
-            {{ $slot }}
+            @yield('content')
         </main>
 
         <!-- Footer -->

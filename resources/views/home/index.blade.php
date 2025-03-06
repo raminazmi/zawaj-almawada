@@ -82,15 +82,7 @@
 </head>
 
 <body>
-  @if(auth()->check())
-  @if(auth()->user()->is_admin)
-  @include('admin.navigation')
-  @else
   @include('layouts.navigation')
-  @endif
-  @else
-  @include('home.navigation')
-  @endif
 
   <section class="relative islamic-pattern p-4 md:p-14 ">
     <div

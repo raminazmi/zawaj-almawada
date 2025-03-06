@@ -10,16 +10,16 @@
                 </a>
             </div>
 
+            <!-- Navigation Links -->
             <div class="hidden lg:flex items-center space-x-6">
                 <a href="{{ route('index') }}" class="nav-link mx-6 {{ request()->routeIs('index') ? 'active' : '' }}">
                     الرئيسية
                 </a>
-                <a href={{ route('cv') }} class="nav-link {{ request()->routeIs('cv') ? 'active' : '' }}">
+                <a href="{{ route('cv') }}" class="nav-link {{ request()->routeIs('cv') ? 'active' : '' }}">
                     السيرة الذاتية
                 </a>
                 <div class="nav-link flex items-center gap-2">
-                    <a href={{ route('business-activities.create') }}>
-                        أضف نشاطك التجاري </a>
+                    <a href="{{ route('business-activities.create') }}">أضف نشاطك التجاري</a>
                 </div>
                 <div class="relative" x-data="{ isOpen: false }" @click.away="isOpen = false">
                     <button @click="isOpen = !isOpen" class="nav-link flex items-center gap-2">
@@ -29,7 +29,7 @@
                     </button>
                     <div x-show="isOpen" x-cloak
                         class="absolute bg-white shadow-lg mt-2 w-52 rounded-md border border-gray-200 z-50">
-                        <a href={{ route('dashboard') }}
+                        <a href="{{ route('dashboard') }}"
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('dashboard') ? 'text-purple-700' : 'text-gray-900' }}">
                             مقياس التوافق الزواجي
                         </a>
@@ -37,7 +37,7 @@
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('readiness') ? 'text-purple-700' : 'text-gray-900' }}">
                             اختبار الجاهزية للحياة الزوجية
                         </a>
-                        <a href={{ route('exam.user.index') }}
+                        <a href="{{ route('exam.user.index') }}"
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('exam.user.index') ? 'text-purple-700' : 'text-gray-900' }}">
                             اختباراتي
                         </a>
@@ -51,11 +51,11 @@
                     </button>
                     <div x-show="isOpen" x-cloak
                         class="absolute bg-white shadow-lg mt-2 w-48 rounded-md border border-gray-200 z-50">
-                        <a href={{ route('e-books') }}
+                        <a href="{{ route('e-books') }}"
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('e-books') ? 'text-purple-700' : 'text-gray-900' }}">
                             الكتب الإلكترونية
                         </a>
-                        <a href={{ route('printed-books') }}
+                        <a href="{{ route('printed-books') }}"
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('printed-books') ? 'text-purple-700' : 'text-gray-900' }}">
                             الكتب المطبوعة
                         </a>
@@ -127,36 +127,71 @@
                             </button>
                             <div x-show="subOpen" x-cloak
                                 class="absolute left-full top-0 bg-white shadow-lg mt-0 w-56 rounded-md border border-gray-200 z-50">
-                                <a href={{ route('doctor-counseling') }}
-                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('doctorConsultation') ? 'text-purple-700' : 'text-gray-900' }}">
+                                <a href="{{ route('doctor-counseling') }}"
+                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('doctor-counseling') ? 'text-purple-700' : 'text-gray-900' }}">
                                     استشارة طبيب
                                 </a>
-                                <a href={{ route('legal-counseling')}}
-                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('legalConsultation') ? 'text-purple-700' : 'text-gray-900' }}">
+                                <a href="{{ route('legal-counseling') }}"
+                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('legal-counseling') ? 'text-purple-700' : 'text-gray-900' }}">
                                     استشارة قانوني
                                 </a>
-                                <a href={{ route('family-counseling') }}
-                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('familyConsultation') ? 'text-purple-700' : 'text-gray-900' }}">
+                                <a href="{{ route('family-counseling') }}"
+                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('family-counseling') ? 'text-purple-700' : 'text-gray-900' }}">
                                     استشارة أخصائي شؤون أسرية
                                 </a>
-                                <a href={{ route('psychic-counseling')}}
-                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('psychologicalConsultation') ? 'text-purple-700' : 'text-gray-900' }}">
+                                <a href="{{ route('psychic-counseling') }}"
+                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('psychic-counseling') ? 'text-purple-700' : 'text-gray-900' }}">
                                     استشارة أخصائي نفسي
                                 </a>
-                                <a href={{ route('legitimate-counseling')}}
-                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('religiousConsultation') ? 'text-purple-700' : 'text-gray-900' }}">
+                                <a href="{{ route('legitimate-counseling') }}"
+                                    class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('legitimate-counseling') ? 'text-purple-700' : 'text-gray-900' }}">
                                     استشارة متخصص شرعي
                                 </a>
                             </div>
                         </div>
-                        <a href="#"
+                        <a href="{{ route('marriage-requests') }}"
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('marriageRequests') ? 'text-purple-700' : 'text-gray-900' }}">
                             تقديم طلبات الزواج
                         </a>
                     </div>
                 </div>
+
+                <!-- Admin Links (Only for Admins) -->
+                @if(auth()->check() && auth()->user()->is_admin)
+                <div class="relative" x-data="{ isOpen: false }" @click.away="isOpen = false">
+                    <button @click="isOpen = !isOpen" class="nav-link flex items-center gap-2">
+                        الإدارة
+                        <i class="fas fa-chevron-down text-xs ml-1 transition-transform"
+                            :class="{ 'rotate-180': isOpen }"></i>
+                    </button>
+                    <div x-show="isOpen" x-cloak
+                        class="absolute bg-white shadow-lg mt-2 w-48 rounded-md border border-gray-200 z-50">
+                        <a href="{{ route('admin.questions.index') }}"
+                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('admin.questions.index') ? 'text-purple-700' : 'text-gray-900' }}">
+                            الأسئلة
+                        </a>
+                        <a href="{{ route('admin.users.index') }}"
+                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('admin.users.index') ? 'text-purple-700' : 'text-gray-900' }}">
+                            الأعضاء
+                        </a>
+                        <a href="{{ route('admin.shops') }}"
+                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('admin.shops') ? 'text-purple-700' : 'text-gray-900' }}">
+                            المحلات
+                        </a>
+                    </div>
+                </div>
+                @endif
             </div>
 
+            <!-- Right Section (Contact or User Dropdown) -->
+            @guest
+            <a href="{{ route('contact') }}"
+                class="gold-btn px-6 py-2 text-white rounded-full hidden lg:flex items-center">
+                تواصل معنا
+            </a>
+            @endguest
+
+            @auth
             <div class="hidden lg:flex items-center">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -181,56 +216,46 @@
                     </x-slot>
                 </x-dropdown>
             </div>
+            @endauth
 
+            <!-- Mobile Menu Toggle -->
             <button @click="open = !open" class="lg:hidden text-gray-600">
                 <i class="fas fa-bars text-2xl"></i>
             </button>
         </div>
     </div>
 
+    <!-- Mobile Menu -->
     <div x-show="open" class="lg:hidden px-4 pb-4 space-y-2" x-cloak>
-        <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
-            class="nav-link block py-2">
-            <i class="fas fa-home ml-2"></i> موقع زواج المودة
-        </x-responsive-nav-link>
-        <x-responsive-nav-link :href="route('exam.user.index')" :active="request()->routeIs('exam.user.index')"
-            class="nav-link block py-2">
-            <i class="fas fa-clipboard-list ml-2"></i> اختباراتي
-        </x-responsive-nav-link>
-
         <a href="{{ route('index') }}" class="nav-link block py-2">
             <i class="fas fa-home ml-2"></i> الرئيسية
         </a>
-        <a href="#" class="nav-link block py-2">
+        <a href="{{ route('cv') }}" class="nav-link block py-2">
             <i class="fas fa-info ml-2"></i> السيرة الذاتية
         </a>
-        <div class="nav-link flex items-center gap-2">
-            <a href={{ route('business-activities.create') }}>
-                أضف نشاطك التجاري </a>
+        <div class="nav-link block py-2">
+            <a href="{{ route('business-activities.create') }}"><i class="fas fa-plus ml-2"></i> أضف نشاطك التجاري</a>
         </div>
         <div x-data="{ isOpen: false }">
             <button @click="isOpen = !isOpen" class="nav-link block w-full text-left py-2 flex justify-between">
-                <div>
-                    <i class="fas fa-book-open ml-2"></i> المقاييس
-                </div>
+                <div><i class="fas fa-book-open ml-2"></i> المقاييس</div>
                 <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': isOpen }"></i>
             </button>
             <div x-show="isOpen" x-cloak class="pl-4 space-y-2">
-                <a href={{ route('dashboard') }} class="block text-sm hover:bg-pink-50 py-2 px-1">
+                <a href="{{ route('dashboard') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
                     مقياس التوافق الزواجي
                 </a>
                 <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">
                     اختبار الجاهزية للحياة الزوجية
                 </a>
-                <a href={{ route('exam.user.index') }} class="block text-sm hover:bg-pink-50 py-2 px-1">
+                <a href="{{ route('exam.user.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
                     اختباراتي
                 </a>
             </div>
         </div>
-
         <div x-data="{ isOpen: false }">
             <button @click="isOpen = !isOpen" class="nav-link block w-full text-left py-2 flex justify-between">
-                <div><i class="fas fa-book ml-2"></i> الكتب </div>
+                <div><i class="fas fa-book ml-2"></i> الكتب</div>
                 <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': isOpen }"></i>
             </button>
             <div x-show="isOpen" x-cloak class="pl-4 space-y-2">
@@ -239,25 +264,21 @@
                     المطبوعة</a>
             </div>
         </div>
-
         <div x-data="{ isOpen: false }">
             <button @click="isOpen = !isOpen" class="nav-link block w-full text-left py-2 flex justify-between">
-                <div> <i class="fas fa-chalkboard-teacher ml-2"></i> الدورات </div>
+                <div><i class="fas fa-chalkboard-teacher ml-2"></i> الدورات</div>
                 <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': isOpen }"></i>
             </button>
             <div x-show="isOpen" x-cloak class="pl-4 space-y-2">
                 <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">دورة التأهيل للزواج</a>
             </div>
         </div>
-
         <div x-data="{ isOpen: false }">
             <button @click="isOpen = !isOpen" class="nav-link block w-full text-left py-2 flex justify-between">
-                <div><i class="fas fa-ellipsis-h ml-2"></i> المزيد </div>
+                <div><i class="fas fa-ellipsis-h ml-2"></i> المزيد</div>
                 <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': isOpen }"></i>
             </button>
             <div x-show="isOpen" x-cloak class="pl-4 space-y-2">
-                <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">تقديم طلبات الزواج</a>
-
                 <div x-data="{ subOpen: false }">
                     <button @click="subOpen = !subOpen" class="w-full text-left text-sm flex justify-between py-2">
                         خدمات الأعراس
@@ -291,7 +312,6 @@
                         </a>
                     </div>
                 </div>
-
                 <div x-data="{ subOpen: false }">
                     <button @click="subOpen = !subOpen" class="w-full text-left text-sm flex justify-between py-2">
                         طلب استشارة مجانية
@@ -299,16 +319,54 @@
                             :class="{ 'rotate-180': subOpen }"></i>
                     </button>
                     <div x-show="subOpen" x-cloak class="pl-4 space-y-2">
-                        <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">استشارة طبيب</a>
-                        <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">استشارة قانوني</a>
-                        <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">استشارة أخصائي شؤون أسرية</a>
-                        <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">استشارة أخصائي نفسي</a>
-                        <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">استشارة متخصص شرعي</a>
+                        <a href="{{ route('doctor-counseling') }}"
+                            class="block text-sm hover:bg-pink-50 py-2 px-1">استشارة طبيب</a>
+                        <a href="{{ route('legal-counseling') }}"
+                            class="block text-sm hover:bg-pink-50 py-2 px-1">استشارة قانوني</a>
+                        <a href="{{ route('family-counseling') }}"
+                            class="block text-sm hover:bg-pink-50 py-2 px-1">استشارة أخصائي شؤون أسرية</a>
+                        <a href="{{ route('psychic-counseling') }}"
+                            class="block text-sm hover:bg-pink-50 py-2 px-1">استشارة أخصائي نفسي</a>
+                        <a href="{{ route('legitimate-counseling') }}"
+                            class="block text-sm hover:bg-pink-50 py-2 px-1">استشارة متخصص شرعي</a>
                     </div>
                 </div>
+                <a href="{{ route('marriage-requests') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">تقديم طلبات
+                    الزواج</a>
             </div>
         </div>
 
+        <!-- Admin Links in Mobile (Only for Admins) -->
+        @if(auth()->check() && auth()->user()->is_admin)
+        <div x-data="{ isOpen: false }">
+            <button @click="isOpen = !isOpen" class="nav-link block w-full text-left py-2 flex justify-between">
+                <div><i class="fas fa-user-shield ml-2"></i> الإدارة</div>
+                <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': isOpen }"></i>
+            </button>
+            <div x-show="isOpen" x-cloak class="pl-4 space-y-2">
+                <a href="{{ route('admin.questions.index') }}"
+                    class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('admin.questions.index') ? 'text-purple-700' : 'text-gray-900' }}">
+                    الأسئلة
+                </a>
+                <a href="{{ route('admin.users.index') }}"
+                    class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('admin.users.index') ? 'text-purple-700' : 'text-gray-900' }}">
+                    الأعضاء
+                </a>
+                <a href="{{ route('admin.shops') }}"
+                    class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('admin.shops') ? 'text-purple-700' : 'text-gray-900' }}">
+                    المحلات
+                </a>
+            </div>
+        </div>
+        @endif
+
+        @guest
+        <a href="{{ route('contact') }}" class="gold-btn block text-center px-6 py-2 rounded-full">
+            تواصل معنا
+        </a>
+        @endguest
+
+        @auth
         <div class="pt-4 pb-1 border-t border-pink-200">
             <div class="px-4">
                 <div class="font-medium text-base text-purple-900">{{ Auth::user()->name }}</div>
@@ -326,8 +384,10 @@
                 </form>
             </div>
         </div>
+        @endauth
     </div>
 
+    <!-- Styles -->
     <style>
         .rotate-180 {
             transform: rotate(180deg);
