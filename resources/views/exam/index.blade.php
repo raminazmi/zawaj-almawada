@@ -23,19 +23,20 @@
                                 <span class="flex flex-col space-y-4">
                                     <span class="text-xl font-bold text-purple-900 mb-4 flex items-center">
                                         <i class="fas fa-exclamation-circle ml-2"></i>
-                                        قسم الاستخدام:
+                                        تعهد الاستخدام:
                                     </span>
                                     <p class="text-gray-700 leading-relaxed text-lg text-start">
-                                        حتى أكون صادقاً أمام الله وأمام الطرف الآخر، أقسم بالله العظيم أن أجيب بصدق تام
-                                        على كل عبارات المقياس، كما أقسم ألا أنسخ أو أصور أو استخدام المقياس في أي موضع
-                                        آخر دون أذن صاحبه.
+                                        تعهد الاستخدام
+                                        أتعهد أمام الله وأمام الطرف الآخر بأن أجيب بصدق تام على كل عبارات المقياس،
+                     كما أتعهد بعدم نسخ أو تصوير أو استخدام المقياس في أي موضع آخر دون إذن صاحبه.
+
                                     </p>
                                 </span>
                                 <label for="swearCheckbox"
                                     class="inline-flex items-center mt-6 cursor-pointer hover:opacity-90 transition-opacity">
                                     <input id="swearCheckbox" type="checkbox"
                                         class="form-checkbox h-6 w-6 ml-3 text-yellow-600 border-pink-300 rounded-lg transition-all duration-300">
-                                    <span class="text-xl font-bold text-purple-900">أُقسم</span>
+                                    <span class="text-xl font-bold text-purple-900">أتعهد</span>
                                 </label>
                             </h2>
                         </div>
@@ -72,7 +73,7 @@
 
                 <div class="aspect-w-16 aspect-h-9">
                     <iframe id="tutorialVideo" class="w-full h-96"
-                        data-src="https://www.youtube.com/embed/dOCXj51ytPg?autoplay=1&controls=1&modestbranding=1&rel=0"
+                        data-src="https://youtu.be/9s8V0Q34AO0?si=LUsGcftKVbO0-UKl"
                         src="" frameborder="0"
                         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
                     </iframe>
@@ -133,7 +134,7 @@
                 if (startVideoButton) {
                     startVideoButton.addEventListener("click", function(e) {
                         if (!swearCheckbox?.checked) {
-                            alert('يجب عليك الضغط على "أقسم" قبل بدء الاختبار.');
+                            alert('يجب عليك الضغط على "أتعهد" قبل بدء الاختبار.');
                             return;
                         }
                         showVideoModal();

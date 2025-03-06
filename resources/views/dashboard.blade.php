@@ -73,23 +73,21 @@ $token = request('token') ?? request()->route('token');
                                 <span class="flex flex-col space-y-4">
                                     <span class="text-xl font-bold text-purple-900 mb-4 flex items-center">
                                         <i class="fas fa-exclamation-circle ml-2"></i>
-                                        قسم الاستخدام:
+                                        تعهد الاستخدام:
                                     </span>
                                     <p class="text-gray-700 leading-relaxed text-lg">
-                                        حتى أكون صادقاً أمام الله وأمام الطرف الآخر، أقسم بالله العظيم أن أجيب بصدق تام
-                                        على كل عبارات المقياس، كما أقسم ألا أنسخ أو أصور أو استخدام المقياس في أي موضع
-                                        آخر دون أذن صاحبه.
+                                        أتعهد أمام الله وأمام الطرف الآخر بأن أجيب بصدق تام على كل عبارات المقياس،
+                                        كما أتعهد بعدم نسخ أو تصوير أو استخدام المقياس في أي موضع آخر دون إذن صاحبه.
                                     </p>
                                 </span>
                                 <label for="swearCheckbox"
                                     class="inline-flex items-center mt-6 cursor-pointer hover:opacity-90 transition-opacity">
                                     <input id="swearCheckbox" type="checkbox"
                                         class="form-checkbox h-6 w-6 ml-3 text-yellow-600 border-pink-300 rounded-lg transition-all duration-300">
-                                    <span class="text-xl font-bold text-purple-900">أُقسم</span>
+                                    <span class="text-xl font-bold text-purple-900">أتعهد
+                                    </span>
                                 </label>
                             </h2>
-
-
                         </div>
                         <div class="text-center">
                             <button id="startTestButton" type="button"
@@ -153,7 +151,6 @@ $token = request('token') ?? request()->route('token');
                               </div>
                             </div>
                           </section>
-
                     </div>
                     @endif
                 </div>
@@ -162,31 +159,34 @@ $token = request('token') ?? request()->route('token');
     </div>
 
     <div id="videoModal" onclick="closeModal()"
-        class="hidden fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-75">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-2xl overflow-hidden shadow-xl w-full max-w-4xl relative">
-                <div id="videoContainer" class="aspect-w-16 aspect-h-9">
-                    <iframe id="tutorialVideo" class="w-full h-96"
-                        data-src="https://www.youtube.com/embed/dOCXj51ytPg?autoplay=1&controls=1&modestbranding=1&rel=0"
-                        src="" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
-                </div>
+    class="hidden fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-75">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-2xl overflow-hidden shadow-xl w-full max-w-4xl relative">
+            <div class="aspect-video">
+                <iframe id="tutorialVideo"
+                    class="w-full h-full"
+                    data-src="https://www.youtube.com/embed/9s8V0Q34AO0?autoplay=1"
+                    src=""
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
 
-                <div onclick="event.stopPropagation()"
-                    class="bg-gradient-to-r from-purple-50 to-pink-50 p-4 text-center md:text-end md:flex md:justify-between md:items-center md:flex-wrap ">
-                    <h1 class="mb-3 md:mb-0"> مقطع يوضح كيفية استخدام مقياس التوافق الزواجي </h1>
-                    <button id="continueTestButton" type="button"
-                        data-href="{{ route('exam.index', ['token' => $token]) }}"
-                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-md font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
-                        الاستمرار إلى الاختبار
-                        <i class="fas fa-arrow-circle-left mr-2"></i>
-                    </button>
-                </div>
+            <!-- باقي الكود بدون تغيير -->
+            <div onclick="event.stopPropagation()"
+                class="bg-gradient-to-r from-purple-50 to-pink-50 p-4 text-center md:text-end md:flex md:justify-between md:items-center md:flex-wrap ">
+                <h1 class="mb-3 md:mb-0"> مقطع يوضح كيفية استخدام مقياس التوافق الزواجي </h1>
+                <button id="continueTestButton" type="button"
+                    data-href="{{ route('exam.index', ['token' => $token]) }}"
+                    class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-md font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    الاستمرار إلى الاختبار
+                    <i class="fas fa-arrow-circle-left mr-2"></i>
+                </button>
             </div>
         </div>
     </div>
-
+</div>
     <script>
         function showVideoModal() {
             const modal = document.getElementById('videoModal');
@@ -211,7 +211,7 @@ $token = request('token') ?? request()->route('token');
                     e.preventDefault();
                     const swearCheckbox = document.getElementById('swearCheckbox');
                     if (!swearCheckbox?.checked) {
-                        alert('يجب عليك الضغط على "أقسم" قبل بدء الاختبار.');
+                        alert('يجب عليك الضغط على "أتعهد" قبل بدء الاختبار.');
                         return;
                     }
                     showVideoModal();

@@ -75,8 +75,6 @@
                         </a>
                     </div>
                 </div>
-
-
                 <div class="relative" x-data="{ isOpen: false }" @click.away="isOpen = false">
                     <button @click="isOpen = !isOpen" class="nav-link flex items-center gap-2">
                         المزيد
@@ -153,7 +151,7 @@
                                 </a>
                             </div>
                         </div>
-                        <a href="#"
+                        <a  href="{{ route('marriage-requests') }}"
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('marriageRequests') ? 'text-purple-700' : 'text-gray-900' }}">
                             تقديم طلبات الزواج
                         </a>
@@ -236,10 +234,6 @@
                             :class="{ 'rotate-180': subOpen }"></i>
                     </button>
                     <div x-show="subOpen" x-cloak class="pl-4 space-y-2">
-                        <a href={{ route('business-activities.create') }}
-                            class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('weddingTents') ? 'text-purple-700' : 'text-gray-900' }}">
-                            اضف نشاطك
-                        </a>
                         <a href="{{ route('business-activities.show', 'محلات تأجير الخيام') }}"
                             class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'محلات تأجير الخيام' ? 'text-purple-700' : 'text-gray-900' }}">
                             محلات تأجير الخيام
