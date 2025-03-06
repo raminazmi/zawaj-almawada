@@ -17,12 +17,10 @@
                 <a href={{ route('cv') }} class="nav-link {{ request()->routeIs('cv') ? 'active' : '' }}">
                     السيرة الذاتية
                 </a>
-                <div class="nav-link flex items-center gap-2"
-                >
-                <a href={{ route('business-activities.create') }}
-              >
-                أضف نشاطك التجاري   </a>
-            </div>
+                <div class="nav-link flex items-center gap-2">
+                    <a href={{ route('business-activities.create') }}>
+                        أضف نشاطك التجاري </a>
+                </div>
                 <div class="relative" x-data="{ isOpen: false }" @click.away="isOpen = false">
                     <button @click="isOpen = !isOpen" class="nav-link flex items-center gap-2">
                         المقاييس
@@ -206,12 +204,10 @@
         <a href="#" class="nav-link block py-2">
             <i class="fas fa-info ml-2"></i> السيرة الذاتية
         </a>
-        <div class="nav-link flex items-center gap-2"
-        >
-        <a href={{ route('business-activities.create') }}
-      >
-        أضف نشاطك التجاري   </a>
-    </div>
+        <div class="nav-link flex items-center gap-2">
+            <a href={{ route('business-activities.create') }}>
+                أضف نشاطك التجاري </a>
+        </div>
         <div x-data="{ isOpen: false }">
             <button @click="isOpen = !isOpen" class="nav-link block w-full text-left py-2 flex justify-between">
                 <div>

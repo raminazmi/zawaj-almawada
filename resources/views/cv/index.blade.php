@@ -145,7 +145,8 @@
         <div>
           <h4 class="text-xl font-bold mb-6">تابعنا</h4>
           <div class="flex space-x-2 gap-4">
-            <a href="https://www.instagram.com/hamoodalnoofli/" class="social-icon hover:-translate-y-1" target="_blank">
+            <a href="https://www.instagram.com/hamoodalnoofli/" class="social-icon hover:-translate-y-1"
+              target="_blank">
               <i class="fab fa-instagram"></i>
             </a>
             <a href="https://x.com/molhim399?s=08" class="social-icon hover:-translate-y-1">
