@@ -26,6 +26,7 @@ use App\Http\Middleware\AuthAdmin;
 use App\Http\Middleware\AuthUser;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AddActivity\BusinessActivityController;
+use App\Http\Controllers\MarriageRequests\MarriageRequestsController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -33,6 +34,7 @@ Route::get('/cv', [CvController::class, 'index'])->name('cv');
 Route::get('/printed-books', [PrintedBookController::class, 'index'])->name('printed-books');
 Route::get('/e-books', [EbooksController::class, 'index'])->name('e-books');
 Route::get('/add-activity', [AddActivityController::class, 'index'])->name('add-activity');
+Route::get('/marriage-requests', [MarriageRequestsController::class, 'index'])->name('marriage-requests');
 Route::get('/family-counseling', [FamilyCounselingController::class, 'index'])->name('family-counseling');
 Route::get('/doctor-counseling', [DoctorCounselingController::class, 'index'])->name('doctor-counseling');
 Route::get('/legal-counseling', [LegalCounselingController::class, 'index'])->name('legal-counseling');
