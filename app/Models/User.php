@@ -25,7 +25,10 @@ class User extends Authenticatable
         'google_id',
         'gender',
         'country',
-        'phone'
+        'phone',
+        'current_marriage_request_id',
+        'marital_status',
+        'status'
     ];
 
     /**
@@ -65,5 +68,15 @@ class User extends Authenticatable
             return null;
         }
         return $this->exams()->where(auth()->user()->gender . '_finished', false)->first();
+    }
+    public function marriageRequests()
+    {
+        return $this->hasMany(MarriageRequest::class);
+    }
+
+    public function activeMarriageRequest()
+    {
+        return $this->hasOne(MarriageRequest::class, 'user_id')
+            ->where('status', 'active');
     }
 }

@@ -26,6 +26,7 @@ use App\Http\Middleware\AuthAdmin;
 use App\Http\Middleware\AuthUser;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AddActivity\BusinessActivityController;
+use App\Http\Controllers\MarriageRequestController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -64,6 +65,15 @@ Route::middleware('auth')->group(function () {
 
         Route::get('my-exams', [UserExamController::class, 'index'])->name('exam.user.index');
         Route::get('my-exams/{id}', [UserExamController::class, 'show'])->name('exam.user.show');
+
+
+        Route::prefix('marriage-requests')->group(function () {
+            Route::get('/create', [MarriageRequestController::class, 'create'])->name('marriage-requests.create');
+            Route::post('/', [MarriageRequestController::class, 'store'])->name('marriage-requests.store');
+            Route::get('/status', [MarriageRequestController::class, 'status'])->name('marriage-requests.status');
+            Route::post('/propose/{marriageRequest}', [MarriageRequestController::class, 'sendProposal'])->name('marriage-requests.propose');
+            Route::post('/respond/{marriageRequest}', [MarriageRequestController::class, 'respondProposal'])->name('marriage-requests.respond');
+        });
     });
 });
 

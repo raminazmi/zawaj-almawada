@@ -42,6 +42,7 @@ class Kernel extends HttpKernel
             \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
+            \App\Http\Middleware\CheckMarriageStatus::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 

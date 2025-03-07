@@ -149,7 +149,7 @@
                                 </a>
                             </div>
                         </div>
-                        <a href="{{ route('marriage-requests') }}"
+                        <a href="{{ route('marriage-requests.create') }}"
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('marriageRequests') ? 'text-purple-700' : 'text-gray-900' }}">
                             تقديم طلبات الزواج
                         </a>
@@ -331,8 +331,16 @@
                             class="block text-sm hover:bg-pink-50 py-2 px-1">استشارة متخصص شرعي</a>
                     </div>
                 </div>
-                <a href="{{ route('marriage-requests') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">تقديم طلبات
+                <a href="{{ route('marriage-requests.create') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">تقديم
+                    طلبات
                     الزواج</a>
+
+                <a href="{{ route('marriage-requests.create') }}" class="nav-link">
+                    طلب زواج
+                </a>
+                <a href="{{ route('marriage-requests.status') }}" class="nav-link">
+                    حالة الطلب
+                </a>
             </div>
         </div>
 
