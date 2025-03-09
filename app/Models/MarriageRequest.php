@@ -2,17 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class MarriageRequest extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'user_id',
-        'applicant_type',
+        'target_user_id',
+        'status',
         'request_number',
+        'applicant_type',
         'state',
         'age',
         'height',
@@ -39,12 +38,11 @@ class MarriageRequest extends Model
         'deformity_details',
         'wants_children',
         'infertility',
+        'is_smoker',
         'religiosity_level',
         'prayer_commitment',
         'personal_description',
-        'partner_expectations',
-        'status',
-        'target_user_id'
+        'partner_expectations'
     ];
 
     protected $casts = [
@@ -53,6 +51,16 @@ class MarriageRequest extends Model
         'has_deformity' => 'boolean',
         'wants_children' => 'boolean',
         'infertility' => 'boolean',
-        'monthly_income' => 'decimal:2',
+        'is_smoker' => 'boolean',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function target()
+    {
+        return $this->belongsTo(User::class, 'target_user_id');
+    }
 }

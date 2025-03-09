@@ -108,7 +108,7 @@
         @endisset
 
         <!-- Page Content -->
-        <main class="bg-gradient-to-b from-purple-50 to-pink-50 py-12">
+        <main class="bg-gradient-to-br from-purple-50 to-blue-50 py-12">
             @yield('content')
         </main>
 

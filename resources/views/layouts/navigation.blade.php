@@ -10,7 +10,6 @@
                 </a>
             </div>
 
-            <!-- Navigation Links -->
             <div class="hidden lg:flex items-center space-x-6">
                 <a href="{{ route('index') }}" class="nav-link mx-6 {{ request()->routeIs('index') ? 'active' : '' }}">
                     الرئيسية
@@ -149,14 +148,19 @@
                                 </a>
                             </div>
                         </div>
-                        <a href="{{ route('marriage-requests.create') }}"
-                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('marriageRequests') ? 'text-purple-700' : 'text-gray-900' }}">
-                            تقديم طلبات الزواج
+                        <a href="{{ route('marriage-requests.index') }}"
+                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('marriage-requests.index') ? 'text-purple-700' : 'text-gray-900' }}">
+                            برنامج الزواج الشرعي
                         </a>
+                        @auth
+                        <a href="{{ route('marriage-requests.status') }}"
+                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('marriage-requests.status') ? 'text-purple-700' : 'text-gray-900' }}">
+                            حالة طلب الزواج
+                        </a>
+                        @endauth
                     </div>
                 </div>
 
-                <!-- Admin Links (Only for Admins) -->
                 @if(auth()->check() && auth()->user()->is_admin)
                 <div class="relative" x-data="{ isOpen: false }" @click.away="isOpen = false">
                     <button @click="isOpen = !isOpen" class="nav-link flex items-center gap-2">
@@ -178,12 +182,15 @@
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('admin.shops') ? 'text-purple-700' : 'text-gray-900' }}">
                             المحلات
                         </a>
+                        <a href="{{ route('admin.marriage-requests.index') }}"
+                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('admin.marriage-requests.index') ? 'text-purple-700' : 'text-gray-900' }}">
+                            طلبات الزواج
+                        </a>
                     </div>
                 </div>
                 @endif
             </div>
 
-            <!-- Right Section (Contact or User Dropdown) -->
             @guest
             <a href="{{ route('contact') }}"
                 class="gold-btn px-6 py-2 text-white rounded-full hidden lg:flex items-center">
@@ -198,9 +205,7 @@
                         <button
                             class="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-full text-gray-900 bg-pink-50 hover:bg-pink-200 focus:outline-none transition-all duration-300">
                             <div>{{ Auth::user()->name }}</div>
-                            <div class="mr-2">
-                                <i class="fas fa-chevron-down text-sm"></i>
-                            </div>
+                            <div class="mr-2"><i class="fas fa-chevron-down text-sm"></i></div>
                         </button>
                     </x-slot>
                     <x-slot name="content">
@@ -209,8 +214,7 @@
                             <x-dropdown-link :href="route('logout')"
                                 onclick="event.preventDefault(); this.closest('form').submit();"
                                 class="text-gray-900 hover:bg-pink-50 transition-colors">
-                                <i class="fas fa-sign-out-alt ml-2"></i>
-                                تسجيل الخروج
+                                <i class="fas fa-sign-out-alt ml-2"></i> تسجيل الخروج
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -218,14 +222,12 @@
             </div>
             @endauth
 
-            <!-- Mobile Menu Toggle -->
             <button @click="open = !open" class="lg:hidden text-gray-600">
                 <i class="fas fa-bars text-2xl"></i>
             </button>
         </div>
     </div>
 
-    <!-- Mobile Menu -->
     <div x-show="open" class="lg:hidden px-4 pb-4 space-y-2" x-cloak>
         <a href="{{ route('index') }}" class="nav-link block py-2">
             <i class="fas fa-home ml-2"></i> الرئيسية
@@ -287,29 +289,17 @@
                     </button>
                     <div x-show="subOpen" x-cloak class="pl-4 space-y-2">
                         <a href="{{ route('business-activities.show', 'محلات تأجير الخيام') }}"
-                            class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'محلات تأجير الخيام' ? 'text-purple-700' : 'text-gray-900' }}">
-                            محلات تأجير الخيام
-                        </a>
+                            class="block text-sm hover:bg-pink-50 py-2 px-1">محلات تأجير الخيام</a>
                         <a href="{{ route('business-activities.show', 'محلات تأجير القاعات') }}"
-                            class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'محلات تأجير القاعات' ? 'text-purple-700' : 'text-gray-900' }}">
-                            محلات تأجير القاعات
-                        </a>
+                            class="block text-sm hover:bg-pink-50 py-2 px-1">محلات تأجير القاعات</a>
                         <a href="{{ route('business-activities.show', 'محلات الأثاث') }}"
-                            class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'محلات الأثاث' ? 'text-purple-700' : 'text-gray-900' }}">
-                            محلات الأثاث
-                        </a>
+                            class="block text-sm hover:bg-pink-50 py-2 px-1">محلات الأثاث</a>
                         <a href="{{ route('business-activities.show', 'مستلزمات الأعراس') }}"
-                            class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'مستلزمات الأعراس' ? 'text-purple-700' : 'text-gray-900' }}">
-                            مستلزمات الأعراس
-                        </a>
+                            class="block text-sm hover:bg-pink-50 py-2 px-1">مستلزمات الأعراس</a>
                         <a href="{{ route('business-activities.show', 'محلات التصميم والتصوير') }}"
-                            class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'محلات التصميم والتصوير' ? 'text-purple-700' : 'text-gray-900' }}">
-                            محلات التصميم والتصوير
-                        </a>
+                            class="block text-sm hover:bg-pink-50 py-2 px-1">محلات التصميم والتصوير</a>
                         <a href="{{ route('business-activities.show', 'مطاعم تقديم الولائم') }}"
-                            class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('business-activities.show') && request()->segment(2) == 'مطاعم تقديم الولائم' ? 'text-purple-700' : 'text-gray-900' }}">
-                            مطاعم تقديم الولائم
-                        </a>
+                            class="block text-sm hover:bg-pink-50 py-2 px-1">مطاعم تقديم الولائم</a>
                     </div>
                 </div>
                 <div x-data="{ subOpen: false }">
@@ -331,20 +321,17 @@
                             class="block text-sm hover:bg-pink-50 py-2 px-1">استشارة متخصص شرعي</a>
                     </div>
                 </div>
+                <a href="{{ route('marriage-requests.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">برنامج
+                    الزواج الشرعي</a>
+                @auth
                 <a href="{{ route('marriage-requests.create') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">تقديم
-                    طلبات
-                    الزواج</a>
-
-                <a href="{{ route('marriage-requests.create') }}" class="nav-link">
-                    طلب زواج
-                </a>
-                <a href="{{ route('marriage-requests.status') }}" class="nav-link">
-                    حالة الطلب
-                </a>
+                    طلب زواج</a>
+                <a href="{{ route('marriage-requests.status') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">حالة
+                    طلب الزواج</a>
+                @endauth
             </div>
         </div>
 
-        <!-- Admin Links in Mobile (Only for Admins) -->
         @if(auth()->check() && auth()->user()->is_admin)
         <div x-data="{ isOpen: false }">
             <button @click="isOpen = !isOpen" class="nav-link block w-full text-left py-2 flex justify-between">
@@ -353,17 +340,11 @@
             </button>
             <div x-show="isOpen" x-cloak class="pl-4 space-y-2">
                 <a href="{{ route('admin.questions.index') }}"
-                    class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('admin.questions.index') ? 'text-purple-700' : 'text-gray-900' }}">
-                    الأسئلة
-                </a>
-                <a href="{{ route('admin.users.index') }}"
-                    class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('admin.users.index') ? 'text-purple-700' : 'text-gray-900' }}">
-                    الأعضاء
-                </a>
-                <a href="{{ route('admin.shops') }}"
-                    class="block text-sm hover:bg-pink-50 py-2 px-1 {{ request()->routeIs('admin.shops') ? 'text-purple-700' : 'text-gray-900' }}">
-                    المحلات
-                </a>
+                    class="block text-sm hover:bg-pink-50 py-2 px-1">الأسئلة</a>
+                <a href="{{ route('admin.users.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">الأعضاء</a>
+                <a href="{{ route('admin.shops') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">المحلات</a>
+                <a href="{{ route('admin.marriage-requests.index') }}"
+                    class="block text-sm hover:bg-pink-50 py-2 px-1">طلبات الزواج</a>
             </div>
         </div>
         @endif
@@ -386,8 +367,7 @@
                     <x-responsive-nav-link :href="route('logout')"
                         onclick="event.preventDefault(); this.closest('form').submit();"
                         class="text-gray-900 hover:bg-pink-200 transition-colors">
-                        <i class="fas fa-sign-out-alt ml-2"></i>
-                        تسجيل الخروج
+                        <i class="fas fa-sign-out-alt ml-2"></i> تسجيل الخروج
                     </x-responsive-nav-link>
                 </form>
             </div>
@@ -395,7 +375,6 @@
         @endauth
     </div>
 
-    <!-- Styles -->
     <style>
         .rotate-180 {
             transform: rotate(180deg);
