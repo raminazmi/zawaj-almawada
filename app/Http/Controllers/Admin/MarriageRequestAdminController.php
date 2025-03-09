@@ -27,8 +27,8 @@ class MarriageRequestAdminController extends Controller
         $request->user->update(['status' => 'engaged']);
         $request->target->update(['status' => 'engaged']);
 
-        Mail::to($request->user->email)->send(new RequestApproved($request->user->email, $request));
-        Mail::to($request->target->email)->send(new RequestApproved($request->target->email, $request));
+        Mail::to($request->user->email)->send(new RequestApproved($request->user, $request));
+        Mail::to($request->target->email)->send(new RequestApproved($request->target, $request));
         return redirect()->back()->with('success', 'تمت الموافقة على الطلب بنجاح');
     }
 
@@ -40,8 +40,8 @@ class MarriageRequestAdminController extends Controller
         $request->user->update(['status' => 'available']);
         $request->target->update(['status' => 'available']);
 
-        Mail::to($request->user->email)->send(new RequestRejected($request->user->email, $request));
-        Mail::to($request->target->email)->send(new RequestRejected($request->target->email, $request));
+        Mail::to($request->user->email)->send(new RequestRejected($request->user, $request));
+        Mail::to($request->target->email)->send(new RequestRejected($request->target, $request));
 
         return redirect()->back()->with('success', 'تم رفض الطلب بنجاح');
     }
