@@ -33,7 +33,7 @@ class CreateMarriageRequestsTable extends Migration
             $table->text('genetic_diseases')->nullable();
             $table->text('infectious_diseases')->nullable();
             $table->text('psychological_disorders')->nullable();
-            $table->enum('housing_type', ['independent', 'family_annex', 'family_room'])->nullable();
+            $table->enum('housing_type', ['independent', 'family_annex', 'family_room', 'no_preference'])->nullable();
             $table->text('health_status')->nullable();
             $table->boolean('has_disability')->nullable();
             $table->text('disability_details')->nullable();
@@ -41,11 +41,15 @@ class CreateMarriageRequestsTable extends Migration
             $table->text('deformity_details')->nullable();
             $table->boolean('wants_children')->nullable();
             $table->boolean('infertility')->nullable();
-            $table->boolean('is_smoker')->nullable();
+            $table->boolean('is_smoker')->nullable(); // للشاب فقط
             $table->enum('religiosity_level', ['high', 'medium', 'low'])->nullable();
             $table->enum('prayer_commitment', ['yes', 'sometimes', 'no'])->nullable();
             $table->text('personal_description')->nullable();
             $table->text('partner_expectations')->nullable();
+            $table->string('compatibility_test_link')->nullable();
+            $table->string('real_name')->nullable();
+            $table->string('village')->nullable();
+            $table->boolean('admin_approved')->default(false);
             $table->timestamps();
         });
     }

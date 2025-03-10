@@ -26,6 +26,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'email',
     ];
 
     protected function casts(): array
@@ -34,20 +35,6 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    public function exams(): HasMany
-    {
-        $foreignKey = auth()->user()->gender . '_user_id';
-        return $this->hasMany(Exam::class, $foreignKey);
-    }
-
-    public function activeExam()
-    {
-        if (!auth()->user()->gender) {
-            return null;
-        }
-        return $this->exams()->where(auth()->user()->gender . '_finished', false)->first();
     }
 
     public function activeMarriageRequest()

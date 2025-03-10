@@ -41,57 +41,85 @@
                             'bg-red-100 text-red-800' => $request->status === 'rejected',
                             'bg-green-100 text-green-800' => $request->status === 'engaged',
                             ])>
-                            @if($request->status === 'pending') قيد المراجعة من قبل الادمن@endif
-                            @if($request->status === 'approved') بانتظار رد الطرف الثاني@endif
+                            @if($request->status === 'pending') قيد المراجعة من قبل الإدارة @endif
+                            @if($request->status === 'approved') بانتظار رد الطرف الآخر @endif
                             @if($request->status === 'rejected') مرفوض @endif
-                            @if($request->status === 'engaged') مكتمل @endif
+                            @if($request->status === 'engaged') مكتمل، بانتظار اختبار المقياس @endif
                         </span>
                     </p>
+
+                    @if($request->status === 'engaged' && !$request->compatibility_test_link)
+                    <form method="POST" action="{{ route('marriage-requests.submit-test', $request->id) }}"
+                        class="mt-4">
+                        @csrf
+                        <label class="block text-sm font-medium text-gray-700 mb-2">أرسل رابط اختبار المقياس</label>
+                        <input type="url" name="compatibility_test_link" required
+                            class="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('compatibility_test_link') border-red-500 @enderror"
+                            placeholder="https://...">
+                        @error('compatibility_test_link')<div class="mt-1 text-red-600 text-sm">{{ $message }}</div>
+                        @enderror
+                        <button type="submit" class="mt-2 btn-success">إرسال</button>
+                    </form>
+                    @elseif($request->status === 'engaged' && $request->compatibility_test_link)
+                    <div class="mt-4">
+                        <p class="text-gray-600">رابط اختبار المقياس: <a href="{{ $request->compatibility_test_link }}"
+                                target="_blank" class="text-blue-600">{{ $request->compatibility_test_link }}</a></p>
+                        <form method="POST" action="{{ route('marriage-requests.final-approval', $request->id) }}"
+                            class="mt-4 space-y-4">
+                            @csrf
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">الاسم الثلاثي مع
+                                    القبيلة</label>
+                                <input type="text" name="real_name" required
+                                    class="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('real_name') border-red-500 @enderror">
+                                @error('real_name')<div class="mt-1 text-red-600 text-sm">{{ $message }}</div>@enderror
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">القرية</label>
+                                <input type="text" name="village" required
+                                    class="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('village') border-red-500 @enderror">
+                                @error('village')<div class="mt-1 text-red-600 text-sm">{{ $message }}</div>@enderror
+                            </div>
+                            <div class="flex gap-4">
+                                <button type="submit" name="action" value="approve" class="btn-success">الموافقة
+                                    النهائية</button>
+                                <button type="submit" name="action" value="reject" class="btn-danger">رفض
+                                    الخطوبة</button>
+                            </div>
+                        </form>
+                        @if($request->admin_approved && $request->target->activeMarriageRequest()->real_name &&
+                        $request->target->activeMarriageRequest()->village)
+                        <div class="mt-4 bg-green-100 p-4 rounded-lg">
+                            <p><strong>بيانات الطرف الآخر:</strong></p>
+                            <p>الاسم: {{ $request->target->activeMarriageRequest()->real_name }}</p>
+                            <p>القرية: {{ $request->target->activeMarriageRequest()->village }}</p>
+                        </div>
+                        @endif
+                    </div>
+                    @endif
                 </div>
             </div>
             @else
-            @if(Auth::user()->status === 'engaged' || Auth::user()->status === 'pending')
-            @if(Auth::user()->status === 'engaged')
-            <div class="mt-4 flex justify-center gap-4">
-                <div class="bg-green-100 text-green-700 p-4 rounded-lg mb-8 text-center max-w-2xl mx-auto">
-                    <p>أنت متزوج بالفعل من {{
-                        Auth::user()->activeMarriageRequest()
-                        ? Auth::user()->activeMarriageRequest()->target->name
-                        : Auth::user()->targetMarriageRequest()->user->name
-                        }} ولا يمكنك تقديم طلبات جديدة.</p>
-                </div>
+            @if(Auth::user()->status !== 'available')
+            <div class="bg-green-100 text-green-700 p-4 rounded-lg mb-8 text-center">
+                <p>لديك طلب خطوبة نشط بالفعل مع {{
+                    Auth::user()->activeMarriageRequest()
+                    ? Auth::user()->activeMarriageRequest()->target->name
+                    : Auth::user()->targetMarriageRequest()->user->name
+                    }} ولا يمكنك تقديم طلبات جديدة.</p>
             </div>
             @else
-            <div class="mt-4 flex justify-center gap-4">
-                <div class="bg-green-100 text-green-700 p-4 rounded-lg mb-8 text-center max-w-2xl mx-auto">
-                    <p class="text-lg">
-                        لديك طلب بالفعل من {{
-                        Auth::user()->activeMarriageRequest()
-                        ? Auth::user()->activeMarriageRequest()->target->name
-                        : Auth::user()->targetMarriageRequest()->user->name
-                        }} ولا يمكنك تقديم طلبات جديدة.
-                    </p>
-                </div>
-            </div>
-            @endif
-            @endif
-            @if(Auth::user()->status === 'available')
             <div class="bg-white rounded-xl shadow-lg p-6 border border-purple-100 text-center">
                 <div class="flex justify-center text-6xl text-purple-200 mb-4">
                     <i class="fas fa-file-circle-question"></i>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">لا يوجد
-                    طلبات مرفوعة حالياً</h3>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">لا يوجد طلبات مرفوعة حالياً</h3>
                 <p class="text-gray-600">يمكنك البدء بإنشاء طلب جديد من خلال:</p>
                 <div class="mt-4 flex justify-center gap-4">
-                    <a href="{{ route('marriage-requests.boys') }}"
-                        class="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-md hover:shadow-lg">
-                        <i class="fas fa-male ml-2"></i>طلب للشباب
-                    </a>
-                    <a href="{{ route('marriage-requests.girls') }}"
-                        class="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-md hover:shadow-lg">
-                        <i class="fas fa-female ml-2"></i>طلب للفتيات
-                    </a>
+                    <a href="{{ route('marriage-requests.boys') }}" class="btn-primary"><i
+                            class="fas fa-male ml-2"></i>طلب للشباب</a>
+                    <a href="{{ route('marriage-requests.girls') }}" class="btn-primary"><i
+                            class="fas fa-female ml-2"></i>طلب للفتيات</a>
                 </div>
             </div>
             @endif
@@ -107,50 +135,74 @@
                     <div class="border-b pb-4">
                         <div class="flex flex-wrap items-center gap-2">
                             <span class="font-medium text-gray-600">رقم الطلب:</span>
-                            <span class="badge bg-purple-100 text-purple-800">
-                                {{ $targetRequest->request_number}}
-                            </span>
+                            <span class="badge bg-purple-100 text-purple-800">{{ $targetRequest->request_number
+                                }}</span>
                         </div>
                         <div class="flex flex-wrap items-center gap-2 mt-2">
                             <span class="font-medium text-gray-600">المرسل:</span>
                             <span class="text-gray-800">{{ $targetRequest->user->name }}</span>
                         </div>
-                        <div class="flex flex-wrap items-center gap-2 mt-2">
-                            <p class="flex items-center gap-2">
-                                <span class="font-medium text-gray-600">الحالة:</span>
-                                <span @class([ 'px-2 py-1 rounded-full text-sm' , 'bg-yellow-100 text-yellow-800'=>
-                                    $targetRequest->status === 'pending',
-                                    'bg-blue-100 text-blue-800' => $targetRequest->status === 'approved',
-                                    'bg-red-100 text-red-800' => $targetRequest->status === 'rejected',
-                                    'bg-green-100 text-green-800' => $targetRequest->status === 'engaged',
-                                    ])>
-                                    @if($targetRequest->status === 'pending') قيد المراجعة من قبل الادمن@endif
-                                    @if($targetRequest->status === 'approved') بانتظار ردك@endif
-                                    @if($targetRequest->status === 'rejected') مرفوض @endif
-                                    @if($targetRequest->status === 'engaged') مكتمل @endif
-                                </span>
-                            </p>
-                        </div>
+                        <p class="flex items-center gap-2 mt-2">
+                            <span class="font-medium text-gray-600">الحالة:</span>
+                            <span @class([ 'px-2 py-1 rounded-full text-sm' , 'bg-yellow-100 text-yellow-800'=>
+                                $targetRequest->status === 'pending',
+                                'bg-blue-100 text-blue-800' => $targetRequest->status === 'approved',
+                                'bg-red-100 text-red-800' => $targetRequest->status === 'rejected',
+                                'bg-green-100 text-green-800' => $targetRequest->status === 'engaged',
+                                ])>
+                                @if($targetRequest->status === 'pending') قيد المراجعة من قبل الإدارة @endif
+                                @if($targetRequest->status === 'approved') بانتظار ردك @endif
+                                @if($targetRequest->status === 'rejected') مرفوض @endif
+                                @if($targetRequest->status === 'engaged') مكتمل، بانتظار اختبار المقياس @endif
+                            </span>
+                        </p>
                     </div>
 
                     @if($targetRequest->status === 'approved')
-                    <div class="flex flex-wrap gap-4 justify-end">
-                        <form method="POST" action="{{ route('marriage-requests.respond', $targetRequest->id) }}"
-                            class="w-full md:w-auto">
+                    <form method="POST" action="{{ route('marriage-requests.respond', $targetRequest->id) }}"
+                        class="flex gap-4">
+                        @csrf
+                        <button type="submit" name="action" value="accept" class="btn-success"><i
+                                class="fas fa-check-circle ml-2"></i>قبول</button>
+                        <button type="submit" name="action" value="reject" class="btn-danger"><i
+                                class="fas fa-times-circle ml-2"></i>رفض</button>
+                    </form>
+                    @elseif($targetRequest->status === 'engaged' && $targetRequest->compatibility_test_link)
+                    <div class="mt-4">
+                        <p class="text-gray-600">رابط اختبار المقياس: <a
+                                href="{{ $targetRequest->compatibility_test_link }}" target="_blank"
+                                class="text-blue-600">{{ $targetRequest->compatibility_test_link }}</a></p>
+                        <form method="POST" action="{{ route('marriage-requests.final-approval', $targetRequest->id) }}"
+                            class="mt-4 space-y-4">
                             @csrf
-                            <div class="flex flex-col md:flex-row gap-3">
-                                <button type="submit" name="action" value="accept"
-                                    class="flex items-center px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all shadow-md hover:shadow-lg">
-                                    <i class="fas fa-check-circle ml-2"></i>
-                                    <span>قبول الطلب</span>
-                                </button>
-                                <button type="submit" name="action" value="reject"
-                                    class="flex items-center px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all shadow-md hover:shadow-lg">
-                                    <i class="fas fa-times-circle ml-2"></i>
-                                    <span>رفض الطلب</span>
-                                </button>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">الاسم الثلاثي مع
+                                    القبيلة</label>
+                                <input type="text" name="real_name" required
+                                    class="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('real_name') border-red-500 @enderror">
+                                @error('real_name')<div class="mt-1 text-red-600 text-sm">{{ $message }}</div>@enderror
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">القرية</label>
+                                <input type="text" name="village" required
+                                    class="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('village') border-red-500 @enderror">
+                                @error('village')<div class="mt-1 text-red-600 text-sm">{{ $message }}</div>@enderror
+                            </div>
+                            <div class="flex gap-4">
+                                <button type="submit" name="action" value="approve" class="btn-success">الموافقة
+                                    النهائية</button>
+                                <button type="submit" name="action" value="reject" class="btn-danger">رفض
+                                    الخطوبة</button>
                             </div>
                         </form>
+                        @if($targetRequest->admin_approved && $targetRequest->user->activeMarriageRequest()->real_name
+                        && $targetRequest->user->activeMarriageRequest()->village)
+                        <div class="mt-4 bg-green-100 p-4 rounded-lg">
+                            <p><strong>بيانات الطرف الآخر:</strong></p>
+                            <p>الاسم: {{ $targetRequest->user->activeMarriageRequest()->real_name }}</p>
+                            <p>القرية: {{ $targetRequest->user->activeMarriageRequest()->village }}</p>
+                        </div>
+                        @endif
                     </div>
                     @endif
                 </div>

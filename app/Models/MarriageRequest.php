@@ -42,7 +42,11 @@ class MarriageRequest extends Model
         'religiosity_level',
         'prayer_commitment',
         'personal_description',
-        'partner_expectations'
+        'partner_expectations',
+        'compatibility_test_link',
+        'real_name',
+        'village',
+        'admin_approved'
     ];
 
     protected $casts = [
@@ -52,6 +56,7 @@ class MarriageRequest extends Model
         'wants_children' => 'boolean',
         'infertility' => 'boolean',
         'is_smoker' => 'boolean',
+        'admin_approved' => 'boolean',
     ];
 
     public function user()

@@ -44,6 +44,8 @@ Route::get('/legitimate-counseling', [LegitimateCounselingController::class, 'in
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 
 Route::prefix('marriage-requests')->middleware('auth')->group(function () {
+    Route::get('/', [MarriageRequestController::class, 'index'])->name('marriage-requests.index');
+    Route::get('/create', [MarriageRequestController::class, 'create'])->name('marriage-requests.create');
     Route::get('/boys', [MarriageRequestController::class, 'boys'])->name('marriage-requests.boys');
     Route::get('/girls', [MarriageRequestController::class, 'girls'])->name('marriage-requests.girls');
     Route::get('/create-proposal/{targetId}', [MarriageRequestController::class, 'createProposal'])->name('marriage-requests.create-proposal');
@@ -82,16 +84,18 @@ Route::middleware('auth')->group(function () {
         Route::get('my-exams/{id}', [UserExamController::class, 'show'])->name('exam.user.show');
 
         // Marriage Request Routes
-        Route::prefix('marriage-requests')->group(function () {
-            Route::get('/', [MarriageRequestController::class, 'index'])->name('marriage-requests.index');
-            Route::get('/create', [MarriageRequestController::class, 'create'])->name('marriage-requests.create');
-            Route::post('/', [MarriageRequestController::class, 'store'])->name('marriage-requests.store');
+        Route::prefix('marriage-requests')->middleware('auth')->group(function () {
+            Route::get('/boys', [MarriageRequestController::class, 'boys'])->name('marriage-requests.boys');
+            Route::get('/girls', [MarriageRequestController::class, 'girls'])->name('marriage-requests.girls');
+            Route::get('/create-proposal/{targetId}', [MarriageRequestController::class, 'createProposal'])->name('marriage-requests.create-proposal');
+            Route::post('/store-proposal/{targetId}', [MarriageRequestController::class, 'storeProposal'])->name('marriage-requests.store-proposal');
             Route::get('/status', [MarriageRequestController::class, 'status'])->name('marriage-requests.status');
-            Route::get('/list', [MarriageRequestController::class, 'list'])->name('marriage-requests.list');
-            Route::post('/propose/{marriageRequest}', [MarriageRequestController::class, 'propose'])->name('marriage-requests.propose');
-            Route::post('/respond/{marriageRequest}', [MarriageRequestController::class, 'respond'])->name('marriage-requests.respond');
-            Route::post('/submit-test/{marriageRequest}', [MarriageRequestController::class, 'submitTest'])->name('marriage-requests.submit-test');
-            Route::post('/final-approval/{marriageRequest}', [MarriageRequestController::class, 'finalApproval'])->name('marriage-requests.final-approval');
+            Route::get('/admin-approval', [MarriageRequestController::class, 'adminApproval'])->name('marriage-requests.admin-approval')->middleware('admin');
+            Route::post('/approve/{id}', [MarriageRequestController::class, 'approve'])->name('marriage-requests.approve')->middleware('admin');
+            Route::post('/reject/{id}', [MarriageRequestController::class, 'reject'])->name('marriage-requests.reject')->middleware('admin');
+            Route::post('/respond/{id}', [MarriageRequestController::class, 'respond'])->name('marriage-requests.respond');
+            Route::post('/submit-test/{id}', [MarriageRequestController::class, 'submitTest'])->name('marriage-requests.submit-test');
+            Route::post('/final-approval/{id}', [MarriageRequestController::class, 'finalApproval'])->name('marriage-requests.final-approval');
         });
     });
 });
@@ -110,12 +114,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/business-activities/{businessActivity}/status', [BusinessActivityController::class, 'updateStatus'])
             ->name('business-activities.updateStatus');
 
+        Route::resource('courses', AdminCourseController::class)->except('show');
+
         // Admin Marriage Request Routes
         Route::get('/marriage-requests', [MarriageRequestAdminController::class, 'index'])->name('marriage-requests.index');
-        Route::post('/marriage-requests/{marriageRequest}/approve', [MarriageRequestAdminController::class, 'approve'])->name('marriage-requests.approve');
-        Route::post('/marriage-requests/{marriageRequest}/reject', [MarriageRequestAdminController::class, 'reject'])->name('marriage-requests.reject');
-        Route::post('/marriage-requests/{marriageRequest}/approve-final', [MarriageRequestAdminController::class, 'approveFinal'])->name('marriage-requests.approve-final');
-        Route::resource('courses', AdminCourseController::class)->except('show');
+        Route::post('/marriage-requests/{id}/approve', [MarriageRequestAdminController::class, 'approve'])->name('marriage-requests.approve');
+        Route::post('/marriage-requests/{id}/reject', [MarriageRequestAdminController::class, 'reject'])->name('marriage-requests.reject');
+        Route::post('/marriage-requests/{id}/approve-final', [MarriageRequestAdminController::class, 'approveFinal'])->name('marriage-requests.approve-final');
     });
 });
 

@@ -11,8 +11,7 @@
 
         <div class="mb-12">
             <h3 class="text-2xl font-semibold text-purple-700 mb-6 flex items-center gap-2">
-                <i class="fas fa-hourglass-half text-purple-600"></i>
-                الطلبات المعلقة
+                <i class="fas fa-hourglass-half text-purple-600"></i>الطلبات المعلقة
             </h3>
 
             <div class="bg-white rounded-2xl shadow-xl border border-purple-100 overflow-hidden">
@@ -55,28 +54,23 @@
                     <div class="flex flex-wrap gap-4 justify-end mt-4">
                         <form method="POST" action="{{ route('admin.marriage-requests.approve', $request->id) }}">
                             @csrf
-                            <button type="submit" class="flex items-center px-6 py-2 bg-green-600 text-white rounded-lg 
-                                       hover:bg-green-700 transition-all shadow-md hover:shadow-lg">
-                                <i class="fas fa-check-circle ml-2"></i>
-                                <span>موافقة</span>
+                            <button type="submit"
+                                class="flex items-center px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all shadow-md hover:shadow-lg">
+                                <i class="fas fa-check-circle ml-2"></i><span>موافقة</span>
                             </button>
                         </form>
-
                         <form method="POST" action="{{ route('admin.marriage-requests.reject', $request->id) }}">
                             @csrf
-                            <button type="submit" class="flex items-center px-6 py-2 bg-red-600 text-white rounded-lg 
-                                       hover:bg-red-700 transition-all shadow-md hover:shadow-lg">
-                                <i class="fas fa-times-circle ml-2"></i>
-                                <span>رفض</span>
+                            <button type="submit"
+                                class="flex items-center px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all shadow-md hover:shadow-lg">
+                                <i class="fas fa-times-circle ml-2"></i><span>رفض</span>
                             </button>
                         </form>
                     </div>
                 </div>
                 @empty
                 <div class="text-center p-12">
-                    <div class="text-6xl text-purple-200 mb-4">
-                        <i class="fas fa-inbox"></i>
-                    </div>
+                    <div class="text-6xl text-purple-200 mb-4"><i class="fas fa-inbox"></i></div>
                     <h3 class="text-2xl font-semibold text-gray-800 mb-2">لا توجد طلبات معلقة</h3>
                     <p class="text-gray-600">سيظهر هنا أي طلبات جديدة تحتاج لمراجعتك</p>
                 </div>
@@ -86,8 +80,7 @@
 
         <div>
             <h3 class="text-2xl font-semibold text-purple-700 mb-6 flex items-center gap-2">
-                <i class="fas fa-history text-purple-600"></i>
-                الطلبات السابقة
+                <i class="fas fa-history text-purple-600"></i>الطلبات السابقة
             </h3>
 
             <div class="bg-white rounded-2xl shadow-xl border border-purple-100 overflow-hidden">
@@ -133,18 +126,37 @@
                             $request->status === 'approved',
                             'bg-red-100 text-red-800' => $request->status === 'rejected',
                             'bg-yellow-100 text-yellow-800' => $request->status === 'pending',
+                            'bg-blue-100 text-blue-800' => $request->status === 'engaged',
                             ])>
                             @if($request->status === 'approved') موافق عليه @endif
                             @if($request->status === 'rejected') مرفوض @endif
                             @if($request->status === 'pending') قيد المراجعة @endif
+                            @if($request->status === 'engaged') مكتمل @endif
                         </span>
                     </div>
+
+                    @if($request->status === 'engaged' && $request->real_name && $request->village &&
+                    $request->compatibility_test_link)
+                    <div class="mt-4 bg-green-100 p-4 rounded-lg">
+                        <p><strong>بيانات المرسل:</strong></p>
+                        <p>الاسم: {{ $request->real_name }}</p>
+                        <p>القرية: {{ $request->village }}</p>
+                        <p>رابط المقياس: <a href="{{ $request->compatibility_test_link }}" target="_blank">{{
+                                $request->compatibility_test_link }}</a></p>
+                        <form method="POST" action="{{ route('admin.marriage-requests.approve-final', $request->id) }}"
+                            class="mt-4">
+                            @csrf
+                            <button type="submit"
+                                class="flex items-center px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all shadow-md hover:shadow-lg">
+                                <i class="fas fa-check-circle ml-2"></i><span>موافقة نهائية</span>
+                            </button>
+                        </form>
+                    </div>
+                    @endif
                 </div>
                 @empty
                 <div class="text-center p-12">
-                    <div class="text-6xl text-purple-200 mb-4">
-                        <i class="fas fa-inbox"></i>
-                    </div>
+                    <div class="text-6xl text-purple-200 mb-4"><i class="fas fa-inbox"></i></div>
                     <h3 class="text-2xl font-semibold text-gray-800 mb-2">لا توجد طلبات سابقة</h3>
                     <p class="text-gray-600">سيظهر هنا أي طلبات تمت معالجتها</p>
                 </div>

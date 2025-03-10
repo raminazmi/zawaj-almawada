@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\MarriageRequests;
 
 use App\Mail\MarriageProposalNotification;
+use App\Mail\CompatibilityTestNotification;
+use App\Mail\FinalApprovalNotification;
 use App\Models\MarriageRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -20,42 +22,26 @@ class MarriageRequestController extends Controller
 
     public function boys()
     {
-        if (Auth::user()->status === 'engaged') {
-            $partnerName = Auth::user()->activeMarriageRequest()
-                ? Auth::user()->activeMarriageRequest()->target->name
-                : Auth::user()->targetMarriageRequest()->user->name;
-            return redirect()->route('marriage-requests.status')
-                ->with('info', 'أنت متزوج بالفعل من ' . $partnerName);
+        if (Auth::user()->status !== 'available') {
+            return redirect()->route('marriage-requests.status')->with('info', 'لديك طلب خطوبة نشط بالفعل');
         }
-        $boys = User::where('gender', 'male')
-            ->where('status', 'available')
-            ->get();
+        $boys = User::where('gender', 'male')->where('status', 'available')->where('is_admin', false)->get();
         return view('marriage-requests.boys', compact('boys'));
     }
 
     public function girls()
     {
-        if (Auth::user()->status === 'engaged') {
-            $partnerName = Auth::user()->activeMarriageRequest()
-                ? Auth::user()->activeMarriageRequest()->target->name
-                : Auth::user()->targetMarriageRequest()->user->name;
-            return redirect()->route('marriage-requests.status')
-                ->with('info', 'أنت متزوج بالفعل من ' . $partnerName);
+        if (Auth::user()->status !== 'available') {
+            return redirect()->route('marriage-requests.status')->with('info', 'لديك طلب خطوبة نشط بالفعل');
         }
-        $girls = User::where('gender', 'female')
-            ->where('status', 'available')
-            ->get();
+        $girls = User::where('gender', 'female')->where('status', 'available')->where('is_admin', false)->get();
         return view('marriage-requests.girls', compact('girls'));
     }
 
     public function createProposal($targetId)
     {
-        if (Auth::user()->status === 'engaged') {
-            $partnerName = Auth::user()->activeMarriageRequest()
-                ? Auth::user()->activeMarriageRequest()->target->name
-                : Auth::user()->targetMarriageRequest()->user->name;
-            return redirect()->route('marriage-requests.status')
-                ->with('info', 'أنت متزوج بالفعل من ' . $partnerName);
+        if (Auth::user()->status !== 'available') {
+            return redirect()->route('marriage-requests.status')->with('info', 'لديك طلب خطوبة نشط بالفعل');
         }
         $target = User::findOrFail($targetId);
         if ($target->status !== 'available') {
@@ -67,17 +53,14 @@ class MarriageRequestController extends Controller
     public function storeProposal(Request $request, $targetId)
     {
         $user = Auth::user();
-        if ($user->status === 'engaged') {
-            $partnerName = $user->activeMarriageRequest()
-                ? $user->activeMarriageRequest()->target->name
-                : $user->targetMarriageRequest()->user->name;
-            return redirect()->route('marriage-requests.status')
-                ->with('info', 'أنت متزوج بالفعل من ' . $partnerName);
+        if ($user->status !== 'available') {
+            return redirect()->route('marriage-requests.status')->with('info', 'لديك طلب خطوبة نشط بالفعل');
         }
         $target = User::findOrFail($targetId);
         if ($target->status !== 'available') {
             return redirect()->back()->with('error', 'هذا الشخص غير متاح حاليًا لتقديم طلب خطوبة');
         }
+
         $validated = $request->validate([
             'state' => 'required|string|max:255',
             'age' => 'required|integer|min:18|max:100',
@@ -97,7 +80,7 @@ class MarriageRequestController extends Controller
             'genetic_diseases' => 'nullable|string|max:1000',
             'infectious_diseases' => 'nullable|string|max:1000',
             'psychological_disorders' => 'nullable|string|max:1000',
-            'housing_type' => 'required|in:independent,family_annex,family_room',
+            'housing_type' => 'required|in:independent,family_annex,family_room,no_preference',
             'health_status' => 'required|string|max:1000',
             'has_disability' => 'required|boolean',
             'disability_details' => 'nullable|string|max:1000',
@@ -105,71 +88,15 @@ class MarriageRequestController extends Controller
             'deformity_details' => 'nullable|string|max:1000',
             'wants_children' => 'required|boolean',
             'infertility' => 'required|boolean',
-            'is_smoker' => 'nullable|boolean',
+            'is_smoker' => $user->gender === 'male' ? 'required|boolean' : 'nullable|boolean',
             'religiosity_level' => 'required|in:high,medium,low',
             'prayer_commitment' => 'required|in:yes,sometimes,no',
             'personal_description' => 'required|string|max:2000',
             'partner_expectations' => 'required|string|max:2000',
-        ], [
-            'required' => 'حقل :attribute مطلوب.',
-            'string' => 'حقل :attribute يجب أن يكون نصًا.',
-            'max' => [
-                'string' => 'حقل :attribute يجب أن لا يتجاوز :max حروف.',
-            ],
-            'min' => [
-                'string' => 'حقل :attribute يجب أن لا يقل عن :min حروف.',
-                'numeric' => 'حقل :attribute يجب أن لا يقل عن :min.',
-            ],
-            'integer' => 'حقل :attribute يجب أن يكون رقمًا صحيحًا.',
-            'numeric' => 'حقل :attribute يجب أن يكون رقمًا.',
-            'in' => 'القيمة المحددة لـ :attribute غير صالحة.',
-            'boolean' => 'حقل :attribute يجب أن يكون نعم أو لا.',
-            'age.min' => 'الحد الأدنى للعمر هو 18 سنة.',
-            'age.max' => 'الحد الأقصى للعمر هو 100 سنة.',
-            'height.min' => 'الحد الأدنى للطول هو 100 سم.',
-            'height.max' => 'الحد الأقصى للطول هو 250 سم.',
-            'weight.min' => 'الحد الأدنى للوزن هو 30 كجم.',
-            'weight.max' => 'الحد الأقصى للوزن هو 300 كجم.',
-            'children_count.min' => 'عدد الأبناء يجب أن لا يقل عن 0.',
-            'children_count.max' => 'عدد الأبناء يجب أن لا يتجاوز 20.',
-            'monthly_income.min' => 'الدخل الشهري يجب أن لا يقل عن 0.',
-            'is_smoker.required' => 'حقل التدخين مخصص للشباب فقط.',
-            'attributes' => [
-                'state' => 'الولاية',
-                'age' => 'العمر',
-                'height' => 'الطول',
-                'weight' => 'الوزن',
-                'tribe' => 'القبيلة',
-                'skin_color' => 'لون البشرة',
-                'lineage' => 'النسب',
-                'marital_status' => 'الحالة الاجتماعية',
-                'has_children' => 'هل لديك أبناء',
-                'children_count' => 'عدد الأبناء',
-                'education_level' => 'المستوى التعليمي',
-                'work_sector' => 'قطاع العمل',
-                'job_title' => 'المسمى الوظيفي',
-                'monthly_income' => 'الدخل الشهري',
-                'religion' => 'الدين',
-                'genetic_diseases' => 'الأمراض الوراثية',
-                'infectious_diseases' => 'الأمراض المعدية',
-                'psychological_disorders' => 'الأمراض النفسية',
-                'housing_type' => 'نوع السكن',
-                'health_status' => 'الحالة الصحية',
-                'has_disability' => 'الإعاقة',
-                'disability_details' => 'تفاصيل الإعاقة',
-                'has_deformity' => 'التشوهات',
-                'deformity_details' => 'تفاصيل التشوهات',
-                'wants_children' => 'رغبة في الإنجاب',
-                'infertility' => 'العقم',
-                'is_smoker' => 'التدخين',
-                'religiosity_level' => 'مستوى التدين',
-                'prayer_commitment' => 'التزام الصلاة',
-                'personal_description' => 'الوصف الشخصي',
-                'partner_expectations' => 'توقعات الشريك',
-            ],
         ]);
+
         $marriageRequest = MarriageRequest::create([
-            'user_id' => Auth::id(),
+            'user_id' => $user->id,
             'target_user_id' => $target->id,
             'status' => 'pending',
             'request_number' => 'MRQ-' . time(),
@@ -183,24 +110,24 @@ class MarriageRequestController extends Controller
             'lineage' => $validated['lineage'],
             'marital_status' => $validated['marital_status'],
             'has_children' => $validated['has_children'],
-            'children_count' => $validated['children_count'] ?? null,
+            'children_count' => $validated['children_count'],
             'education_level' => $validated['education_level'],
             'work_sector' => $validated['work_sector'],
             'job_title' => $validated['job_title'],
             'monthly_income' => $validated['monthly_income'],
             'religion' => $validated['religion'],
-            'genetic_diseases' => $validated['genetic_diseases'] ?? null,
-            'infectious_diseases' => $validated['infectious_diseases'] ?? null,
-            'psychological_disorders' => $validated['psychological_disorders'] ?? null,
+            'genetic_diseases' => $validated['genetic_diseases'],
+            'infectious_diseases' => $validated['infectious_diseases'],
+            'psychological_disorders' => $validated['psychological_disorders'],
             'housing_type' => $validated['housing_type'],
             'health_status' => $validated['health_status'],
             'has_disability' => $validated['has_disability'],
-            'disability_details' => $validated['disability_details'] ?? null,
+            'disability_details' => $validated['disability_details'],
             'has_deformity' => $validated['has_deformity'],
-            'deformity_details' => $validated['deformity_details'] ?? null,
+            'deformity_details' => $validated['deformity_details'],
             'wants_children' => $validated['wants_children'],
             'infertility' => $validated['infertility'],
-            'is_smoker' => $validated['is_smoker'] ?? 0,
+            'is_smoker' => $user->gender === 'male' ? $validated['is_smoker'] : null,
             'religiosity_level' => $validated['religiosity_level'],
             'prayer_commitment' => $validated['prayer_commitment'],
             'personal_description' => $validated['personal_description'],
@@ -215,6 +142,7 @@ class MarriageRequestController extends Controller
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new AdminMarriageProposalNotification($marriageRequest, $admin));
         }
+
         return redirect()->route('marriage-requests.status')->with('success', 'تم تقديم طلب الخطوبة بنجاح');
     }
 
@@ -256,16 +184,54 @@ class MarriageRequestController extends Controller
 
         if ($request->action === 'accept') {
             $marriageRequest->update(['status' => 'engaged']);
-            $marriageRequest->user->update(['status' => 'engaged']);
-            $marriageRequest->target->update(['status' => 'engaged']);
-            return back()->with('success', 'تمت الخطوبة بنجاح');
+            Mail::to($marriageRequest->user->email)->send(new CompatibilityTestNotification($marriageRequest->target, $marriageRequest));
+            return back()->with('success', 'تم قبول الطلب، يرجى انتظار رابط اختبار المقياس من الطرف الآخر');
         } elseif ($request->action === 'reject') {
             $marriageRequest->user->update(['status' => 'available']);
             $marriageRequest->target->update(['status' => 'available']);
             $marriageRequest->update(['status' => 'rejected']);
-            return back()->with('success', 'تم رفض الطلب وأصبحتما متاحين لتقديم طلبات جديدة');
+            return back()->with('success', 'تم رفض الطلب، يمكنكما الآن البحث عن شريك آخر');
         }
 
         return redirect()->back()->with('error', 'الإجراء غير صالح');
+    }
+
+    public function submitTest(Request $request, $id)
+    {
+        $marriageRequest = MarriageRequest::findOrFail($id);
+        if ($marriageRequest->user_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'غير مصرح لك بإرسال الرابط');
+        }
+
+        $request->validate(['compatibility_test_link' => 'required|url']);
+        $marriageRequest->update(['compatibility_test_link' => $request->compatibility_test_link]);
+        Mail::to($marriageRequest->target->email)->send(new CompatibilityTestNotification($marriageRequest->user, $marriageRequest));
+
+        return back()->with('success', 'تم إرسال رابط اختبار المقياس بنجاح');
+    }
+
+    public function finalApproval(Request $request, $id)
+    {
+        $marriageRequest = MarriageRequest::findOrFail($id);
+        if (!in_array(Auth::id(), [$marriageRequest->user_id, $marriageRequest->target_user_id])) {
+            return redirect()->back()->with('error', 'غير مصرح لك بالموافقة النهائية');
+        }
+
+        $request->validate([
+            'real_name' => 'required|string|max:255',
+            'village' => 'required|string|max:255',
+        ]);
+
+        $marriageRequest->update([
+            'real_name' => $request->real_name,
+            'village' => $request->village,
+        ]);
+
+        $admins = User::where('is_admin', true)->get();
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new FinalApprovalNotification(Auth::user(), $marriageRequest));
+        }
+
+        return back()->with('success', 'تم إرسال بياناتك للموافقة النهائية من المدير');
     }
 }
