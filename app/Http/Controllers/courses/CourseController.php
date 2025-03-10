@@ -10,10 +10,7 @@ class CourseController extends Controller
 {
     public function index()
     {
-        $courses = Course::where('is_active', true)
-            ->latest()
-            ->paginate(9);
-
+        $courses = Course::latest()->paginate(10);
         return view('courses.index', compact('courses'));
     }
 }
