@@ -9,8 +9,8 @@
                     </span>
                 </a>
             </div>
-
             <div class="hidden lg:flex items-center space-x-6">
+                @if((auth()->check() && !auth()->user()->is_admin) || !auth()->check())
                 <a href="{{ route('index') }}" class="nav-link mx-6 {{ request()->routeIs('index') ? 'active' : '' }}">
                     الرئيسية
                 </a>
@@ -68,8 +68,8 @@
                     </button>
                     <div x-show="isOpen" x-cloak
                         class="absolute bg-white shadow-lg mt-2 w-48 rounded-md border border-gray-200 z-50">
-                        <a href="#"
-                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('courses') ? 'text-purple-700' : 'text-gray-900' }}">
+                        <a href="{{ route('courses.index') }}"
+                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('courses.index') ? 'text-purple-700' : 'text-gray-900' }}">
                             دورة التأهيل للزواج
                         </a>
                     </div>
@@ -160,37 +160,30 @@
                         @endauth
                     </div>
                 </div>
-
+                @endif
                 @if(auth()->check() && auth()->user()->is_admin)
-                <div class="relative" x-data="{ isOpen: false }" @click.away="isOpen = false">
-                    <button @click="isOpen = !isOpen" class="nav-link flex items-center gap-2">
-                        الإدارة
-                        <i class="fas fa-chevron-down text-xs ml-1 transition-transform"
-                            :class="{ 'rotate-180': isOpen }"></i>
-                    </button>
-                    <div x-show="isOpen" x-cloak
-                        class="absolute bg-white shadow-lg mt-2 w-48 rounded-md border border-gray-200 z-50">
-                        <a href="{{ route('admin.questions.index') }}"
-                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('admin.questions.index') ? 'text-purple-700' : 'text-gray-900' }}">
-                            الأسئلة
-                        </a>
-                        <a href="{{ route('admin.users.index') }}"
-                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('admin.users.index') ? 'text-purple-700' : 'text-gray-900' }}">
-                            الأعضاء
-                        </a>
-                        <a href="{{ route('admin.shops') }}"
-                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('admin.shops') ? 'text-purple-700' : 'text-gray-900' }}">
-                            المحلات
-                        </a>
-                        <a href="{{ route('admin.marriage-requests.index') }}"
-                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('admin.marriage-requests.index') ? 'text-purple-700' : 'text-gray-900' }}">
-                            طلبات الزواج
-                        </a>
-                    </div>
-                </div>
+                <a href="{{ route('admin.questions.index') }}"
+                    class="nav-link mx-6 {{ request()->routeIs('admin.questions.index') ? 'active' : '' }}">
+                    الأسئلة
+                </a>
+                <a href="{{ route('admin.users.index') }}"
+                    class="nav-link mx-6 {{ request()->routeIs('admin.users.index') ? 'active' : '' }}">
+                    الأعضاء
+                </a>
+                <a href="{{ route('admin.shops') }}"
+                    class="nav-link mx-6 {{ request()->routeIs('admin.shops') ? 'active' : '' }}">
+                    المحلات
+                </a>
+                <a href="{{ route('admin.marriage-requests.index') }}"
+                    class="nav-link mx-6 {{ request()->routeIs('admin.marriage-requests.index') ? 'active' : '' }}">
+                    طلبات الزواج
+                </a>
+                <a href="{{ route('admin.courses.index') }}"
+                    class="nav-link mx-6 {{ request()->routeIs('admin.courses.index') ? 'active' : '' }}">
+                    دورة التأهيل للزواج
+                </a>
                 @endif
             </div>
-
             @guest
             <a href="{{ route('contact') }}"
                 class="gold-btn px-6 py-2 text-white rounded-full hidden lg:flex items-center">
@@ -345,6 +338,9 @@
                 <a href="{{ route('admin.shops') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">المحلات</a>
                 <a href="{{ route('admin.marriage-requests.index') }}"
                     class="block text-sm hover:bg-pink-50 py-2 px-1">طلبات الزواج</a>
+                <a href="{{ route('admin.courses.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
+                    دورة التأهيل للزواج
+                </a>
             </div>
         </div>
         @endif

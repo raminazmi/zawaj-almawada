@@ -27,6 +27,8 @@ use App\Http\Middleware\AuthAdmin;
 use App\Http\Middleware\AuthUser;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AddActivity\BusinessActivityController;
+use App\Http\Controllers\Admin\AdminCourseController;
+use App\Http\Controllers\courses\CourseController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -39,6 +41,7 @@ Route::get('/doctor-counseling', [DoctorCounselingController::class, 'index'])->
 Route::get('/legal-counseling', [LegalCounselingController::class, 'index'])->name('legal-counseling');
 Route::get('/psychic-counseling', [PsychicCounselingController::class, 'index'])->name('psychic-counseling');
 Route::get('/legitimate-counseling', [LegitimateCounselingController::class, 'index'])->name('legitimate-counseling');
+Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 
 Route::prefix('marriage-requests')->middleware('auth')->group(function () {
     Route::get('/boys', [MarriageRequestController::class, 'boys'])->name('marriage-requests.boys');
@@ -112,6 +115,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/marriage-requests/{marriageRequest}/approve', [MarriageRequestAdminController::class, 'approve'])->name('marriage-requests.approve');
         Route::post('/marriage-requests/{marriageRequest}/reject', [MarriageRequestAdminController::class, 'reject'])->name('marriage-requests.reject');
         Route::post('/marriage-requests/{marriageRequest}/approve-final', [MarriageRequestAdminController::class, 'approveFinal'])->name('marriage-requests.approve-final');
+        Route::resource('courses', AdminCourseController::class)->except('show');
     });
 });
 

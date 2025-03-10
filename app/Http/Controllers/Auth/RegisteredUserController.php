@@ -20,6 +20,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
+        if (Str::contains(url()->previous(), '/exam?token=')) {
+            session(['intended_url' => url()->previous()]);
+        }
         return view('auth.register');
     }
 
