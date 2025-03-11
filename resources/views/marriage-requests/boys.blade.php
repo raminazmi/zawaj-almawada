@@ -23,6 +23,13 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($boys as $boy)
             @if($boy->is_admin == 1 || $boy->id == Auth::id()) @continue @endif
+            @if(Auth::user()->gender === $boy->gender)
+            <div class="col-span-full">
+                <p class="bg-green-100 text-green-700 p-4 rounded-lg mb-8 text-center">لا يمكن تقديم طلب لشخص من
+                    نفس الجنس
+                </p>
+            </div>
+            @else
             <div
                 class="bg-white rounded-xl shadow-lg overflow-hidden border border-purple-100 transition-all hover:shadow-xl">
                 <div class="p-6">
@@ -32,7 +39,8 @@
                                 <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                    </path>
                                 </svg>
                             </div>
                         </div>
@@ -44,7 +52,8 @@
                     </div>
 
                     <div class="flex justify-between items-center mt-4">
-                        <span @class([ 'px-3 py-1 rounded-full text-sm' , 'bg-green-100 text-green-800'=> $boy->status
+                        <span @class([ 'px-3 py-1 rounded-full text-sm' , 'bg-green-100 text-green-800'=>
+                            $boy->status
                             === 'available',
                             'bg-red-100 text-red-800' => $boy->status !== 'available'
                             ])>
@@ -52,9 +61,6 @@
                         </span>
 
                         @if($boy->status === 'available')
-                        @if(Auth::user()->gender === $boy->gender)
-                        <p class="text-red-600 text-sm">لا يمكن تقديم طلب لشخص من نفس الجنس</p>
-                        @else
                         <a href="{{ route('marriage-requests.create-proposal', $boy->id) }}"
                             class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,10 +70,10 @@
                             تقديم طلب
                         </a>
                         @endif
-                        @endif
                     </div>
                 </div>
             </div>
+            @endif
             @empty
             <div class="col-span-full">
                 <div class="bg-white rounded-xl p-6 text-center text-gray-600 shadow-sm">

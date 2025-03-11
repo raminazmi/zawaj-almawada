@@ -98,7 +98,6 @@
 <body class="font-sans antialiased">
     <div class="min-h-screen gradient-background">
         @include('layouts.navigation')
-        <!-- Page Heading -->
         @isset($header)
         <header class="bg-pink-100 shadow-lg border-b border-pink-200">
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -107,12 +106,10 @@
         </header>
         @endisset
 
-        <!-- Page Content -->
         <main class="bg-gradient-to-br from-purple-50 to-blue-50 py-12">
             @yield('content')
         </main>
 
-        <!-- Footer -->
         <footer class="bg-purple-900 text-white pt-12 ">
             <div class="container mx-auto px-12">
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-14 border-b border-purple-800 pb-12">

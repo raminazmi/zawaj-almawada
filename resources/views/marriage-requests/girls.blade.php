@@ -22,7 +22,15 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($girls as $girl)
+
             @if($girl->is_admin == 1 || $girl->id == Auth::id()) @continue @endif
+            @if(Auth::user()->gender === $girl->gender)
+            <div class="col-span-full">
+                <p class="bg-green-100 text-green-700 p-4 rounded-lg mb-8 text-center">لا يمكن تقديم طلب لشخص من
+                    نفس الجنس
+                </p>
+            </div>
+            @else
             <div
                 class="bg-white rounded-xl shadow-lg overflow-hidden border border-purple-100 transition-all hover:shadow-xl">
                 <div class="p-6">
@@ -52,9 +60,6 @@
                         </span>
 
                         @if($girl->status === 'available')
-                        @if(Auth::user()->gender === $girl->gender)
-                        <p class="text-red-600 text-sm">لا يمكن تقديم طلب لشخص من نفس الجنس</p>
-                        @else
                         <a href="{{ route('marriage-requests.create-proposal', $girl->id) }}"
                             class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,10 +69,10 @@
                             تقديم طلب
                         </a>
                         @endif
-                        @endif
                     </div>
                 </div>
             </div>
+            @endif
             @empty
             <div class="col-span-full">
                 <div class="bg-white rounded-xl p-6 text-center text-gray-600 shadow-sm">

@@ -14,13 +14,11 @@ class MarriageRequestAdminController extends Controller
 {
     public function index()
     {
-        // الطلبات المعلقة للموافقة النهائية (admin_approval_status = pending)
         $pendingRequests = MarriageRequest::where('admin_approval_status', 'pending')
             ->with(['user', 'target'])
             ->latest()
             ->get();
 
-        // جميع الطلبات الأخرى
         $allRequests = MarriageRequest::where('admin_approval_status', '!=', 'pending')
             ->with(['user', 'target'])
             ->latest()
@@ -52,13 +50,10 @@ class MarriageRequestAdminController extends Controller
 
         $marriageRequest->user()->update(['status' => 'engaged']);
         $marriageRequest->target()->update(['status' => 'engaged']);
-
-        // تحديث الحالة
         $marriageRequest->update([
             'admin_approval_status' => 'approved',
         ]);
 
-        // إرسال الإشعارات
         $this->sendApprovalNotifications($marriageRequest);
 
         return back()->with('success', 'تمت الموافقة النهائية بنجاح');
@@ -68,16 +63,13 @@ class MarriageRequestAdminController extends Controller
     {
         $marriageRequest = MarriageRequest::findOrFail($id);
 
-        // تحديث حالة المستخدمين
         $marriageRequest->user()->update(['status' => 'available']);
         $marriageRequest->target()->update(['status' => 'available']);
 
-        // تحديث حالة الطلب
         $marriageRequest->update([
             'admin_approval_status' => 'rejected',
         ]);
 
-        // إرسال الإشعارات
         $this->sendRejectionNotifications($marriageRequest);
 
         return back()->with('success', 'تم رفض الطلب بنجاح');
@@ -86,12 +78,8 @@ class MarriageRequestAdminController extends Controller
     public function pending($id)
     {
         $marriageRequest = MarriageRequest::findOrFail($id);
-
-        // تحديث حالة المستخدمين
         $marriageRequest->user()->update(['status' => 'pending']);
         $marriageRequest->target()->update(['status' => 'pending']);
-
-        // تحديث حالة الطلب
         $marriageRequest->update([
             'admin_approval_status' => 'pending',
         ]);

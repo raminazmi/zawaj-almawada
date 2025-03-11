@@ -8,10 +8,8 @@
 
     <title>{{ config('زواج المودة') }}</title>
 
-    <!-- Fonts -->
     <link href="https://cdn.jsdelivr.net/npm/samim-font@4.0.5/dist/font-face.min.css" rel="stylesheet">
 
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>

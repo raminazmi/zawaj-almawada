@@ -90,9 +90,7 @@
                                 العمر
                             </label>
                             <div class="relative">
-                                <input type="number" name="age" required min="18" max="100"
-                                    oninvalid="this.setCustomValidity('يجب أن يكون العمر بين 18 و100 سنة')"
-                                    oninput="this.setCustomValidity('')"
+                                <input type="number" name="age" required
                                     class="w-full p-3 pl-10 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('age') border-red-500 @enderror">
                                 <i class="fas fa-calendar-alt absolute left-3 top-4 text-gray-400"></i>
                             </div>
@@ -108,9 +106,7 @@
                                 الطول (سم)
                             </label>
                             <div class="relative">
-                                <input type="number" name="height" required min="100" max="250"
-                                    oninvalid="this.setCustomValidity('يجب أن يكون الطول بين 100 و250 سم')"
-                                    oninput="this.setCustomValidity('')"
+                                <input type="number" name="height" required
                                     class="w-full p-3 pl-10 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('height') border-red-500 @enderror">
                                 <i class="fas fa-text-height absolute left-3 top-4 text-gray-400"></i>
                             </div>
@@ -126,9 +122,7 @@
                                 الوزن (كجم)
                             </label>
                             <div class="relative">
-                                <input type="number" name="weight" required min="30" max="300"
-                                    oninvalid="this.setCustomValidity('يجب أن يكون الوزن بين 30 و300 كجم')"
-                                    oninput="this.setCustomValidity('')"
+                                <input type="number" name="weight" required
                                     class="w-full p-3 pl-10 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('weight') border-red-500 @enderror">
                                 <i class="fas fa-weight-hanging absolute left-3 top-4 text-gray-400"></i>
                             </div>
@@ -249,9 +243,7 @@
                                 </label>
                             </div>
                             <div class="relative">
-                                <input type="number" name="children_count" placeholder="عدد الأبناء" min="0" max="20"
-                                    oninvalid="this.setCustomValidity('يجب أن يكون عدد الأبناء بين 0 و20')"
-                                    oninput="this.setCustomValidity('')"
+                                <input type="number" name="children_count" placeholder="عدد الأبناء"
                                     class="w-full p-3 pl-10 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('children_count') border-red-500 @enderror">
                                 <i class="fas fa-child absolute left-3 top-4 text-gray-400"></i>
                             </div>
@@ -337,9 +329,7 @@
                                 الدخل الشهري (ريال)
                             </label>
                             <div class="relative">
-                                <input type="number" name="monthly_income" min="0"
-                                    oninvalid="this.setCustomValidity('يجب أن يكون الدخل الشهري 0 أو أكثر')"
-                                    oninput="this.setCustomValidity('')"
+                                <input type="number" name="monthly_income"
                                     class="w-full p-3 pl-10 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('monthly_income') border-red-500 @enderror">
                                 <i class="fas fa-money-bill-wave absolute left-3 top-4 text-gray-400"></i>
                             </div>
@@ -585,7 +575,7 @@
 
                         <div class="bg-purple-50 p-4 rounded-xl">
                             <label class="block text-sm font-medium text-purple-600 mb-2">
-                                هل تعاني من عقم?
+                                هل تعاني من عقم؟
                             </label>
                             <div class="flex items-center space-x-4 mb-2 gap-4">
                                 <label class="flex items-center">
@@ -608,7 +598,7 @@
                         @if(Auth::user()->gender === 'male')
                         <div class="bg-purple-50 p-4 rounded-xl">
                             <label class="block text-sm font-medium text-purple-600 mb-2">
-                                هل تدخن?
+                                هل تدخن؟
                             </label>
                             <div class="flex items-center space-x-4 mb-2 gap-4">
                                 <label class="flex items-center">
