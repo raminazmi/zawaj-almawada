@@ -40,14 +40,14 @@ class User extends Authenticatable
     public function activeMarriageRequest()
     {
         return $this->hasOne(MarriageRequest::class, 'user_id')
-            ->whereIn('status', ['pending', 'approved', 'engaged', 'rejected'])
+            ->whereIn('status', ['pending', 'approved', 'engaged'])
             ->first();
     }
 
     public function targetMarriageRequest()
     {
         return $this->hasOne(MarriageRequest::class, 'target_user_id')
-            ->whereIn('status', ['pending', 'approved', 'engaged', 'rejected'])
+            ->whereIn('status', ['pending', 'approved', 'engaged'])
             ->first();
     }
 }

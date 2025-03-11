@@ -13,8 +13,8 @@ class MarriageRequestAdminController extends Controller
 {
     public function index()
     {
-        $pendingRequests = MarriageRequest::where('status', 'pending')->get();
-        $allRequests = MarriageRequest::where('status', '!=', 'pending')->get();
+        $pendingRequests = MarriageRequest::where('status', 'engaged')->where('admin_approved', false)->get();
+        $allRequests = MarriageRequest::where('status', '!=', 'engaged')->orWhere('admin_approved', true)->get();
         return view('admin.marriage-requests.index', compact('pendingRequests', 'allRequests'));
     }
 
@@ -41,7 +41,7 @@ class MarriageRequestAdminController extends Controller
     public function approveFinal($id)
     {
         $marriageRequest = MarriageRequest::findOrFail($id);
-        if ($marriageRequest->status !== 'engaged' || !$marriageRequest->real_name || !$marriageRequest->village || !$marriageRequest->compatibility_test_link) {
+        if ($marriageRequest->status !== 'engaged' || !$marriageRequest->real_name || !$marriageRequest->village || !$marriageRequest->state || !$marriageRequest->compatibility_test_result) {
             return back()->with('error', 'الطلب غير مكتمل أو ليس في مرحلة الموافقة النهائية');
         }
 

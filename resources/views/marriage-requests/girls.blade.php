@@ -9,11 +9,6 @@
             </h1>
         </div>
 
-        @if(Auth::user()->gender === 'female')
-        <div class="bg-red-100 text-red-700 p-4 rounded mb-6 text-center">
-            <p>لا يجوز لكِ الإرتباط بفتاه.</p>
-        </div>
-        @else
         <div class="mb-6 text-center">
             <a href="{{ route('marriage-requests.status') }}"
                 class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all">
@@ -31,7 +26,6 @@
             <div
                 class="bg-white rounded-xl shadow-lg overflow-hidden border border-purple-100 transition-all hover:shadow-xl">
                 <div class="p-6">
-
                     <div class="flex items-center gap-4 mb-4">
                         <div class="flex-shrink-0">
                             <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
@@ -58,6 +52,9 @@
                         </span>
 
                         @if($girl->status === 'available')
+                        @if(Auth::user()->gender === $girl->gender)
+                        <p class="text-red-600 text-sm">لا يمكن تقديم طلب لشخص من نفس الجنس</p>
+                        @else
                         <a href="{{ route('marriage-requests.create-proposal', $girl->id) }}"
                             class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,6 +63,7 @@
                             </svg>
                             تقديم طلب
                         </a>
+                        @endif
                         @endif
                     </div>
                 </div>
@@ -78,7 +76,6 @@
             </div>
             @endforelse
         </div>
-        @endif
     </div>
 </div>
 @endsection

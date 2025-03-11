@@ -39,16 +39,21 @@
                             $request->status === 'pending',
                             'bg-blue-100 text-blue-800' => $request->status === 'approved',
                             'bg-red-100 text-red-800' => $request->status === 'rejected',
-                            'bg-green-100 text-green-800' => $request->status === 'engaged',
+                            'bg-green-100 text-green-800' => $request->status === 'engaged' &&
+                            !$request->admin_approved,
+                            'bg-purple-100 text-purple-800' => $request->status === 'engaged' &&
+                            $request->admin_approved,
                             ])>
-                            @if($request->status === 'pending') قيد المراجعة من قبل الإدارة @endif
-                            @if($request->status === 'approved') بانتظار رد الطرف الآخر @endif
+                            @if($request->status === 'pending') قيد المراجعة من قبل الفتاة @endif
+                            @if($request->status === 'approved') بانتظار إرسال رابط المقياس @endif
                             @if($request->status === 'rejected') مرفوض @endif
-                            @if($request->status === 'engaged') مكتمل، بانتظار اختبار المقياس @endif
+                            @if($request->status === 'engaged' && !$request->admin_approved) مكتمل، بانتظار الموافقة
+                            النهائية @endif
+                            @if($request->status === 'engaged' && $request->admin_approved) مكتمل ومعتمد @endif
                         </span>
                     </p>
 
-                    @if($request->status === 'engaged' && !$request->compatibility_test_link)
+                    @if($request->status === 'approved' && !$request->compatibility_test_link)
                     <form method="POST" action="{{ route('marriage-requests.submit-test', $request->id) }}"
                         class="mt-4">
                         @csrf
@@ -60,41 +65,44 @@
                         @enderror
                         <button type="submit" class="mt-2 btn-success">إرسال</button>
                     </form>
-                    @elseif($request->status === 'engaged' && $request->compatibility_test_link)
+                    @elseif($request->status === 'approved' && $request->compatibility_test_link &&
+                    !$request->compatibility_test_result)
+                    <p class="mt-4 text-gray-600">تم إرسال الرابط، بانتظار نتيجة المقياس من الفتاة</p>
+                    @elseif($request->status === 'approved' && $request->compatibility_test_result)
                     <div class="mt-4">
-                        <p class="text-gray-600">رابط اختبار المقياس: <a href="{{ $request->compatibility_test_link }}"
-                                target="_blank" class="text-blue-600">{{ $request->compatibility_test_link }}</a></p>
+                        <p class="text-gray-600">نتيجة المقياس: {{ $request->compatibility_test_result }}</p>
                         <form method="POST" action="{{ route('marriage-requests.final-approval', $request->id) }}"
                             class="mt-4 space-y-4">
                             @csrf
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">الاسم الثلاثي مع
-                                    القبيلة</label>
-                                <input type="text" name="real_name" required
-                                    class="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('real_name') border-red-500 @enderror">
-                                @error('real_name')<div class="mt-1 text-red-600 text-sm">{{ $message }}</div>@enderror
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">القرية</label>
-                                <input type="text" name="village" required
-                                    class="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('village') border-red-500 @enderror">
-                                @error('village')<div class="mt-1 text-red-600 text-sm">{{ $message }}</div>@enderror
-                            </div>
                             <div class="flex gap-4">
                                 <button type="submit" name="action" value="approve" class="btn-success">الموافقة
                                     النهائية</button>
                                 <button type="submit" name="action" value="reject" class="btn-danger">رفض
                                     الخطوبة</button>
                             </div>
+                            @if($request->status === 'engaged' && !$request->admin_approved)
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">أرسل بياناتك</label>
+                                <input type="text" name="real_name" required
+                                    class="w-full p-3 rounded-lg border border-gray-200"
+                                    placeholder="الاسم الثلاثي مع القبيلة">
+                                <input type="text" name="village" required
+                                    class="w-full p-3 mt-2 rounded-lg border border-gray-200" placeholder="القرية">
+                                <input type="text" name="state" required
+                                    class="w-full p-3 mt-2 rounded-lg border border-gray-200" placeholder="الولاية">
+                                <button type="submit" name="action" value="approve"
+                                    class="mt-2 btn-success">إرسال</button>
+                            </div>
+                            @endif
+                            @if($request->status === 'engaged' && $request->admin_approved)
+                            <div class="mt-4 bg-green-100 p-4 rounded-lg">
+                                <p><strong>البيانات:</strong></p>
+                                <p>الاسم: {{ $request->real_name }}</p>
+                                <p>القرية: {{ $request->village }}</p>
+                                <p>الولاية: {{ $request->state }}</p>
+                            </div>
+                            @endif
                         </form>
-                        @if($request->admin_approved && $request->target->activeMarriageRequest()->real_name &&
-                        $request->target->activeMarriageRequest()->village)
-                        <div class="mt-4 bg-green-100 p-4 rounded-lg">
-                            <p><strong>بيانات الطرف الآخر:</strong></p>
-                            <p>الاسم: {{ $request->target->activeMarriageRequest()->real_name }}</p>
-                            <p>القرية: {{ $request->target->activeMarriageRequest()->village }}</p>
-                        </div>
-                        @endif
                     </div>
                     @endif
                 </div>
@@ -148,17 +156,23 @@
                                 $targetRequest->status === 'pending',
                                 'bg-blue-100 text-blue-800' => $targetRequest->status === 'approved',
                                 'bg-red-100 text-red-800' => $targetRequest->status === 'rejected',
-                                'bg-green-100 text-green-800' => $targetRequest->status === 'engaged',
+                                'bg-green-100 text-green-800' => $targetRequest->status === 'engaged' &&
+                                !$targetRequest->admin_approved,
+                                'bg-purple-100 text-purple-800' => $targetRequest->status === 'engaged' &&
+                                $targetRequest->admin_approved,
                                 ])>
-                                @if($targetRequest->status === 'pending') قيد المراجعة من قبل الإدارة @endif
-                                @if($targetRequest->status === 'approved') بانتظار ردك @endif
+                                @if($targetRequest->status === 'pending') قيد المراجعة من قبلك @endif
+                                @if($targetRequest->status === 'approved') بانتظار إرسال نتيجة المقياس @endif
                                 @if($targetRequest->status === 'rejected') مرفوض @endif
-                                @if($targetRequest->status === 'engaged') مكتمل، بانتظار اختبار المقياس @endif
+                                @if($targetRequest->status === 'engaged' && !$targetRequest->admin_approved) مكتمل،
+                                بانتظار الموافقة النهائية @endif
+                                @if($targetRequest->status === 'engaged' && $targetRequest->admin_approved) مكتمل ومعتمد
+                                @endif
                             </span>
                         </p>
                     </div>
 
-                    @if($targetRequest->status === 'approved')
+                    @if($targetRequest->status === 'pending')
                     <form method="POST" action="{{ route('marriage-requests.respond', $targetRequest->id) }}"
                         class="flex gap-4">
                         @csrf
@@ -167,42 +181,54 @@
                         <button type="submit" name="action" value="reject" class="btn-danger"><i
                                 class="fas fa-times-circle ml-2"></i>رفض</button>
                     </form>
-                    @elseif($targetRequest->status === 'engaged' && $targetRequest->compatibility_test_link)
+                    @elseif($targetRequest->status === 'approved' && $targetRequest->compatibility_test_link &&
+                    !$targetRequest->compatibility_test_result)
+                    <form method="POST" action="{{ route('marriage-requests.submit-test-result', $targetRequest->id) }}"
+                        class="mt-4">
+                        @csrf
+                        <label class="block text-sm font-medium text-gray-700 mb-2">أرسل نتيجة المقياس</label>
+                        <input type="text" name="compatibility_test_result" required
+                            class="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('compatibility_test_result') border-red-500 @enderror"
+                            placeholder="نتيجة المقياس">
+                        @error('compatibility_test_result')<div class="mt-1 text-red-600 text-sm">{{ $message }}</div>
+                        @enderror
+                        <button type="submit" class="mt-2 btn-success">إرسال</button>
+                    </form>
+                    @elseif($targetRequest->status === 'approved' && $targetRequest->compatibility_test_result)
                     <div class="mt-4">
-                        <p class="text-gray-600">رابط اختبار المقياس: <a
-                                href="{{ $targetRequest->compatibility_test_link }}" target="_blank"
-                                class="text-blue-600">{{ $targetRequest->compatibility_test_link }}</a></p>
+                        <p class="text-gray-600">نتيجة المقياس: {{ $targetRequest->compatibility_test_result }}</p>
                         <form method="POST" action="{{ route('marriage-requests.final-approval', $targetRequest->id) }}"
                             class="mt-4 space-y-4">
                             @csrf
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">الاسم الثلاثي مع
-                                    القبيلة</label>
-                                <input type="text" name="real_name" required
-                                    class="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('real_name') border-red-500 @enderror">
-                                @error('real_name')<div class="mt-1 text-red-600 text-sm">{{ $message }}</div>@enderror
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">القرية</label>
-                                <input type="text" name="village" required
-                                    class="w-full p-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('village') border-red-500 @enderror">
-                                @error('village')<div class="mt-1 text-red-600 text-sm">{{ $message }}</div>@enderror
-                            </div>
                             <div class="flex gap-4">
                                 <button type="submit" name="action" value="approve" class="btn-success">الموافقة
                                     النهائية</button>
                                 <button type="submit" name="action" value="reject" class="btn-danger">رفض
                                     الخطوبة</button>
                             </div>
+                            @if($targetRequest->status === 'engaged' && !$targetRequest->admin_approved)
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">أرسل بياناتك</label>
+                                <input type="text" name="real_name" required
+                                    class="w-full p-3 rounded-lg border border-gray-200"
+                                    placeholder="الاسم الثلاثي مع القبيلة">
+                                <input type="text" name="village" required
+                                    class="w-full p-3 mt-2 rounded-lg border border-gray-200" placeholder="القرية">
+                                <input type="text" name="state" required
+                                    class="w-full p-3 mt-2 rounded-lg border border-gray-200" placeholder="الولاية">
+                                <button type="submit" name="action" value="approve"
+                                    class="mt-2 btn-success">إرسال</button>
+                            </div>
+                            @endif
+                            @if($targetRequest->status === 'engaged' && $targetRequest->admin_approved)
+                            <div class="mt-4 bg-green-100 p-4 rounded-lg">
+                                <p><strong>البيانات:</strong></p>
+                                <p>الاسم: {{ $targetRequest->real_name }}</p>
+                                <p>القرية: {{ $targetRequest->village }}</p>
+                                <p>الولاية: {{ $targetRequest->state }}</p>
+                            </div>
+                            @endif
                         </form>
-                        @if($targetRequest->admin_approved && $targetRequest->user->activeMarriageRequest()->real_name
-                        && $targetRequest->user->activeMarriageRequest()->village)
-                        <div class="mt-4 bg-green-100 p-4 rounded-lg">
-                            <p><strong>بيانات الطرف الآخر:</strong></p>
-                            <p>الاسم: {{ $targetRequest->user->activeMarriageRequest()->real_name }}</p>
-                            <p>القرية: {{ $targetRequest->user->activeMarriageRequest()->village }}</p>
-                        </div>
-                        @endif
                     </div>
                     @endif
                 </div>

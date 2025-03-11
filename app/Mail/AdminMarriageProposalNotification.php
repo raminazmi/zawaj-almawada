@@ -12,17 +12,18 @@ class AdminMarriageProposalNotification extends Mailable
     use Queueable, SerializesModels;
 
     public $marriageRequest;
-    public $admin;
 
-    public function __construct(MarriageRequest $marriageRequest, $admin)
+    public function __construct(MarriageRequest $marriageRequest)
     {
         $this->marriageRequest = $marriageRequest;
-        $this->admin = $admin;
     }
 
     public function build()
     {
         return $this->subject('طلب خطوبة جديد يحتاج للمراجعة')
-            ->view('emails.admin-marriage-proposal');
+            ->view('emails.admin-marriage-proposal')
+            ->with([
+                'marriageRequest' => $this->marriageRequest,
+            ]);
     }
 }
