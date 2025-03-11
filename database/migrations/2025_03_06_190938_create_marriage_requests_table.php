@@ -47,7 +47,9 @@ class CreateMarriageRequestsTable extends Migration
             $table->text('personal_description');
             $table->text('partner_expectations');
             $table->string('compatibility_test_link')->nullable();
-            $table->boolean('admin_approved')->default(false);
+            $table->integer('compatibility_test_result')->nullable();
+            $table->boolean('test_link_sent')->default(false);
+            $table->enum('admin_approval_status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
             $table->softDeletes();
         });

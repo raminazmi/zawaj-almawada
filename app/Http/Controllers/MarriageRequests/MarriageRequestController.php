@@ -49,7 +49,6 @@ class MarriageRequestController extends Controller
             return redirect()->back()->with('error', 'هذا الشخص غير متاح حاليًا لتقديم طلب خطوبة');
         }
 
-        // التأكد من أن المستخدم والهدف من جنسين مختلفين
         if (Auth::user()->gender === $target->gender) {
             return redirect()->back()->with('error', 'يجب أن يكون الطلب بين جنسين مختلفين');
         }
@@ -60,33 +59,19 @@ class MarriageRequestController extends Controller
     public function storeProposal(Request $request, $targetId)
     {
         try {
-            \Log::info('Store Proposal called with targetId: ' . $targetId);
             $user = Auth::user();
-            \Log::info('Authenticated user: ' . json_encode($user));
-
-            \Log::info('Attempting to find target with ID: ' . $targetId);
             $target = User::findOrFail($targetId);
-            \Log::info('Target found: ' . json_encode($target));
-
-            \Log::info('Checking user status: ' . $user->status . ', target status: ' . $target->status);
             if ($user->status !== 'available' || $target->status !== 'available') {
-                \Log::warning('Status check failed');
                 return redirect()->back()->with('error', 'لا يمكن تقديم الطلب حالياً');
             }
 
-            \Log::info('Checking gender compatibility: user gender ' . $user->gender . ', target gender ' . $target->gender);
             if (!($user->gender !== $target->gender)) {
-                \Log::warning('Gender compatibility check failed: Both user and target must be of different genders');
                 return redirect()->back()->with('error', 'يجب أن يكون الطلب بين جنسين مختلفين');
             }
 
-            \Log::info('Checking for existing requests');
             if (MarriageRequest::where('user_id', $user->id)->where('target_user_id', $target->id)->exists()) {
-                \Log::warning('Existing request found');
                 return redirect()->back()->with('error', 'لديك طلب مسبق لهذا المستخدم');
             }
-
-            \Log::info('Received Data: ' . json_encode($request->all()));
 
             $validated = $request->validate([
                 'state' => 'required|string|max:255',
@@ -128,11 +113,6 @@ class MarriageRequestController extends Controller
                 'children_count.between' => 'يجب أن يكون عدد الأبناء بين 0 و20',
             ]);
 
-            \Log::info('Validation passed with data: ' . json_encode($validated));
-
-            \DB::beginTransaction();
-            \Log::info('Starting transaction');
-
             $marriageRequest = MarriageRequest::create([
                 'user_id' => $user->id,
                 'target_user_id' => $target->id,
@@ -171,17 +151,8 @@ class MarriageRequestController extends Controller
                 'personal_description' => $validated['personal_description'],
                 'partner_expectations' => $validated['partner_expectations'],
             ]);
-
-            \Log::info('Marriage Request Created: ID ' . $marriageRequest->id);
-
             $user->update(['status' => 'pending']);
-            \Log::info('User status updated to pending');
             $target->update(['status' => 'pending']);
-            \Log::info('Target status updated to pending');
-
-            \DB::commit();
-            \Log::info('Transaction committed');
-
             try {
                 Mail::to($target->email)->send(new MarriageProposalNotification($user, $target));
                 $admins = User::where('is_admin', true)->get();
@@ -194,21 +165,28 @@ class MarriageRequestController extends Controller
 
             return redirect()->route('marriage-requests.status')->with('success', 'تم تقديم الطلب بنجاح');
         } catch (\Exception $e) {
-            \DB::rollBack();
-            \Log::error('Marriage request error: ' . $e->getMessage());
-            if ($e instanceof ValidationException) {
-                \Log::error('Validation errors: ' . json_encode($e->errors()->all()));
-                return back()->withErrors($e->errors())->with('error', 'حدث خطأ في التحقق من البيانات: ' . implode(', ', $e->errors()->all()))->withInput();
-            }
             return back()->with('error', 'حدث خطأ تقني، يرجى المحاولة لاحقاً: ' . $e->getMessage())->withInput();
         }
     }
 
     public function status()
     {
-        $request = Auth::user()->activeMarriageRequest();
-        $targetRequest = Auth::user()->targetMarriageRequest();
-        return view('marriage-requests.status', compact('request', 'targetRequest'));
+        $pendingRequests = MarriageRequest::where('admin_approval_status', 'pending')
+            ->with(['user', 'target'])
+            ->latest()
+            ->get();
+
+        $submittedRequests = MarriageRequest::where('user_id', Auth::id())
+            ->with(['user', 'target'])
+            ->latest()
+            ->get();
+
+        $receivedRequests = MarriageRequest::where('target_user_id', Auth::id())
+            ->with(['user', 'target'])
+            ->latest()
+            ->get();
+
+        return view('marriage-requests.status', compact('pendingRequests', 'submittedRequests', 'receivedRequests'));
     }
 
     public function adminApproval()
@@ -275,7 +253,10 @@ class MarriageRequestController extends Controller
             return redirect()->back()->with('error', 'غير مصرح لك بإرسال النتيجة');
         }
 
-        $request->validate(['compatibility_test_result' => 'required|string']);
+        $request->validate([
+            'compatibility_test_result' => 'required|integer|between:0,100',
+        ]);
+
         $marriageRequest->update(['compatibility_test_result' => $request->compatibility_test_result]);
 
         return back()->with('success', 'تم إرسال نتيجة المقياس بنجاح');

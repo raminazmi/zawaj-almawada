@@ -8,24 +8,22 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\User;
 use App\Models\MarriageRequest;
 
-class RequestApproved extends Mailable
+class CompatibilityTestLinkNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $user;
     public $marriageRequest;
-    public $dashboardLink;
 
-    public function __construct(User $user, MarriageRequest $marriageRequest, $dashboardLink)
+    public function __construct(User $user, MarriageRequest $marriageRequest)
     {
         $this->user = $user;
         $this->marriageRequest = $marriageRequest;
-        $this->dashboardLink = $dashboardLink;
     }
 
     public function build()
     {
-        return $this->subject('تمت الموافقة على طلب الخطوبة')
-            ->view('emails.request_approved');
+        return $this->subject('رابط اختبار المقياس لتقييم التوافق')
+            ->view('emails.compatibility_test_link');
     }
 }

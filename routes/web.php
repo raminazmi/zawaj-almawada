@@ -72,11 +72,6 @@ Route::middleware('auth')->group(function () {
         Route::get('my-exams/{id}', [UserExamController::class, 'show'])->name('exam.user.show');
     });
     Route::prefix('marriage-requests')->group(function () {
-        // ... بقية المسارات
-        Route::post('/store-proposal/{targetId}', [MarriageRequestController::class, 'storeProposal'])->name('marriage-requests.store-proposal');
-        // ... بقية المسارات
-    });
-    Route::prefix('marriage-requests')->group(function () {
         Route::get('/', [MarriageRequestController::class, 'index'])->name('marriage-requests.index');
         Route::get('/create', [MarriageRequestController::class, 'create'])->name('marriage-requests.create');
         Route::get('/boys', [MarriageRequestController::class, 'boys'])->name('marriage-requests.boys');
@@ -84,9 +79,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/create-proposal/{targetId}', [MarriageRequestController::class, 'createProposal'])->name('marriage-requests.create-proposal');
         Route::post('/store-proposal/{targetId}', [MarriageRequestController::class, 'storeProposal'])->name('marriage-requests.store-proposal');
         Route::get('/status', [MarriageRequestController::class, 'status'])->name('marriage-requests.status');
-        Route::get('/admin-approval', [MarriageRequestController::class, 'adminApproval'])->name('marriage-requests.admin-approval')->middleware('admin');
-        Route::post('/approve/{id}', [MarriageRequestController::class, 'approve'])->name('marriage-requests.approve')->middleware('admin');
-        Route::post('/reject/{id}', [MarriageRequestController::class, 'reject'])->name('marriage-requests.reject')->middleware('admin');
+        Route::get('/admin-approval', [MarriageRequestController::class, 'adminApproval'])->name('marriage-requests.admin-approval');
+        Route::post('/approve/{id}', [MarriageRequestController::class, 'approve'])->name('marriage-requests.approve');
+        Route::post('/reject/{id}', [MarriageRequestController::class, 'reject'])->name('marriage-requests.reject');
         Route::post('/respond/{id}', [MarriageRequestController::class, 'respond'])->name('marriage-requests.respond');
         Route::post('/submit-test/{id}', [MarriageRequestController::class, 'submitTest'])->name('marriage-requests.submit-test');
         Route::post('/submit-test-result/{id}', [MarriageRequestController::class, 'submitTestResult'])->name('marriage-requests.submit-test-result');
@@ -110,10 +105,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::resource('courses', AdminCourseController::class)->except('show');
 
-        Route::get('/marriage-requests', [MarriageRequestAdminController::class, 'index'])->name('marriage-requests.index');
-        Route::post('/marriage-requests/{id}/approve', [MarriageRequestAdminController::class, 'approve'])->name('marriage-requests.approve');
-        Route::post('/marriage-requests/{id}/reject', [MarriageRequestAdminController::class, 'reject'])->name('marriage-requests.reject');
-        Route::post('/marriage-requests/{id}/approve-final', [MarriageRequestAdminController::class, 'approveFinal'])->name('marriage-requests.approve-final');
+        Route::prefix('marriage-requests')->group(function () {
+            Route::get('/', [MarriageRequestAdminController::class, 'index'])->name('marriage-requests.index');
+            Route::post('/{id}/approve-final', [MarriageRequestAdminController::class, 'approveFinal'])->name('marriage-requests.approve-final');
+            Route::post('/{id}/send-test-link', [MarriageRequestAdminController::class, 'sendTestLink'])->name('marriage-requests.send-test-link');
+            Route::post('/{id}/approve-final', [MarriageRequestAdminController::class, 'approveFinal'])
+                ->name('marriage-requests.approve-final');
+
+            Route::post('/{id}/reject', [MarriageRequestAdminController::class, 'reject'])
+                ->name('marriage-requests.reject');
+            Route::post('/{id}/pending', [MarriageRequestAdminController::class, 'pending'])
+                ->name('marriage-requests.pending');
+        });
     });
 });
 

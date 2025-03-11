@@ -11,26 +11,20 @@
 
     @if(Auth::user()->status === 'engaged' || Auth::user()->status === 'pending')
     @if(Auth::user()->status === 'engaged')
-    <div class="mt-4 flex justify-center gap-4">
-      <div class="bg-green-100 text-green-700 p-4 rounded-lg mb-8 text-center max-w-2xl mx-auto">
-        <p>أنت متزوج بالفعل من {{
-          Auth::user()->activeMarriageRequest()
-          ? Auth::user()->activeMarriageRequest()->target->name
-          : Auth::user()->targetMarriageRequest()->user->name
-          }} ولا يمكنك تقديم طلبات جديدة.</p>
-      </div>
+    <div class="bg-green-100 text-green-700 p-4 rounded-lg mb-8 text-center">
+      <p>تمت خطوبتك بالفعل مع {{
+        Auth::user()->activeMarriageRequest()
+        ? Auth::user()->activeMarriageRequest()->target->name
+        : Auth::user()->targetMarriageRequest()->user->name
+        }} ولا يمكنك تقديم طلبات جديدة.</p>
     </div>
-    @else
-    <div class="mt-4 flex justify-center gap-4">
-      <div class="bg-green-100 text-green-700 p-4 rounded-lg mb-8 text-center max-w-2xl mx-auto">
-        <p class="text-lg">
-          لديك طلب بالفعل من {{
-          Auth::user()->activeMarriageRequest()
-          ? Auth::user()->activeMarriageRequest()->target->name
-          : Auth::user()->targetMarriageRequest()->user->name
-          }} ولا يمكنك تقديم طلبات جديدة.
-        </p>
-      </div>
+    @elseif(Auth::user()->status !== 'available')
+    <div class="bg-green-100 text-green-700 p-4 rounded-lg mb-8 text-center">
+      <p>لديك طلب خطوبة نشط بالفعل مع {{
+        Auth::user()->activeMarriageRequest()
+        ? Auth::user()->activeMarriageRequest()->target->name
+        : Auth::user()->targetMarriageRequest()->user->name
+        }} ولا يمكنك تقديم طلبات جديدة.</p>
     </div>
     @endif
     @else
