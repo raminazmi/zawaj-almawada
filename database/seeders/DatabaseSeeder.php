@@ -16,23 +16,9 @@ class DatabaseSeeder extends Seeder
     {
         User::query()->create([
             'name' => 'Admin',
-            'email' => 'mahmoudalmallahi90@gmail.com',
-            'password' => Hash::make('123456'),
+            'email' => 'zawajmawadda@gmail.com',
+            'password' => Hash::make('123456789'),
             'is_admin' => true
-        ]);
-        User::query()->create([
-            'name' => 'رامي',
-            'email' => 'raminazmi7@gmail.com',
-            'password' => Hash::make('123456'),
-            'is_admin' => false,
-            'gender' => 'male'
-        ]);
-        User::query()->create([
-            'name' => 'حمدية',
-            'email' => 'hamdinazmi11@gmail.com',
-            'password' => Hash::make('123456'),
-            'is_admin' => false,
-            'gender' => 'female'
         ]);
         $this->call([
             QuestionsSeeder::class,
