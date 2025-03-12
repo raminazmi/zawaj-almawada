@@ -38,10 +38,10 @@
         <div class="bg-white rounded-3xl shadow-xl border border-purple-100 overflow-hidden">
             <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-6 text-center">
                 <h2 class="text-xl font-semibold text-white">
-                    @if(Auth::user()->gender === 'male')
-                    <i class="fas fa-male ml-2"></i>نموذج طلب الخطوبة للشاب
-                    @else
-                    <i class="fas fa-female ml-2"></i>نموذج طلب الخطوبة للفتاة
+                    @if(Auth::user()->gender === 'female')
+                    <i class="fas fa-male ml-2"></i>نموذج طلب لخطوبة شاب
+                    @elseif(Auth::user()->gender === 'male')
+                    <i class="fas fa-female male ml-2"></i>نموذج طلب لخطوبة فتاة
                     @endif
                 </h2>
             </div>
@@ -87,54 +87,6 @@
 
                         <div class="relative">
                             <label class="block text-sm font-medium text-gray-700 mb-2">
-                                العمر
-                            </label>
-                            <div class="relative">
-                                <input type="number" name="age" required
-                                    class="w-full p-3 pl-10 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('age') border-red-500 @enderror">
-                                <i class="fas fa-calendar-alt absolute left-3 top-4 text-gray-400"></i>
-                            </div>
-                            @error('age')
-                            <div class="mt-1 text-red-600 text-sm flex items-center">
-                                <i class="fas fa-exclamation-circle ml-1"></i>{{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-
-                        <div class="relative">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                الطول (سم)
-                            </label>
-                            <div class="relative">
-                                <input type="number" name="height" required
-                                    class="w-full p-3 pl-10 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('height') border-red-500 @enderror">
-                                <i class="fas fa-text-height absolute left-3 top-4 text-gray-400"></i>
-                            </div>
-                            @error('height')
-                            <div class="mt-1 text-red-600 text-sm flex items-center">
-                                <i class="fas fa-exclamation-circle ml-1"></i>{{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-
-                        <div class="relative">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                الوزن (كجم)
-                            </label>
-                            <div class="relative">
-                                <input type="number" name="weight" required
-                                    class="w-full p-3 pl-10 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('weight') border-red-500 @enderror">
-                                <i class="fas fa-weight-hanging absolute left-3 top-4 text-gray-400"></i>
-                            </div>
-                            @error('weight')
-                            <div class="mt-1 text-red-600 text-sm flex items-center">
-                                <i class="fas fa-exclamation-circle ml-1"></i>{{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-
-                        <div class="relative">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
                                 القبيلة
                             </label>
                             <div class="relative">
@@ -143,26 +95,6 @@
                                 <i class="fas fa-flag absolute left-3 top-4 text-gray-400"></i>
                             </div>
                             @error('tribe')
-                            <div class="mt-1 text-red-600 text-sm flex items-center">
-                                <i class="fas fa-exclamation-circle ml-1"></i>{{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-
-                        <div class="relative">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                لون البشرة
-                            </label>
-                            <div class="relative">
-                                <select name="skin_color" required
-                                    class="w-full p-3 pl-10 pr-8 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('skin_color') border-red-500 @enderror">
-                                    <option value="white">بيضاء</option>
-                                    <option value="wheat">حنطية</option>
-                                    <option value="brown">سمراء</option>
-                                </select>
-                                <i class="fas fa-tint absolute left-3 top-4 text-gray-400"></i>
-                            </div>
-                            @error('skin_color')
                             <div class="mt-1 text-red-600 text-sm flex items-center">
                                 <i class="fas fa-exclamation-circle ml-1"></i>{{ $message }}
                             </div>

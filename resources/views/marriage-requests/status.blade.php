@@ -31,7 +31,7 @@
             <div class="bg-white rounded-xl shadow-lg p-6 border border-purple-100 transition-all hover:shadow-xl">
                 <div class="flex items-center gap-3 mb-4">
                     <i class="fas fa-hourglass-half text-yellow-600 text-xl"></i>
-                    <h3 class="text-xl font-semibold text-gray-800">الطلبات المعلقة (بانتظار الموافقة الإدارية)</h3>
+                    <h3 class="text-xl font-semibold text-gray-800">الطلبات المعلقة</h3>
                 </div>
                 <div class="space-y-4">
                     @foreach($pendingRequests as $request)
@@ -93,11 +93,16 @@
                             </span>
                             @endif
                         </div>
-                        @if(Auth::check() && Auth::id() === $request->target_user_id && $request->status === 'approved')
+                        @if(Auth::check() && Auth::id() === $request->target_user_id && ($request->status ===
+                        'approved' || $request->status === 'pending'))
                         <div class="mt-4 bg-green-100 p-4 rounded-lg">
                             <p><strong>بيانات المرسل:</strong></p>
                             <p>الاسم: {{ $request->user->name ?? 'غير متوفر' }}</p>
                             <p>الولاية: {{ $request->state ?? 'غير متوفر' }}</p>
+                            <p>العمر: {{ $request->user->age ?? 'غير متوفر' }}</p>
+                            <p>الطول: {{ $request->user->height ?? 'غير متوفر' }}</p>
+                            <p>الوزن: {{ $request->user->weight ?? 'غير متوفر' }}</p>
+                            <p>لون البشرة: {{ $request->user->skin_color ?? 'غير متوفر' }}</p>
                             <p>يجب عليك تقديم مقياس التوافق الزواجي لمعرفة مدى التوافق بينك وين شريك حياتك، تقدم من هنا
                                 <a href="/dashboard" class="text-blue-500">رابط المقياس</a>
                             </p>

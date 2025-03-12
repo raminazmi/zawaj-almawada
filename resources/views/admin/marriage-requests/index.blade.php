@@ -54,6 +54,10 @@
                     <div class="mt-4 bg-green-100 p-4 rounded-lg">
                         <p><strong>بيانات المرسل:</strong></p>
                         <p>الاسم: {{ $request->user->name ?? 'غير متوفر' }}</p>
+                        <p>العمر: {{ $request->user->age ?? 'غير متوفر' }}</p>
+                        <p>الطول: {{ $request->user->height ?? 'غير متوفر' }}</p>
+                        <p>الوزن: {{ $request->user->weight ?? 'غير متوفر' }}</p>
+                        <p>لون البشرة: {{ $request->user->skin_color ?? 'غير متوفر' }}</p>
                         <p>الولاية: {{ $request->state ?? 'غير متوفر' }}</p>
 
                         <form method="POST" action="{{ route('admin.marriage-requests.send-test-link', $request->id) }}"

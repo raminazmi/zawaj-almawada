@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateUsersTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
@@ -20,8 +17,8 @@ class CreateUsersTable extends Migration
             $table->enum('gender', ['male', 'female']);
             $table->string('google_id')->nullable();
             $table->string('age')->nullable();
-            $table->string('weight')->nullable();
             $table->string('height')->nullable();
+            $table->string('weight')->nullable();
             $table->string('skin_color')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
@@ -32,9 +29,6 @@ class CreateUsersTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down()
     {
         Schema::dropIfExists('users');

@@ -20,6 +20,9 @@ class User extends Authenticatable
         'country',
         'phone',
         'age',
+        'height',
+        'weight',
+        'skin_color',
         'status'
     ];
 
@@ -49,5 +52,19 @@ class User extends Authenticatable
         return $this->hasOne(MarriageRequest::class, 'target_user_id')
             ->whereIn('status', ['pending', 'approved', 'engaged'])
             ->first();
+    }
+
+    public function exams(): HasMany
+    {
+        $foreignKey = auth()->user()->gender . '_user_id';
+        return $this->hasMany(Exam::class, $foreignKey);
+    }
+
+    public function activeExam()
+    {
+        if (!auth()->user()->gender) {
+            return null;
+        }
+        return $this->exams()->where(auth()->user()->gender . '_finished', false)->first();
     }
 }

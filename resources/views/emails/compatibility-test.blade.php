@@ -5,17 +5,18 @@
     <div class="header">
         <div style="background:white; border-raduis:20px; margin-bottom: 10px;">
             <img src="https://zawaj-almawada.com/assets/images/logo.png" alt="شعار الموقع" style="max-width: 100px;">
-            <h1> رابط مقياس التوافق الزواجي</h1>
+            <h1> مقياس التوافق الزواجي</h1>
         </div>
     </div>
 
     <div class="content">
         <h2>مرحبًا،</h2>
-        <p>لقد تم قبول طلب الخطوبة من <strong>{{ $sender->name }}</strong>. يرجى إرسال رابط المقياس الخاص بك:</p>
+        <p>لقد تم قبول طلب الخطوبة من <strong>{{ $sender->name }}</strong>. يرجى تقديم مقياس مدى التوافق بينك وبين
+            شريك حياتك :</p>
         <div style="text-align: center; margin: 2rem 0;">
             <a href="{{ route('marriage-requests.status') }}"
                 style="display: inline-block; padding: 12px 24px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                إرسال الرابط
+                رابط المقياس
             </a>
         </div>
         <p>شكرًا لاستخدامك زواج المودة!</p>

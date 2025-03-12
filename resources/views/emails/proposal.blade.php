@@ -13,7 +13,10 @@
         <p>لقد تلقيت طلب خطوبة جديد على منصة الزواج الشرعي.</p>
         <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
             <p style="margin: 5px 0;"><strong>اسم المرسل:</strong> {{ $user->name }}</p>
-            <p style="margin: 5px 0;"><strong>العمر:</strong> {{ $user->age }}</p>
+            <p style="margin: 5px 0;"><strong>العمر:</strong> {{ $user->age ?? 'غير متوفر' }}</p>
+            <p style="margin: 5px 0;"><strong>الطول:</strong> {{ $user->height ?? 'غير متوفر' }}</p>
+            <p style="margin: 5px 0;"><strong>الوزن:</strong> {{ $user->weight ?? 'غير متوفر' }}</p>
+            <p style="margin: 5px 0;"><strong>لون البشرة:</strong> {{ $user->skin_color ?? 'غير متوفر' }}</p>
             <p style="margin: 5px 0;"><strong>المدينة:</strong> {{ $user->city }}</p>
         </div>
         <p>يمكنك الآن تسجيل الدخول إلى حسابك للاطلاع على تفاصيل الطلب والرد عليه:</p>

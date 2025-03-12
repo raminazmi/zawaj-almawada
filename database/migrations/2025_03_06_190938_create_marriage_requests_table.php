@@ -16,11 +16,7 @@ class CreateMarriageRequestsTable extends Migration
             $table->enum('applicant_type', ['male', 'female']);
             $table->enum('status', ['pending', 'approved', 'rejected', 'engaged'])->default('pending');
             $table->string('state', 100);
-            $table->unsignedTinyInteger('age');
-            $table->unsignedSmallInteger('height');
-            $table->unsignedSmallInteger('weight');
             $table->string('tribe', 100);
-            $table->enum('skin_color', ['white', 'wheat', 'brown']);
             $table->enum('lineage', ['1', '2', '3']);
             $table->enum('marital_status', ['single', 'married', 'widowed', 'divorced']);
             $table->boolean('has_children');

@@ -75,11 +75,7 @@ class MarriageRequestController extends Controller
 
             $validated = $request->validate([
                 'state' => 'required|string|max:255',
-                'age' => 'required|integer|between:18,100',
-                'height' => 'required|integer|between:100,250',
-                'weight' => 'required|integer|between:30,300',
                 'tribe' => 'required|string|max:255',
-                'skin_color' => 'required|in:white,wheat,brown',
                 'lineage' => 'required|in:1,2,3',
                 'marital_status' => 'required|in:single,married,widowed,divorced',
                 'has_children' => 'required|boolean',
@@ -106,9 +102,6 @@ class MarriageRequestController extends Controller
                 'personal_description' => 'required|string|max:2000',
                 'partner_expectations' => 'required|string|max:2000',
             ], [
-                'age.between' => 'يجب أن يكون العمر بين 18 و100 سنة',
-                'height.between' => 'يجب أن يكون الطول بين 100 و250 سم',
-                'weight.between' => 'يجب أن يكون الوزن بين 30 و300 كجم',
                 'monthly_income.min' => 'يجب أن يكون الدخل الشهري 0 أو أكثر',
                 'children_count.between' => 'يجب أن يكون عدد الأبناء بين 0 و20',
             ]);
@@ -120,11 +113,7 @@ class MarriageRequestController extends Controller
                 'applicant_type' => $user->gender,
                 'status' => 'pending',
                 'state' => $validated['state'],
-                'age' => $validated['age'],
-                'height' => $validated['height'],
-                'weight' => $validated['weight'],
                 'tribe' => $validated['tribe'],
-                'skin_color' => $validated['skin_color'],
                 'lineage' => $validated['lineage'],
                 'marital_status' => $validated['marital_status'],
                 'has_children' => $validated['has_children'],
@@ -151,8 +140,10 @@ class MarriageRequestController extends Controller
                 'personal_description' => $validated['personal_description'],
                 'partner_expectations' => $validated['partner_expectations'],
             ]);
+
             $user->update(['status' => 'pending']);
             $target->update(['status' => 'pending']);
+
             try {
                 Mail::to($target->email)->send(new MarriageProposalNotification($user, $target));
                 $admins = User::where('is_admin', true)->get();
