@@ -222,6 +222,7 @@
     </div>
 
     <div x-show="open" class="lg:hidden px-4 pb-4 space-y-2" x-cloak>
+        @if((auth()->check() && !auth()->user()->is_admin) || !auth()->check())
         <a href="{{ route('index') }}" class="nav-link block py-2">
             <i class="fas fa-home ml-2"></i> الرئيسية
         </a>
@@ -317,31 +318,22 @@
                 <a href="{{ route('marriage-requests.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">برنامج
                     الزواج الشرعي</a>
                 @auth
-                <a href="{{ route('marriage-requests.create') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">تقديم
-                    طلب زواج</a>
                 <a href="{{ route('marriage-requests.status') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">حالة
                     طلب الزواج</a>
                 @endauth
             </div>
         </div>
-
+        @endif
         @if(auth()->check() && auth()->user()->is_admin)
-        <div x-data="{ isOpen: false }">
-            <button @click="isOpen = !isOpen" class="nav-link block w-full text-left py-2 flex justify-between">
-                <div><i class="fas fa-user-shield ml-2"></i> الإدارة</div>
-                <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': isOpen }"></i>
-            </button>
-            <div x-show="isOpen" x-cloak class="pl-4 space-y-2">
-                <a href="{{ route('admin.questions.index') }}"
-                    class="block text-sm hover:bg-pink-50 py-2 px-1">الأسئلة</a>
-                <a href="{{ route('admin.users.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">الأعضاء</a>
-                <a href="{{ route('admin.shops') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">المحلات</a>
-                <a href="{{ route('admin.marriage-requests.index') }}"
-                    class="block text-sm hover:bg-pink-50 py-2 px-1">طلبات الزواج</a>
-                <a href="{{ route('admin.courses.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
-                    دورة التأهيل للزواج
-                </a>
-            </div>
+        <div class="pl-4 space-y-2">
+            <a href="{{ route('admin.questions.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">الأسئلة</a>
+            <a href="{{ route('admin.users.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">الأعضاء</a>
+            <a href="{{ route('admin.shops') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">المحلات</a>
+            <a href="{{ route('admin.marriage-requests.index') }}"
+                class="block text-sm hover:bg-pink-50 py-2 px-1">طلبات الزواج</a>
+            <a href="{{ route('admin.courses.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
+                دورة التأهيل للزواج
+            </a>
         </div>
         @endif
 

@@ -31,14 +31,20 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
         $request->session()->regenerate();
-        $previousUrl = url()->previous();
-        if (Str::contains($previousUrl, '/exam?token=')) {
-            session(['previous_url' => $previousUrl]);
+
+        $user = Auth::user();
+        $previousUrl = session('previous_url');
+        if ($previousUrl && Str::contains($previousUrl, '/exam?token=')) {
+            session()->forget('previous_url');
             return redirect($previousUrl);
         }
+
+        if ($user->is_admin) {
+            return redirect()->route('admin.questions.index');
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
-
 
     /**
      * Destroy an authenticated session.
