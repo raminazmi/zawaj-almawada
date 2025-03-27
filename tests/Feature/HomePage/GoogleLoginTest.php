@@ -5,7 +5,7 @@ use Laravel\Socialite\Facades\Socialite;
 
 test('Google login screen can be rendered', function () {
     $this->get(route('auth.google'))
-    ->assertRedirectContains('https://accounts.google.com/o/oauth2/auth');
+        ->assertRedirectContains('https://accounts.google.com/o/oauth2/auth');
 });
 
 
@@ -30,11 +30,11 @@ test('Google callback', function () {
             $mock->shouldReceive('stateless')->andReturnSelf();
             $mock->shouldReceive('user')->andReturn($abstractUser);
         }));
-    
+
     // Test that ensures the callback is handled correctly
     $this->get('/auth/google/callback')
-        ->assertRedirect(route('dashboard'));
-    
+        ->assertRedirect(route('exam.pledge'));
+
     // Verify the user is in the database
     $this->assertDatabaseHas('users', [
         'email' => 'test@example.com',
@@ -42,6 +42,6 @@ test('Google callback', function () {
     ]);
 
     $this->actingAs(User::where('email', 'test@example.com')->first())
-        ->get(route('dashboard'))
+        ->get(route('exam.pledge'))
         ->assertOk();
 });

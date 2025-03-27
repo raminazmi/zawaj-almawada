@@ -3,11 +3,9 @@
 @section('content')
 <div class="email-container">
         <div class="header">
-                <div style="background:white; border-raduis:20px; margin-bottom: 10px;">
-                        <img src="https://zawaj-almawada.com/assets/images/logo.png" alt="شعار الموقع"
-                                style="max-width: 100px;">
-                        <h1>رابط اختبار المقياس</h1>
-                </div>
+                <img src="https://zawaj-almawada.com/assets/images/logo.png" alt="شعار الموقع"
+                        style="max-width: 100px; margin-bottom: 10px;">
+                <h1>رابط اختبار المقياس</h1>
         </div>
         <div class="content">
                 <h2>مرحبًا {{ $user->name }}،</h2>

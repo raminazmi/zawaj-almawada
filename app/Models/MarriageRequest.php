@@ -15,54 +15,30 @@ class MarriageRequest extends Model
         'request_number',
         'applicant_type',
         'status',
-        'admin_approval_status',
-        'state',
-        'tribe',
-        'lineage',
-        'marital_status',
-        'has_children',
-        'children_count',
-        'education_level',
-        'work_sector',
-        'job_title',
-        'monthly_income',
-        'religion',
-        'genetic_diseases',
-        'infectious_diseases',
-        'psychological_disorders',
         'compatibility_test_link',
         'compatibility_test_result',
         'test_link_sent',
-        'housing_type',
-        'health_status',
-        'has_disability',
-        'disability_details',
-        'has_deformity',
-        'deformity_details',
-        'wants_children',
-        'infertility',
-        'is_smoker',
-        'real_name',
-        'village',
-        'religiosity_level',
-        'prayer_commitment',
-        'personal_description',
-        'partner_expectations',
+        'admin_approval_status',
+        'exam_id',
+    ];
+
+    protected $attributes = [
+        'compatibility_test_link' => null,
     ];
 
     protected $casts = [
-        'has_children' => 'boolean',
-        'has_disability' => 'boolean',
-        'has_deformity' => 'boolean',
-        'wants_children' => 'boolean',
-        'infertility' => 'boolean',
-        'is_smoker' => 'boolean',
-        'admin_approval_status' => 'string',
         'test_link_sent' => 'boolean',
+        'admin_approval_status' => 'string',
         'created_at' => 'datetime:Y-m-d H:i',
         'updated_at' => 'datetime:Y-m-d H:i',
         'deleted_at' => 'datetime:Y-m-d H:i',
     ];
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->attributes['compatibility_test_link'] = route('exam.pledge');
+    }
 
     public function user()
     {
@@ -72,5 +48,10 @@ class MarriageRequest extends Model
     public function target()
     {
         return $this->belongsTo(User::class, 'target_user_id');
+    }
+
+    public function exam()
+    {
+        return $this->hasOne(Exam::class, 'id', 'exam_id');
     }
 }

@@ -28,6 +28,7 @@ use App\Http\Middleware\AuthUser;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AddActivity\BusinessActivityController;
 use App\Http\Controllers\Admin\AdminCourseController;
+use App\Http\Controllers\Admin\ProfileApprovalController;
 use App\Http\Controllers\courses\CourseController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
@@ -43,8 +44,6 @@ Route::get('/psychic-counseling', [PsychicCounselingController::class, 'index'])
 Route::get('/legitimate-counseling', [LegitimateCounselingController::class, 'index'])->name('legitimate-counseling');
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 
-
-
 Route::controller(GoogleController::class)->group(function () {
     Route::get('auth/google', 'redirectToGoogle')->name('auth.google');
     Route::get('auth/google/callback', 'handleGoogleCallback');
@@ -59,17 +58,17 @@ Route::post('/register', [RegisteredUserController::class, 'store']);
 
 Route::middleware('auth')->group(function () {
     Route::middleware(AuthUser::class)->group(function () {
-        Route::get('/dashboard', function () {
-            return view('dashboard');
-        })->name('dashboard');
-
         Route::post('update-gender', [GenderController::class, 'update'])->name('gender.update');
+        Route::get('personal-info', [HomeController::class, 'personalInfoStart'])->name('personal-info');
 
-        Route::get('exam', [ExamController::class, 'index'])->name('exam.index');
+        Route::get('index', [ExamController::class, 'index'])->name('exam.index');
+        Route::get('exam/pledge', [ExamController::class, 'pledge'])->name('exam.pledge');
+        Route::post('exam/start', [ExamController::class, 'start'])->name('exam.start');
         Route::post('exam/save-answer', [ExamController::class, 'saveUserAnswer'])->name('exam.save-answer');
 
         Route::get('my-exams', [UserExamController::class, 'index'])->name('exam.user.index');
         Route::get('my-exams/{id}', [UserExamController::class, 'show'])->name('exam.user.show');
+        Route::get('profile/{id}', [ProfileApprovalController::class, 'show'])->name('profile-approvals.show');
 
         Route::prefix('marriage-requests')->group(function () {
             Route::get('/', [MarriageRequestController::class, 'index'])->name('marriage-requests.index');
@@ -86,6 +85,8 @@ Route::middleware('auth')->group(function () {
             Route::post('/submit-test/{id}', [MarriageRequestController::class, 'submitTest'])->name('marriage-requests.submit-test');
             Route::post('/submit-test-result/{id}', [MarriageRequestController::class, 'submitTestResult'])->name('marriage-requests.submit-test-result');
             Route::post('/final-approval/{id}', [MarriageRequestController::class, 'finalApproval'])->name('marriage-requests.final-approval');
+            Route::get('/edit-profile', [RegisteredUserController::class, 'editProfile'])->name('profile.edit');
+            Route::post('/update-profile', [RegisteredUserController::class, 'updateProfile'])->name('profile.update');
         });
     });
 });
@@ -103,20 +104,24 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/shops', [BusinessActivityController::class, 'index'])->name('shops');
         Route::post('/business-activities/{businessActivity}/status', [BusinessActivityController::class, 'updateStatus'])
             ->name('business-activities.updateStatus');
+        Route::post('/profile/{id}/approve', [MarriageRequestAdminController::class, 'approveProfile'])->name('profile.approve');
+        Route::post('/profile/{id}/reject', [MarriageRequestAdminController::class, 'rejectProfile'])->name('profile.reject');
 
         Route::resource('courses', AdminCourseController::class)->except('show');
-
+        Route::prefix('profile-approvals')->group(function () {
+            Route::get('/', [ProfileApprovalController::class, 'index'])->name('profile-approvals.index');
+            Route::post('/{id}/approve', [ProfileApprovalController::class, 'approve'])->name('profile-approvals.approve');
+            Route::get('/{id}', [ProfileApprovalController::class, 'show'])->name('profile-approvals.show');
+            Route::post('/{id}/reject', [ProfileApprovalController::class, 'reject'])->name('profile-approvals.reject');
+            Route::post('/{id}/pending', [ProfileApprovalController::class, 'pending'])->name('profile-approvals.pending');
+        });
         Route::prefix('marriage-requests')->group(function () {
             Route::get('/', [MarriageRequestAdminController::class, 'index'])->name('marriage-requests.index');
             Route::post('/{id}/approve-final', [MarriageRequestAdminController::class, 'approveFinal'])->name('marriage-requests.approve-final');
             Route::post('/{id}/send-test-link', [MarriageRequestAdminController::class, 'sendTestLink'])->name('marriage-requests.send-test-link');
-            Route::post('/{id}/approve-final', [MarriageRequestAdminController::class, 'approveFinal'])
-                ->name('marriage-requests.approve-final');
-
-            Route::post('/{id}/reject', [MarriageRequestAdminController::class, 'reject'])
-                ->name('marriage-requests.reject');
-            Route::post('/{id}/pending', [MarriageRequestAdminController::class, 'pending'])
-                ->name('marriage-requests.pending');
+            Route::post('/{id}/approve-final', [MarriageRequestAdminController::class, 'approveFinal'])->name('marriage-requests.approve-final');
+            Route::post('/{id}/reject', [MarriageRequestAdminController::class, 'reject'])->name('marriage-requests.reject');
+            Route::post('/{id}/pending', [MarriageRequestAdminController::class, 'pending'])->name('marriage-requests.pending');
         });
     });
 });

@@ -97,7 +97,7 @@
           لشخصياتكما.
         </p>
         @auth
-        <a href="{{ route('dashboard') }}" class="inline-block">
+        <a href="{{ route('exam.pledge') }}" class="inline-block">
           @else
           <a href="{{ route('login') }}" class="inline-block">
             @endauth

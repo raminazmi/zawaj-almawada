@@ -15,7 +15,7 @@ test('User is redirected from exam page to dashboard if gender is not set', func
         'gender' => null
     ]);
     $response = $this->actingAs($user)->get('/exam');
-    $response->assertRedirect(route('dashboard'));
+    $response->assertRedirect(route('exam.pledge'));
 });
 
 test('Exam page be rendered from authenticated user', function () {

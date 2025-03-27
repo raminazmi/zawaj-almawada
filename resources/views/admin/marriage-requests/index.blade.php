@@ -4,13 +4,13 @@
 <section class="min-h-screen bg-gradient-to-b from-purple-50 to-white">
     <div class="max-w-7xl mx-auto px-4 py-8">
         <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold text-purple-800 inline-block relative pb-4">
+            <h2 class="text-2xl font-bold text-purple-800 inline-block relative pb-4">
                 <i class="fas fa-heartbeat ml-3"></i>طلبات الخطوبة
             </h2>
         </div>
 
         <div class="mb-12">
-            <h3 class="text-2xl font-semibold text-purple-700 mb-6 flex items-center gap-2">
+            <h3 class="text-xl font-semibold text-purple-700 mb-6 flex items-center gap-2">
                 <i class="fas fa-hourglass-half text-purple-600"></i>الطلبات المعلقة للموافقة النهائية
             </h3>
 
@@ -50,28 +50,41 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="mt-4 bg-green-100 p-4 rounded-lg">
-                        <p><strong>بيانات المرسل:</strong></p>
-                        <p>الاسم: {{ $request->user->name ?? 'غير متوفر' }}</p>
-                        <p>العمر: {{ $request->user->age ?? 'غير متوفر' }}</p>
-                        <p>الطول: {{ $request->user->height ?? 'غير متوفر' }}</p>
-                        <p>الوزن: {{ $request->user->weight ?? 'غير متوفر' }}</p>
-                        <p>لون البشرة: {{ $request->user->skin_color ?? 'غير متوفر' }}</p>
-                        <p>الولاية: {{ $request->state ?? 'غير متوفر' }}</p>
-
-                        <form method="POST" action="{{ route('admin.marriage-requests.send-test-link', $request->id) }}"
-                            class="mt-4 flex justify-end">
-                            @csrf
-                            <button type="submit"
-                                class="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-md hover:shadow-lg">
-                                <i class="fas fa-link ml-2"></i><span>إرسال رابط المقياس</span>
-                            </button>
-                        </form>
+                    @if($request->exam && $request->exam->male_finished && $request->exam->female_finished)
+                    <div class="mt-6 p-6 bg-gray-50 rounded-2xl shadow-xl border border-purple-100">
+                        <h3 class="text-xl font-semibold text-purple-700 mb-4">نتائج اختبار مقياس الزواج</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="text-lg font-medium text-gray-800 mb-2">نتيجة الاختبار العامة</h4>
+                                <p class="text-2xl font-bold text-green-600">{{ $request->exam->calculateScore() }}%</p>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-medium text-gray-800 mb-2">الأسئلة المهمة</h4>
+                                <?php
+                                        $maleImportantScore = $request->exam->importantScore('male');
+                                        $femaleImportantScore = $request->exam->importantScore('female');
+                                        $totalImportant = $maleImportantScore['total'] + $femaleImportantScore['total'];
+                                    ?>
+                                <p class="text-gray-700">إجمالي الأسئلة المهمة: {{ $totalImportant }}</p>
+                                <p class="text-gray-700">نقاط الذكر: {{ $maleImportantScore['score'] }} / {{
+                                    $maleImportantScore['total'] }}</p>
+                                <p class="text-gray-700">نقاط الأنثى: {{ $femaleImportantScore['score'] }} / {{
+                                    $femaleImportantScore['total'] }}</p>
+                            </div>
+                        </div>
                     </div>
+                    @elseif($request->exam)
+                    <div class="mt-6 p-6 bg-yellow-100 rounded-2xl shadow-xl border border-yellow-200">
+                        <p class="text-yellow-800">الاختبار لم يكتمل بعد من كلا الطرفين.</p>
+                    </div>
+                    @else
+                    <div class="mt-6 p-6 bg-yellow-100 rounded-2xl shadow-xl border border-yellow-200">
+                        <p class="text-yellow-800">لم يتم إجراء اختبار مقياس الزواج لهذا الطلب بعد.</p>
+                    </div>
+                    @endif
 
-                    <div class="mt-6 border-t border-green-200 pt-4">
-                        <div class="flex flex-wrap gap-4 justify-between items-center">
+                    <div class="mt-6">
+                        <div class="flex flex-wrap gap-4 justify-between items-center pb-4 border-b border-green-200">
                             <div class="flex-1 min-w-[200px]">
                                 <p class="text-sm text-green-800 mb-2">
                                     <i class="fas fa-info-circle ml-2"></i>مراجعة نهائية من الإدارة
@@ -102,12 +115,24 @@
                                 </form>
                             </div>
                         </div>
+                        <div class="flex items-center justify-center gap-4 px-4 pt-4">
+                            <a href="{{ route('admin.profile-approvals.show', $request->user->id) }}"
+                                class="text-purple-600 hover:text-purple-800 flex items-center gap-2">
+                                <i class="fas fa-eye"></i>
+                                عرض ملف المرسل
+                            </a>
+                            <a href="{{ route('admin.profile-approvals.show', $request->target->id) }}"
+                                class="text-purple-600 hover:text-purple-800 flex items-center gap-2">
+                                <i class="fas fa-eye"></i>
+                                عرض ملف المستهدف
+                            </a>
+                        </div>
                     </div>
                 </div>
                 @empty
                 <div class="text-center p-12">
                     <div class="text-6xl text-purple-200 mb-4"><i class="fas fa-inbox"></i></div>
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">لا توجد طلبات معلقة للموافقة النهائية</h3>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">لا توجد طلبات معلقة للموافقة النهائية</h3>
                     <p class="text-gray-600">سيظهر هنا أي طلبات جديدة تحتاج لمراجعتك</p>
                 </div>
                 @endforelse
@@ -115,7 +140,7 @@
         </div>
 
         <div>
-            <h3 class="text-2xl font-semibold text-purple-700 mb-6 flex items-center gap-2">
+            <h3 class="text-xl font-semibold text-purple-700 mb-6 flex items-center gap-2">
                 <i class="fas fa-history text-purple-600"></i>الطلبات السابقة
             </h3>
 
@@ -210,20 +235,34 @@
                         @endif
                     </div>
                 </div>
-                <form method="POST" action="{{ route('admin.marriage-requests.pending', $request->id) }}"
-                    class="flex items-center justify-end p-2">
-                    @csrf
-                    <button type="submit" class="px-6 py-2 bg-purple-600 text-white rounded-lg 
+                <div class="flex items-center justify-center sm:justify-between flex-wrap gap-2">
+                    <div class="flex items-center justify-start gap-4 px-4 py-2">
+                        <a href="{{ route('admin.profile-approvals.show', $request->user->id) }}"
+                            class="text-purple-600 hover:text-purple-800 flex items-center gap-2">
+                            <i class="fas fa-eye"></i>
+                            عرض ملف المرسل
+                        </a>
+                        <a href="{{ route('admin.profile-approvals.show', $request->target->id) }}"
+                            class="text-purple-600 hover:text-purple-800 flex items-center gap-2">
+                            <i class="fas fa-eye"></i>
+                            عرض ملف المستهدف
+                        </a>
+                    </div>
+                    <form method="POST" action="{{ route('admin.marriage-requests.pending', $request->id) }}"
+                        class="flex items-center justify-end p-2">
+                        @csrf
+                        <button type="submit" class="px-6 py-2 bg-purple-600 text-white rounded-lg 
                    hover:bg-purple-700 transition-all shadow-md hover:shadow-lg gap-3
                    transform hover:scale-[1.02]">
-                        <i class="fas fa-undo text-white"></i>
-                        <span>التراجع عن الإجراء</span>
-                    </button>
-                </form>
+                            <i class="fas fa-undo text-white"></i>
+                            <span>التراجع عن الإجراء</span>
+                        </button>
+                    </form>
+                </div>
                 @empty
                 <div class="text-center p-12">
                     <div class="text-6xl text-purple-200 mb-4"><i class="fas fa-inbox"></i></div>
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-2">لا توجد طلبات سابقة</h3>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">لا توجد طلبات سابقة</h3>
                     <p class="text-gray-600">سيظهر هنا أي طلبات تمت معالجتها</p>
                 </div>
                 @endforelse
@@ -232,3 +271,8 @@
     </div>
 </section>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+@endpush

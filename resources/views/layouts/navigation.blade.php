@@ -28,8 +28,8 @@
                     </button>
                     <div x-show="isOpen" x-cloak
                         class="absolute bg-white shadow-lg mt-2 w-52 rounded-md border border-gray-200 z-50">
-                        <a href="{{ route('dashboard') }}"
-                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('dashboard') ? 'text-purple-700' : 'text-gray-900' }}">
+                        <a href="{{ route('exam.pledge') }}"
+                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('exam.pledge') ? 'text-purple-700' : 'text-gray-900' }}">
                             مقياس التوافق الزواجي
                         </a>
                         <a href="#"
@@ -152,6 +152,9 @@
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('marriage-requests.index') ? 'text-purple-700' : 'text-gray-900' }}">
                             برنامج الزواج الشرعي
                         </a>
+                        <a href="{{ route('profile.edit') }}"
+                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('profile.edit') ? 'text-purple-700' : 'text-gray-900' }}">
+                            تقديم طلب زواج</a>
                         @auth
                         <a href="{{ route('marriage-requests.status') }}"
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('marriage-requests.status') ? 'text-purple-700' : 'text-gray-900' }}">
@@ -173,6 +176,10 @@
                 <a href="{{ route('admin.shops') }}"
                     class="nav-link mx-6 {{ request()->routeIs('admin.shops') ? 'active' : '' }}">
                     المحلات
+                </a>
+                <a href="{{ route('admin.profile-approvals.index') }}"
+                    class="nav-link mx-6 {{ request()->routeIs('profile-approvals.index') ? 'active' : '' }}">
+                    طلبات قبول الملف الشخصي
                 </a>
                 <a href="{{ route('admin.marriage-requests.index') }}"
                     class="nav-link mx-6 {{ request()->routeIs('admin.marriage-requests.index') ? 'active' : '' }}">
@@ -238,7 +245,7 @@
                 <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': isOpen }"></i>
             </button>
             <div x-show="isOpen" x-cloak class="pl-4 space-y-2">
-                <a href="{{ route('dashboard') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
+                <a href="{{ route('exam.pledge') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
                     مقياس التوافق الزواجي
                 </a>
                 <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">
@@ -317,6 +324,8 @@
                 </div>
                 <a href="{{ route('marriage-requests.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">برنامج
                     الزواج الشرعي</a>
+                <a href="{{ route('profile.edit') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
+                    تقديم طلب زواج</a>
                 @auth
                 <a href="{{ route('marriage-requests.status') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">حالة
                     طلب الزواج</a>
@@ -329,6 +338,9 @@
             <a href="{{ route('admin.questions.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">الأسئلة</a>
             <a href="{{ route('admin.users.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">الأعضاء</a>
             <a href="{{ route('admin.shops') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">المحلات</a>
+            <a href="{{ route('admin.profile-approvals.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
+                طلبات قبول الملف الشخصي
+            </a>
             <a href="{{ route('admin.marriage-requests.index') }}"
                 class="block text-sm hover:bg-pink-50 py-2 px-1">طلبات الزواج</a>
             <a href="{{ route('admin.courses.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">

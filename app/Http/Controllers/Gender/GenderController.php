@@ -32,6 +32,6 @@ class GenderController extends Controller
             return redirect()->route('exam.index', ['token' => $request->token]);
         }
 
-        return redirect()->route('dashboard');
+        return redirect()->route('personal-info');
     }
 }

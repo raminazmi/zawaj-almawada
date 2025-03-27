@@ -21,7 +21,7 @@ class CompatibilityTestNotification extends Mailable
 
     public function build()
     {
-        return $this->subject('طلب إرسال رابط المقياس - زواج المودة')
+        return $this->subject('مقياس التوافق الزواجي - زواج المودة')
             ->view('emails.compatibility-test');
     }
 }

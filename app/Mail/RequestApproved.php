@@ -16,11 +16,11 @@ class RequestApproved extends Mailable
     public $marriageRequest;
     public $dashboardLink;
 
-    public function __construct(User $user, MarriageRequest $marriageRequest, $dashboardLink)
+    public function __construct(User $user, MarriageRequest $marriageRequest)
     {
         $this->user = $user;
         $this->marriageRequest = $marriageRequest;
-        $this->dashboardLink = $dashboardLink;
+        $this->dashboardLink = route('exam.pledge');
     }
 
     public function build()

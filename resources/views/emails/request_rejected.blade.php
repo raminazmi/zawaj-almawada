@@ -3,11 +3,9 @@
 @section('content')
 <div class="email-container">
     <div class="header">
-        <div style="background:white; border-raduis:5px">
-            <img src="https://zawaj-almawada.com/assets/images/logo.png" alt="شعار الموقع"
-                style="max-width: 100px; margin-bottom: 10px; padding:5px">
-            <h1>تم رفض طلب الخطوبة</h1>
-        </div>
+        <img src="https://zawaj-almawada.com/assets/images/logo.png" alt="شعار الموقع"
+            style="max-width: 100px; margin-bottom: 10px;">
+        <h1>تم رفض طلب الخطوبة</h1>
     </div>
 
     <div class="content">
