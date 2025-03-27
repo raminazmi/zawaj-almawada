@@ -273,7 +273,8 @@
                 <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': isOpen }"></i>
             </button>
             <div x-show="isOpen" x-cloak class="pl-4 space-y-2">
-                <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">دورة التأهيل للزواج</a>
+                <a href="{{ route('courses.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">دورة التأهيل
+                    للزواج</a>
             </div>
         </div>
         <div x-data="{ isOpen: false }">
