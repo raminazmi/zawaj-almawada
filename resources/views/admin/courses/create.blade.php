@@ -26,7 +26,9 @@
                     ['name' => 'ebook_url', 'label' => 'رابط الكتاب الإلكتروني', 'icon' => 'book', 'type' => 'url'],
                     ['name' => 'intro_video', 'label' => 'رابط الفيديو التعريفي', 'icon' => 'video', 'type' => 'url'],
                     ['name' => 'supporting_companies', 'label' => 'الشركات الداعمة (مفصولة بفواصل)', 'icon' =>
-                    'building', 'type' => 'text']
+                    'building', 'type' => 'text'],
+                    ['name' => 'honor_students', 'label' => 'الحاصلون على امتياز (مفصولة بفواصل)', 'icon' =>
+                    'graduation-cap', 'type' => 'text'],
                     ] as $field)
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -40,6 +42,58 @@
                         @enderror
                     </div>
                     @endforeach
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-calendar-start text-purple-600 ml-2"></i>
+                                تاريخ البدء
+                            </label>
+                            <input type="date" name="start_date" value="{{ old('start_date') }}"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+                            @error('start_date')
+                            <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-calendar-end text-purple-600 ml-2"></i>
+                                تاريخ الانتهاء
+                            </label>
+                            <input type="date" name="end_date" value="{{ old('end_date') }}"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+                            @error('end_date')
+                            <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-calendar-day text-blue-600 ml-2"></i>
+                                تاريخ الامتحان
+                            </label>
+                            <input type="date" name="exam_date" value="{{ old('exam_date') }}"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+                            @error('exam_date')
+                            <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-link text-blue-600 ml-2"></i>
+                                رابط الامتحان
+                            </label>
+                            <input type="url" name="exam_link" value="{{ old('exam_link') }}"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+                            @error('exam_link')
+                            <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">

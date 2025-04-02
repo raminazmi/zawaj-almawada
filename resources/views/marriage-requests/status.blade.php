@@ -10,7 +10,9 @@
         @endif
 
         @if(Auth::user()->status === 'engaged')
-        <x-marriage-requests.engaged-notification />
+        <x-marriage-requests.engaged-notification :marriageRequest="$marriageRequest" :partner="$partner"
+            :totalImportant="$totalImportant" :maleImportantScore="$maleImportantScore"
+            :femaleImportantScore="$femaleImportantScore" :testResult="$testResult" />
         @else
         <div class="space-y-6">
             <x-marriage-requests.pending-section :pendingRequests="$pendingRequests" />

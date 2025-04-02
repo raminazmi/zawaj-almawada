@@ -7,11 +7,13 @@ use App\Models\MarriageRequest;
 use App\Models\Exam;
 use Illuminate\Http\Request;
 use App\Mail\CompatibilityTestLinkNotification;
+use App\Mail\FinalApprovalNotification;
 use App\Mail\ProfileApprovalNotification;
 use App\Mail\ProfileRejectedNotification;
 use App\Mail\RequestApproved;
 use App\Mail\RequestRejected;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class MarriageRequestAdminController extends Controller
 {
@@ -92,17 +94,54 @@ class MarriageRequestAdminController extends Controller
 
     public function approveFinal($id)
     {
-        $marriageRequest = MarriageRequest::findOrFail($id);
+        $marriageRequest = MarriageRequest::with('exam')->findOrFail($id);
 
-        $marriageRequest->user()->update(['status' => 'engaged']);
-        $marriageRequest->target()->update(['status' => 'engaged']);
         $marriageRequest->update([
             'admin_approval_status' => 'approved',
+            'status' => 'engaged',
         ]);
+        $marriageRequest->user->update(['status' => 'engaged']);
+        $marriageRequest->target->update(['status' => 'engaged']);
 
-        $this->sendApprovalNotifications($marriageRequest);
+        $maleUserId = $marriageRequest->user->gender === 'male' ? $marriageRequest->user_id : $marriageRequest->target_user_id;
+        $femaleUserId = $marriageRequest->user->gender === 'female' ? $marriageRequest->user_id : $marriageRequest->target_user_id;
 
-        return back()->with('success', 'تمت الموافقة النهائية بنجاح');
+        $exam = Exam::where('male_user_id', $maleUserId)
+            ->where('female_user_id', $femaleUserId)
+            ->first();
+
+        if (!$exam) {
+            $exam = Exam::create([
+                'male_user_id' => $maleUserId,
+                'female_user_id' => $femaleUserId,
+                'token' => Str::random(60)
+            ]);
+        }
+
+        $testLink = route('exam.index', ['token' => $exam->token]);
+        $testResult = ($exam && $exam->male_finished && $exam->female_finished) ? $exam->calculateScore() : null;
+
+        Mail::to($marriageRequest->user->email)->send(
+            new FinalApprovalNotification(
+                $marriageRequest->user,
+                $marriageRequest->target,
+                $testLink,
+                $testResult,
+                $exam
+            )
+        );
+
+        Mail::to($marriageRequest->target->email)->send(
+            new FinalApprovalNotification(
+                $marriageRequest->target,
+                $marriageRequest->user,
+                $testLink,
+                $testResult,
+                $exam
+            )
+        );
+
+        return redirect()->back()->with('success', 'تمت الموافقة النهائية على الطلب');
     }
 
     public function reject($id)
@@ -116,7 +155,22 @@ class MarriageRequestAdminController extends Controller
             'admin_approval_status' => 'rejected',
         ]);
 
-        $this->sendRejectionNotifications($marriageRequest);
+        $maleUserId = $marriageRequest->user->gender === 'male' ? $marriageRequest->user_id : $marriageRequest->target_user_id;
+        $femaleUserId = $marriageRequest->user->gender === 'female' ? $marriageRequest->user_id : $marriageRequest->target_user_id;
+
+        $exam = Exam::where('male_user_id', $maleUserId)
+            ->where('female_user_id', $femaleUserId)
+            ->first();
+
+        $reason = 'تم الرفض من قبل الإدارة';
+        if ($exam && $exam->male_finished && $exam->female_finished) {
+            $score = $exam->calculateScore();
+            if ($score < 90) {
+                $reason = 'نسبة التوافق بين الخاطبين متدنية';
+            }
+        }
+
+        $this->sendRejectionNotifications($marriageRequest, $reason);
 
         return back()->with('success', 'تم رفض الطلب بنجاح');
     }
@@ -128,32 +182,21 @@ class MarriageRequestAdminController extends Controller
         $marriageRequest->target()->update(['status' => 'pending']);
         $marriageRequest->update([
             'admin_approval_status' => 'pending',
+            'status' => 'approved'
         ]);
 
         return back()->with('success', 'تم تعديل الطلب بنجاح');
     }
 
-    private function sendApprovalNotifications($marriageRequest)
+    private function sendRejectionNotifications($marriageRequest, $reason)
     {
         $dashboardLink = route('exam.pledge');
 
         Mail::to($marriageRequest->user->email)
-            ->send(new RequestApproved($marriageRequest->user, $marriageRequest, $dashboardLink));
+            ->send(new RequestRejected($marriageRequest->user, $marriageRequest, $reason));
 
         Mail::to($marriageRequest->target->email)
-            ->send(new RequestApproved($marriageRequest->target, $marriageRequest, $dashboardLink));
-    }
-
-    private function sendRejectionNotifications($marriageRequest)
-    {
-        $dashboardLink = route('exam.pledge');
-        $reason = 'تم الرفض من قبل الإدارة';
-
-        Mail::to($marriageRequest->user->email)
-            ->send(new RequestRejected($marriageRequest->user, $marriageRequest, $dashboardLink, $reason));
-
-        Mail::to($marriageRequest->target->email)
-            ->send(new RequestRejected($marriageRequest->target, $marriageRequest, $dashboardLink, $reason));
+            ->send(new RequestRejected($marriageRequest->target, $marriageRequest, $reason));
     }
 
     public function approveProfile($userId)

@@ -52,7 +52,7 @@
                             class="card-hover p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-600 transition-all">
                             <div class="flex items-center">
                                 <i class="fas fa-clipboard-check text-green-600 text-xl ml-2"></i>
-                                <span class="text-gray-700">امتحان الدورة</span>
+                                <span class="text-gray-700">رابط دخول الامتحان</span>
                             </div>
                         </a>
                         @endif
@@ -61,46 +61,70 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600">
                         @if($course->start_date && $course->end_date)
                         <div class="bg-gray-50 p-4 rounded-lg">
-                            <i class="fas fa-calendar-alt ml-2 text-purple-600"></i>
-                            من {{ $course->start_date->translatedFormat('d M Y') }}<br>
-                            إلى {{ $course->end_date->translatedFormat('d M Y') }}
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-calendar-alt text-purple-600 ml-2"></i>
+                                <h4 class="text-sm font-semibold text-purple-800">فترة الدورة</h4>
+                            </div> <label class="block text-sm font-medium text-gray-700 mb-2">
+                                تاريخ البدء : {{ $course->start_date->translatedFormat('d M Y') }}<br>
+                            </label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                تاريخ الانتهاء : {{ $course->end_date->translatedFormat('d M Y') }}
+                            </label>
                         </div>
                         @endif
 
                         @if($course->exam_date)
                         <div class="bg-gray-50 p-4 rounded-lg">
                             <i class="fas fa-clock ml-2 text-purple-600"></i>
-                            تاريخ الامتحان: {{ $course->exam_date->translatedFormat('d M Y') }}
+                            تاريخ الامتحان : {{ $course->exam_date->translatedFormat('d M Y') }}
                         </div>
                         @endif
                     </div>
 
-                    @if(count($course->supporting_companies) > 0)
-                    <div class="mt-4 bg-purple-50 p-4 rounded-lg">
-                        <h4 class="text-sm font-semibold text-purple-800 mb-2">
-                            <i class="fas fa-handshake ml-2"></i>
-                            المؤسسات الراعية
-                        </h4>
-                        <div class="flex flex-wrap gap-2">
-                            @foreach($course->supporting_companies as $company)
-                            <span class="px-3 py-1 bg-white text-purple-700 rounded-full text-sm shadow-sm">
-                                {{ $company }}
-                            </span>
-                            @endforeach
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600">
+                        @if(count($course->honor_students) > 0)
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-award text-green-600 ml-2"></i>
+                                <h4 class="text-sm font-semibold text-green-800">الحاصلون على امتياز</h4>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($course->honor_students as $student)
+                                <span class="px-3 py-1 bg-white text-green-700 rounded-full text-sm shadow-sm">
+                                    {{ $student }}
+                                </span>
+                                @endforeach
+                            </div>
                         </div>
+                        @endif
+
+                        @if(count($course->supporting_companies) > 0)
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h4 class="text-sm font-semibold text-purple-800 mb-2">
+                                <i class="fas fa-handshake ml-2"></i>
+                                المؤسسات الراعية
+                            </h4>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($course->supporting_companies as $company)
+                                <span class="px-3 py-1 bg-white text-purple-700 rounded-full text-sm shadow-sm">
+                                    {{ $company }}
+                                </span>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endif
                     </div>
-                    @endif
                 </div>
 
                 <div class="lg:col-span-1">
-                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 h-full flex flex-col">
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 max-h-auto flex flex-col">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">
                             <i class="fas fa-list-ol ml-2 text-purple-600"></i>
                             محتوى الدورة
                         </h3>
 
                         <div
-                            class="flex-grow overflow-y-auto max-h-[250px] mb-4 pr-2 scrollbar-thin scrollbar-thumb-purple-300 scrollbar-track-gray-100">
+                            class="flex-grow overflow-y-auto max-h-[400px] mb-4 pr-2 scrollbar-thin scrollbar-thumb-purple-300 scrollbar-track-gray-100">
                             @foreach($course->episodes as $episode)
                             <button type="button"
                                 class="episode-btn w-full text-right p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-all flex items-center justify-between group mb-2"
@@ -118,7 +142,7 @@
 
                         <div class="mt-auto">
                             <a href="{{ $course->youtube_playlist }}" target="_blank"
-                                class="w-full p-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all flex items-center justify-center">
+                                class="w-full p-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all flex items-center justify-center text-center">
                                 <i class="fab fa-youtube ml-2"></i>
                                 مشاهدة جميع الحلقات على يوتيوب
                             </a>
@@ -183,6 +207,14 @@
     </div>
 </div>
 <style>
+    .date-badge {
+        @apply px-3 py-1 bg-white text-purple-700 rounded-full text-sm shadow-sm border border-purple-200;
+    }
+
+    .info-card {
+        @apply p-4 rounded-lg transition-all duration-300 hover: shadow-md;
+    }
+
     .scrollbar-thin::-webkit-scrollbar {
         width: 6px;
     }

@@ -33,7 +33,6 @@
             <div class="p-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
                     <h2 class="text-2xl font-semibold text-gray-800 mb-2 md:mb-0">
-                        <i class="fas fa-book ml-2 text-purple-600"></i>
                         {{ $course->title }}
                     </h2>
                     <div class="flex space-x-3 gap-2">

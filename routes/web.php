@@ -63,7 +63,6 @@ Route::middleware('auth')->group(function () {
 
         Route::get('index', [ExamController::class, 'index'])->name('exam.index');
         Route::get('exam/pledge', [ExamController::class, 'pledge'])->name('exam.pledge');
-        Route::post('exam/start', [ExamController::class, 'start'])->name('exam.start');
         Route::post('exam/save-answer', [ExamController::class, 'saveUserAnswer'])->name('exam.save-answer');
 
         Route::get('my-exams', [UserExamController::class, 'index'])->name('exam.user.index');

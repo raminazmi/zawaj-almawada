@@ -17,6 +17,7 @@ use App\Mail\CompatibilityTestLinkNotification;
 use App\Mail\RequestApproved;
 use App\Mail\RequestRejected;
 use App\Mail\TargetRequestRejected;
+use Illuminate\Support\Str;
 
 class MarriageRequestController extends Controller
 {
@@ -64,7 +65,37 @@ class MarriageRequestController extends Controller
             session(['previous_url' => route('marriage-requests.index')]);
             return redirect()->route('personal-info');
         }
-        return view('marriage-requests.index');
+
+        $user = Auth::user();
+        $marriageRequest = $user->activeMarriageRequest ?? $user->targetMarriageRequest;
+        $partner = null;
+        $exam = null;
+        $totalImportant = null;
+        $maleImportantScore = null;
+        $femaleImportantScore = null;
+        $testResult = null;
+
+        if ($marriageRequest && $marriageRequest->status === 'engaged') {
+            $partner = $marriageRequest->user_id === $user->id ? $marriageRequest->target : $marriageRequest->user;
+            $exam = $marriageRequest->exam;
+
+            if ($exam && $exam->male_finished && $exam->female_finished) {
+                $maleImportantScore = $exam->importantScore('male');
+                $femaleImportantScore = $exam->importantScore('female');
+                $totalImportant = $maleImportantScore['total'] + $femaleImportantScore['total'];
+                $testResult = $exam->calculateScore();
+            }
+        }
+
+        return view('marriage-requests.index', compact(
+            'marriageRequest',
+            'partner',
+            'exam',
+            'totalImportant',
+            'maleImportantScore',
+            'femaleImportantScore',
+            'testResult'
+        ));
     }
 
     public function create()
@@ -253,7 +284,37 @@ class MarriageRequestController extends Controller
         $submittedRequests = $user->submittedRequests;
         $receivedRequests = $user->receivedRequests;
 
-        return view('marriage-requests.status', compact('pendingRequests', 'submittedRequests', 'receivedRequests'));
+        $marriageRequest = $user->activeMarriageRequest ?? $user->targetMarriageRequest;
+        $partner = null;
+        $exam = null;
+        $totalImportant = null;
+        $maleImportantScore = null;
+        $femaleImportantScore = null;
+        $testResult = null;
+
+        if ($marriageRequest && $marriageRequest->status === 'engaged') {
+            $partner = $marriageRequest->user_id === $user->id ? $marriageRequest->target : $marriageRequest->user;
+            $exam = $marriageRequest->exam;
+
+            if ($exam && $exam->male_finished && $exam->female_finished) {
+                $maleImportantScore = $exam->importantScore('male');
+                $femaleImportantScore = $exam->importantScore('female');
+                $totalImportant = $maleImportantScore['total'] + $femaleImportantScore['total'];
+                $testResult = $exam->calculateScore();
+            }
+        }
+
+        return view('marriage-requests.status', compact(
+            'pendingRequests',
+            'submittedRequests',
+            'receivedRequests',
+            'marriageRequest',
+            'partner',
+            'totalImportant',
+            'maleImportantScore',
+            'femaleImportantScore',
+            'testResult'
+        ));
     }
 
     public function adminApproval()
@@ -263,9 +324,26 @@ class MarriageRequestController extends Controller
 
     public function approve($id)
     {
-        $request = MarriageRequest::findOrFail($id);
-        $request->update(['status' => 'approved']);
-        return redirect()->back()->with('success', 'تم الموافقة على الطلب');
+        $marriageRequest = MarriageRequest::with(['user', 'target'])->findOrFail($id);
+
+        $marriageRequest->update(['status' => 'approved']);
+
+        // Mail::to($marriageRequest->user->email)->send(
+        //     new RequestApproved($marriageRequest->user, $marriageRequest->target, $marriageRequest, $exam)
+        // );
+
+        // Mail::to($marriageRequest->target->email)->send(
+        //     new RequestApproved($marriageRequest->target, $marriageRequest->user, $marriageRequest, $exam)
+        // );
+
+        $admins = User::where('is_admin', true)->get();
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(
+                new AdminMarriageProposalNotification($marriageRequest)
+            );
+        }
+
+        return redirect()->back()->with('success', 'تم الموافقة على الطلب وإرسال الإشعارات');
     }
 
     public function reject($id)
@@ -285,29 +363,27 @@ class MarriageRequestController extends Controller
         if ($action === 'accept') {
             $marriageRequest->update(['status' => 'approved']);
 
-            try {
-                if ($marriageRequest->exam) {
-                    $sender = $marriageRequest->user;
-                    $target = $marriageRequest->target;
+            $exam = Exam::create([
+                'male_user_id' => $marriageRequest->user->gender === 'male' ? $marriageRequest->user_id : $marriageRequest->target_user_id,
+                'female_user_id' => $marriageRequest->user->gender === 'female' ? $marriageRequest->user_id : $marriageRequest->target_user_id,
+                'token' => Str::random(60)
+            ]);
 
-                    if (!$marriageRequest->exam->male_finished && $sender->gender === 'female') {
-                        Mail::to($target->email)->send(
-                            new CompatibilityTestNotification($sender, $marriageRequest)
-                        );
-                    } elseif (!$marriageRequest->exam->female_finished && $sender->gender === 'male') {
-                        Mail::to($target->email)->send(
-                            new CompatibilityTestNotification($sender, $marriageRequest)
-                        );
-                    } elseif (!$marriageRequest->exam->male_finished && $target->gender === 'male') {
-                        Mail::to($target->email)->send(
-                            new CompatibilityTestNotification($sender, $marriageRequest)
-                        );
-                    } elseif (!$marriageRequest->exam->female_finished && $target->gender === 'female') {
-                        Mail::to($target->email)->send(
-                            new CompatibilityTestNotification($sender, $marriageRequest)
-                        );
-                    }
-                }
+            $testLink = route('exam.index', ['token' => $exam->token]);
+            $marriageRequest->update([
+                'exam_id' => $exam->id,
+                'compatibility_test_link' => $testLink,
+                'test_link_sent' => true,
+            ]);
+
+            try {
+                Mail::to($marriageRequest->user->email)->send(
+                    new RequestApproved($marriageRequest->user, $marriageRequest->target, $marriageRequest, $exam)
+                );
+
+                Mail::to($marriageRequest->target->email)->send(
+                    new RequestApproved($marriageRequest->target, $marriageRequest->user, $marriageRequest, $exam)
+                );
 
                 $admins = User::where('is_admin', true)->get();
                 foreach ($admins as $admin) {
@@ -357,12 +433,50 @@ class MarriageRequestController extends Controller
 
     public function finalApproval($id)
     {
-        $marriageRequest = MarriageRequest::findOrFail($id);
+        $marriageRequest = MarriageRequest::with('exam')->findOrFail($id);
+
         $marriageRequest->update(['status' => 'engaged']);
         $marriageRequest->user->update(['status' => 'engaged']);
         $marriageRequest->target->update(['status' => 'engaged']);
-        Mail::to($marriageRequest->user->email)->send(new FinalApprovalNotification($marriageRequest->user, $marriageRequest->target));
-        Mail::to($marriageRequest->target->email)->send(new FinalApprovalNotification($marriageRequest->target, $marriageRequest->user));
+
+        $maleUserId = $marriageRequest->user->gender === 'male' ? $marriageRequest->user_id : $marriageRequest->target_user_id;
+        $femaleUserId = $marriageRequest->user->gender === 'female' ? $marriageRequest->user_id : $marriageRequest->target_user_id;
+
+        $exam = Exam::where('male_user_id', $maleUserId)
+            ->where('female_user_id', $femaleUserId)
+            ->first();
+
+        if (!$exam) {
+            $exam = Exam::create([
+                'male_user_id' => $maleUserId,
+                'female_user_id' => $femaleUserId,
+                'token' => \Str::random(32),
+            ]);
+        }
+
+        $testLink = route('exam.index', ['token' => $exam->token]);
+        $testResult = $exam->male_finished && $exam->female_finished ? $exam->compatibility_test_result : null;
+
+        Mail::to($marriageRequest->user->email)->send(
+            new FinalApprovalNotification(
+                $marriageRequest->user,
+                $marriageRequest->target,
+                $testLink,
+                $testResult,
+                $exam
+            )
+        );
+
+        Mail::to($marriageRequest->target->email)->send(
+            new FinalApprovalNotification(
+                $marriageRequest->target,
+                $marriageRequest->user,
+                $testLink,
+                $testResult,
+                $exam
+            )
+        );
+
         return redirect()->back()->with('success', 'تمت الموافقة النهائية على الطلب');
     }
 }

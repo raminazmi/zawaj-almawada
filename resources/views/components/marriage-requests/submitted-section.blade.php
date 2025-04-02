@@ -9,9 +9,9 @@
         <div class="space-y-3 border-b pb-2">
             <x-marriage-requests.request-info :request="$request" />
 
-            @if($request->status === 'approved')
+            @if($request->status === 'approved' && $request->compatibility_test_link)
             <div style="text-align: end; margin: 5px 0;">
-                <a href="{{ route('exam.pledge') }}"
+                <a href="{{ $request->compatibility_test_link }}"
                     style="display: inline-block; padding: 8px 18px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold;">
                     رابط المقياس
                 </a>
@@ -21,7 +21,7 @@
 
         @if(Auth::check() && Auth::id() === $request->user_id && ($request->status === 'approved' || $request->status
         === 'pending'))
-        <x-target-info-card :target="$request->target" />
+        <x-target-info-card :target="$request->target" :compatibility_test_link="$request->compatibility_test_link" />
         @endif
         @endforeach
     </div>

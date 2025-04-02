@@ -1,4 +1,4 @@
-@props(['user'])
+@props(['user', 'compatibility_test_link'])
 
 <div class="mt-6 bg-white rounded-xl shadow-md overflow-hidden" x-data="{ isOpen: false }">
     <button type="button" class="w-full focus:outline-none" @click="isOpen = !isOpen">
@@ -40,8 +40,8 @@
                         <i class="fas fa-map-marker-alt"></i>
                     </div>
                     <div class="mr-3">
-                        <p class="text-sm font-medium text-gray-500">الولاية</p>
-                        <p class="text-sm text-gray-900">{{ $user->state ?? 'غير متوفر' }}</p>
+                        <p class="text-sm font-medium text-gray-500">البلد</p>
+                        <p class="text-sm text-gray-900">{{ $user->country ?? 'غير متوفر' }}</p>
                     </div>
                 </div>
 
@@ -238,7 +238,8 @@
                 <div class="mr-3">
                     <p class="text-sm text-green-700">
                         يجب عليك تقديم مقياس التوافق الزواجي لمعرفة مدى التوافق بينك وبين شريك حياتك،
-                        <a href="/exam/pledge" class="font-medium text-green-600 hover:text-green-500">
+                        <a href="{{ $compatibility_test_link }}"
+                            class="font-medium text-green-600 hover:text-green-500">
                             اضغط هنا للانتقال إلى المقياس
                         </a>
                     </p>

@@ -12,14 +12,29 @@ use Illuminate\Support\Facades\Auth;
 
 class ExamController extends Controller
 {
-    public function pledge(InitExamAction $action)
+    public function pledge()
     {
         $token = request('token') ?? request()->route('token');
+
         if (!auth()->user()->age || !auth()->user()->gender) {
             session(['previous_url' => route('exam.pledge')]);
-            return redirect()->route('personal-info', ['token' => request('token')]);
+            return redirect()->route('personal-info', ['token' => $token]);
         }
+
         return view('exam-pledge', ['token' => $token]);
+    }
+
+    public function start(InitExamAction $action)
+    {
+        $token = request('token');
+
+        if (!$token) {
+            abort(404);
+        }
+
+        $action->createExam($token);
+
+        return redirect()->route('exam.index', ['token' => $token]);
     }
 
     public function index(InitExamAction $action)
@@ -27,8 +42,11 @@ class ExamController extends Controller
         if (!request('token') && !auth()->user()->gender) {
             return to_route('personal-info');
         }
+
+        $exam = $action->createExam(request('token'));
+
         if ($action->canShowExam()) {
-            return redirect()->route('exam.user.show', $action->exam);
+            return redirect()->route('exam.user.show', $exam);
         }
 
         $data = $action->handle();

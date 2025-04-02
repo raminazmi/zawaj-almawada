@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-<div class="email-container">
+<div class="email-container" dir="rtl">
     <div class="header">
         <img src="https://zawaj-almawada.com/assets/images/logo.png" alt="شعار الموقع"
             style="max-width: 100px; margin-bottom: 10px;">
@@ -13,7 +13,6 @@
         <p>لقد تلقيت طلب خطوبة جديد على منصة الزواج الشرعي.</p>
 
         <div style="background-color: #f9f9f9; padding: 20px; border-radius: 10px; margin-bottom: 25px;">
-            <!-- المعلومات الأساسية -->
             <div style="margin-bottom: 25px;">
                 <h3 style="color: #6B46C1; border-bottom: 2px solid #EEE; padding-bottom: 8px;">
                     <i class="fas fa-user" style="margin-left: 8px;"></i>

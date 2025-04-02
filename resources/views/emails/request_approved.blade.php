@@ -1,26 +1,52 @@
 @extends('layouts.email')
 
 @section('content')
-<div class="email-container">
+<div class="email-container" dir="rtl">
     <div class="header">
         <img src="https://zawaj-almawada.com/assets/images/logo.png" alt="شعار الموقع"
             style="max-width: 100px; margin-bottom: 10px;">
         <h1>تمت الموافقة على طلب الخطوبة</h1>
     </div>
-
-    <div class="content">
-        <h2>مرحبًا {{ $user->name }}،</h2>
-        <p>نود إبلاغك أنه تمت الموافقة النهائية على طلب الخطوبة رقم <strong>{{ $marriageRequest->request_number
-                }}</strong> من قبل الإدارة.</p>
-        <p>يمكنك الآن متابعة الخطوات التالية عبر لوحة التحكم:</p>
-        <div style="text-align: center; margin: 2rem 0;">
-            <a href="{{ $dashboardLink }}"
-                style="display: inline-block; padding: 12px 24px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                الانتقال إلى لوحة التحكم
-            </a>
+    <div class="email-container">
+        <div class="content">
+            <h2>مرحبًا {{ $user->name }}،</h2>
+            <p>يسعدنا إعلامك بأنه تمت الموافقة على طلب الخطوبة مع {{ $partner->name }}.</p>
+            <p>للوصول إلى اختبار التوافق، يرجى النقر على الرابط التالي:</p>
+            <p><a href="{{ $testLink }}">{{ $testLink }}</a></p>
+            <p>نتمنى لك التوفيق في الخطوات القادمة!</p>
+            <p>فريق زواج المودة</p>
         </div>
-        <p>شكرًا لاستخدامك زواج المودة!</p>
-        <p>فريق زواج المودة</p>
     </div>
 </div>
+
+<style>
+    .email-container {
+        max-width: 600px;
+        margin: 0 auto;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+    }
+
+    .header {
+        text-align: center;
+        padding: 20px 0;
+    }
+
+    .content {
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        color: #6B46C1;
+        margin-top: 10px;
+    }
+
+    h2 {
+        color: #2D3748;
+    }
+</style>
 @endsection

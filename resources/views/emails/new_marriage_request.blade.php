@@ -1,7 +1,7 @@
 @extends('layouts.email')
 
 @section('content')
-<div class="email-container">
+<div class="email-container" dir="rtl">
     <div class="header">
         <img src="https://zawaj-almawada.com/assets/images/logo.png" alt="شعار الموقع"
             style="max-width: 100px; margin-bottom: 10px;">

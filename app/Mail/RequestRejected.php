@@ -17,12 +17,12 @@ class RequestRejected extends Mailable
     public $dashboardLink;
     public $reason;
 
-    public function __construct(User $user, MarriageRequest $marriageRequest, $reason = null)
+    public function __construct(User $user, MarriageRequest $marriageRequest, $reason)
     {
         $this->user = $user;
         $this->marriageRequest = $marriageRequest;
         $this->dashboardLink = route('exam.pledge');
-        $this->reason = $reason ?? 'لم يتم تقديم سبب محدد';
+        $this->reason = $reason;
     }
 
     public function build()
