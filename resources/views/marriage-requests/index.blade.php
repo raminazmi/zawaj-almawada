@@ -116,7 +116,7 @@
           <div class="flex-shrink-0 pt-1">
             <i class="fas fa-exclamation-triangle text-orange-400 text-xl"></i>
           </div>
-          <div class="ml-3 flex-1">
+          <div class="mr-3 flex-1">
             <h3 class="text-lg font-medium text-gray-800">طلب قيد المراجعة</h3>
             <div class="mt-2 text-gray-600">
               <p>لديك طلب خطوبة نشط مع
@@ -133,7 +133,7 @@
             <div class="mt-4">
               <a href="{{ route('marriage-requests.status') }}"
                 class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all">
-                <i class="fas fa-clock mr-2"></i>
+                <i class="fas fa-clock ml-2"></i>
                 متابعة حالة الطلب
               </a>
             </div>
