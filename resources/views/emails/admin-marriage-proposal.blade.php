@@ -38,7 +38,7 @@
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 15px;">
                 <div>
                     <p style="margin: 5px 0;"><strong>العمر:</strong> {{ $sender->age ?? 'غير متوفر' }}</p>
-                    <p style="margin: 5px 0;"><strong>المدينة:</strong> {{ $sender->city ?? 'غير متوفر' }}</p>
+                    <p style="margin: 5px 0;"><strong>البلد:</strong> {{ $sender->country ?? 'غير متوفر' }}</p>
                     <p style="margin: 5px 0;"><strong>الحالة الاجتماعية:</strong>
                         @php
                         $maritalStatus = [
