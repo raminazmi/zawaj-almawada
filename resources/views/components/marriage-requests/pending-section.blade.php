@@ -15,7 +15,7 @@
 
             @if(Auth::check() && Auth::id() === $request->target_user_id && ($request->status === 'approved' ||
             $request->status === 'pending'))
-            <x-user-info-card :user="$request->user" />
+            <x-user-info-card :user="$request->user" :link="$request->compatibility_test_link" />
             @endif
         </div>
         @endforeach

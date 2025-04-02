@@ -1,4 +1,4 @@
-@props(['target', 'compatibility_test_link'])
+@props(['target', 'link'])
 
 <div class="mt-3 bg-white rounded-xl shadow-md overflow-hidden" x-data="{ isOpen: false }">
     <button type="button" class="w-full focus:outline-none" @click="isOpen = !isOpen">
@@ -247,8 +247,7 @@
                 <div class="mr-3">
                     <p class="text-sm text-green-700">
                         يمكنك تقديم مقياس التوافق الزواجي لمعرفة مدى التوافق بينك وبين هذا الشريك،
-                        <a href="{{ $compatibility_test_link }}"
-                            class="font-medium text-green-600 hover:text-green-500">
+                        <a href="{{ $link }}" class="font-medium text-green-600 hover:text-green-500">
                             اضغط هنا للانتقال إلى المقياس
                         </a>
                     </p>
