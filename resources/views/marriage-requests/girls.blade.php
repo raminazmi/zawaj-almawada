@@ -175,16 +175,23 @@
                                                         <p class="text-gray-800">{{ $girl->country ?? 'غير محدد' }}</p>
                                                     </div>
                                                     <div>
-                                                        <p class="text-sm font-medium text-gray-500">الولاية</p>
-                                                        <p class="text-gray-800">{{ $girl->state ?? 'غير محدد' }}</p>
-                                                    </div>
-                                                    <div>
-                                                        <p class="text-sm font-medium text-gray-500">القبيلة</p>
-                                                        <p class="text-gray-800">{{ $girl->tribe ?? 'غير محدد' }}</p>
-                                                    </div>
-                                                    <div>
                                                         <p class="text-sm font-medium text-gray-500">النسب</p>
                                                         <p class="text-gray-800">{{ $girl->lineage ?? 'غير محدد' }}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-medium text-gray-500">الحالة الاجتماعية
+                                                        </p>
+                                                        <p class="text-gray-800">
+                                                            @php
+                                                            $maritalStatus = [
+                                                            'single' => 'عزباء',
+                                                            'married' => 'متزوجة',
+                                                            'widowed' => 'أرملة',
+                                                            'divorced' => 'مطلقة'
+                                                            ];
+                                                            echo $maritalStatus[$girl->marital_status] ?? 'غير محدد';
+                                                            @endphp
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div class="space-y-3">
@@ -201,21 +208,6 @@
                                                     <div>
                                                         <p class="text-sm font-medium text-gray-500">لون البشرة</p>
                                                         <p class="text-gray-800">{{ $girl->skin_color ?? 'غير محدد' }}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <p class="text-sm font-medium text-gray-500">الحالة الاجتماعية
-                                                        </p>
-                                                        <p class="text-gray-800">
-                                                            @php
-                                                            $maritalStatus = [
-                                                            'single' => 'عزباء',
-                                                            'married' => 'متزوجة',
-                                                            'widowed' => 'أرملة',
-                                                            'divorced' => 'مطلقة'
-                                                            ];
-                                                            echo $maritalStatus[$girl->marital_status] ?? 'غير محدد';
-                                                            @endphp
                                                         </p>
                                                     </div>
                                                     <div>
