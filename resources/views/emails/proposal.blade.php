@@ -26,7 +26,7 @@
                         <p style="margin: 5px 0;"><strong>الوزن:</strong> {{ $user->weight ?? 'غير متوفر' }} كجم</p>
                     </div>
                     <div>
-                        <p style="margin: 5px 0;"><strong>المدينة:</strong> {{ $user->city }}</p>
+                        <p style="margin: 5px 0;"><strong>البلد:</strong> {{ $user->country }}</p>
                         <p style="margin: 5px 0;"><strong>القبيلة:</strong> {{ $user->tribe ?? 'غير متوفر' }}</p>
                         <p style="margin: 5px 0;"><strong>الحالة الاجتماعية:</strong>
                             @php
@@ -43,7 +43,6 @@
                 </div>
             </div>
 
-            <!-- المعلومات التعليمية والمهنية -->
             <div style="margin-bottom: 25px;">
                 <h3 style="color: #6B46C1; border-bottom: 2px solid #EEE; padding-bottom: 8px;">
                     <i class="fas fa-graduation-cap" style="margin-left: 8px;"></i>
@@ -85,7 +84,6 @@
                 </div>
             </div>
 
-            <!-- المعلومات الدينية -->
             <div style="margin-bottom: 25px;">
                 <h3 style="color: #6B46C1; border-bottom: 2px solid #EEE; padding-bottom: 8px;">
                     <i class="fas fa-star-and-crescent" style="margin-left: 8px;"></i>
@@ -119,7 +117,6 @@
                 </div>
             </div>
 
-            <!-- الوصف الشخصي -->
             <div style="margin-bottom: 25px;">
                 <h3 style="color: #6B46C1; border-bottom: 2px solid #EEE; padding-bottom: 8px;">
                     <i class="fas fa-comment-dots" style="margin-left: 8px;"></i>
@@ -130,7 +127,6 @@
                 </p>
             </div>
 
-            <!-- توقعات الشريك -->
             <div>
                 <h3 style="color: #6B46C1; border-bottom: 2px solid #EEE; padding-bottom: 8px;">
                     <i class="fas fa-heart" style="margin-left: 8px;"></i>

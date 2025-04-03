@@ -19,7 +19,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
                 <div class="space-y-2">
                     <label class="text-sm text-gray-500">الاسم الكامل</label>
-                    <p class="font-medium">{{ $partner->name }}</p>
+                    <p class="font-medium">{{ $partner->full_name }}</p>
                 </div>
                 <div class="space-y-2">
                     <label class="text-sm text-gray-500">البلد</label>
@@ -28,6 +28,10 @@
                 <div class="space-y-2">
                     <label class="text-sm text-gray-500">الولاية</label>
                     <p class="font-medium">{{ $partner->state }}</p>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm text-gray-500">القرية</label>
+                    <p class="font-medium">{{ $partner->village }}</p>
                 </div>
                 <div class="space-y-2">
                     <label class="text-sm text-gray-500">القبيلة</label>

@@ -93,9 +93,9 @@
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 15px;">
                 <div>
                     <p style="margin: 5px 0;"><strong>العمر:</strong> {{ $target->age ?? 'غير متوفر' }}</p>
-                    <p style="margin: 5px 0;"><strong>المدينة:</strong> {{ $target->city ?? 'غير متوفر' }}</p>
+                    <p style="margin: 5px 0;"><strong>البلد:</strong> {{ $target->country ?? 'غير متوفر' }}</p>
                     <p style="margin: 5px 0;"><strong>الحالة الاجتماعية:</strong>
-                        @php
+                        @phpظظظ
                         $maritalStatus = [
                         'single' => 'أعزب/عزباء',
                         'married' => 'متزوج/ة',

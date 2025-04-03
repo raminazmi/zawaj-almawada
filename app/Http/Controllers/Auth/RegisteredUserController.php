@@ -115,7 +115,6 @@ class RegisteredUserController extends Controller
     {
         $user = Auth::user();
 
-
         try {
             $validated = $request->validate([
                 'state' => 'required|string|max:100',
@@ -145,6 +144,8 @@ class RegisteredUserController extends Controller
                 'prayer_commitment' => 'required|in:yes,sometimes,no',
                 'personal_description' => 'required|string|max:2000',
                 'partner_expectations' => 'required|string|max:2000',
+                'full_name' => 'required|string|max:255',
+                'village' => 'required|string|max:255',
             ], [
                 'state.required' => 'حقل الولاية مطلوب',
                 'state.string' => 'يجب أن تكون الولاية نصاً',
@@ -235,6 +236,14 @@ class RegisteredUserController extends Controller
                 'partner_expectations.required' => 'حقل مواصفات الشريك المطلوب مطلوب',
                 'partner_expectations.string' => 'يجب أن تكون مواصفات الشريك المطلوب نصاً',
                 'partner_expectations.max' => 'يجب ألا تتجاوز مواصفات الشريك المطلوب 2000 حرف',
+
+                'full_name.required' => 'حقل الاسم كاملا مطلوب',
+                'full_name.string' => 'يجب أن يكون الاسم كاملا نصاً',
+                'full_name.max' => 'يجب ألا يتجاوز الاسم كاملا 255 حرفاً',
+
+                'village.required' => 'حقل القرية مطلوب',
+                'village.string' => 'يجب أن تكون القرية نصاً',
+                'village.max' => 'يجب ألا تتجاوز القرية 255 حرفاً',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('فشل التحقق: ' . json_encode($e->errors()));

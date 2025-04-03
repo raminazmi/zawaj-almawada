@@ -54,6 +54,8 @@ class User extends Authenticatable
         'partner_expectations',
         'profile_status',
         'membership_number',
+        'full_name',
+        'village',
     ];
 
     protected $hidden = [

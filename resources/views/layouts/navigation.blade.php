@@ -191,11 +191,18 @@
                 </a>
                 @endif
             </div>
+
             @guest
-            <a href="{{ route('contact') }}"
-                class="gold-btn px-6 py-2 text-white rounded-full hidden lg:flex items-center">
-                تواصل معنا
-            </a>
+            <div class="flex justify-center items-center gap-2">
+                <a href="{{ route('login') }}"
+                    class="gold-btn px-4 py-2 text-white rounded-full hidden lg:flex items-center text-sm">
+                    تسجيل الدخول
+                </a>
+                <a href="{{ route('contact') }}"
+                    class="gold-btn px-4 py-2 text-white rounded-full hidden lg:flex items-center text-sm">
+                    تواصل معنا
+                </a>
+            </div>
             @endguest
 
             @auth
@@ -351,9 +358,14 @@
         @endif
 
         @guest
-        <a href="{{ route('contact') }}" class="gold-btn block text-center px-6 py-2 rounded-full">
-            تواصل معنا
-        </a>
+        <div class="space-y-2">
+            <a href="{{ route('login') }}" class="gold-btn block text-center px-6 py-2 rounded-full">
+                تسجيل الدخول
+            </a>
+            <a href="{{ route('contact') }}" class="gold-btn block text-center px-6 py-2 rounded-full">
+                تواصل معنا
+            </a>
+        </div>
         @endguest
 
         @auth

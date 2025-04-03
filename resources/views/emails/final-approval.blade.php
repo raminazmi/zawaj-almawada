@@ -13,8 +13,9 @@
         <p>مبارك! تمت خطبتكم وتم قبول طلب الزواج من منصة زواج المودة.</p>
         <p>إليك بيانات الطرف الآخر:</p>
         <ul>
-            <li><strong>الاسم:</strong> {{ $partner->name }}</li>
+            <li><strong>الاسم الكامل:</strong> {{ $partner->full_name ?? 'غير محدد' }}</li>
             <li><strong>البلد:</strong> {{ $partner->country ?? 'غير محدد' }}</li>
+            <li><strong>القرية:</strong> {{ $partner->village ?? 'غير محدد' }}</li>
             <li><strong>الولاية:</strong> {{ $partner->state ?? 'غير محدد' }}</li>
             <li><strong>القبيلة:</strong> {{ $partner->tribe ?? 'غير محدد' }}</li>
         </ul>
