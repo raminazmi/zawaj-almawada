@@ -5,7 +5,6 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col sm:flex-row justify-between items-center mb-8 space-y-4 sm:space-y-0">
             <div class="flex items-center bg-white px-6 py-3 rounded-full shadow-sm border border-purple-200">
-                <i class="fas fa-ring text-purple-600 ml-3"></i>
                 <h1
                     class="text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                     دورة التأهيل للزواج

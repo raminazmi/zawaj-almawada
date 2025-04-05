@@ -24,17 +24,7 @@
                             class="card-hover p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-600 transition-all">
                             <div class="flex items-center">
                                 <i class="fas fa-play-circle text-red-500 text-xl ml-2"></i>
-                                <span class="text-gray-700">المقطع التوضيحي</span>
-                            </div>
-                        </a>
-                        @endif
-
-                        @if($course->ebook_url)
-                        <a href="{{ $course->ebook_url }}" target="_blank"
-                            class="card-hover p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-600 transition-all">
-                            <div class="flex items-center">
-                                <i class="fas fa-book-open text-purple-600 text-xl ml-2"></i>
-                                <span class="text-gray-700">الكتاب الإلكتروني</span>
+                                <span class="text-gray-700">مقطع توضيحي للدورة</span>
                             </div>
                         </a>
                         @endif
@@ -65,10 +55,10 @@
                                 <i class="fas fa-calendar-alt text-purple-600 ml-2"></i>
                                 <h4 class="text-sm font-semibold text-purple-800">فترة الدورة</h4>
                             </div> <label class="block text-sm font-medium text-gray-700 mb-2">
-                                تاريخ البدء : {{ $course->start_date->translatedFormat('d M Y') }}<br>
+                                تاريخ بدء الدورة : {{ $course->start_date->translatedFormat('d M Y') }}<br>
                             </label>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
-                                تاريخ الانتهاء : {{ $course->end_date->translatedFormat('d M Y') }}
+                                تاريخ انتهاء الدورة : {{ $course->end_date->translatedFormat('d M Y') }}
                             </label>
                         </div>
                         @endif
@@ -120,11 +110,21 @@
                     <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 max-h-auto flex flex-col">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">
                             <i class="fas fa-list-ol ml-2 text-purple-600"></i>
-                            محتوى الدورة
+                            محتويات الدورة
                         </h3>
 
                         <div
                             class="flex-grow overflow-y-auto max-h-[400px] mb-4 pr-2 scrollbar-thin scrollbar-thumb-purple-300 scrollbar-track-gray-100">
+                            @if($course->ebook_url)
+                            <a href="{{ $course->ebook_url }}" target="_blank"
+                                class="w-full text-right p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-all flex items-center justify-between group mb-2">
+                                <div class="flex items-center">
+                                    <span class="text-gray-700 mr-2 text-sm truncate">كتاب الدورة الإلكتروني</span>
+                                </div>
+                                <i class="fas fa-book-open text-gray-400 group-hover:text-purple-600 ml-2"></i>
+                            </a>
+                            @endif
+
                             @foreach($course->episodes as $episode)
                             <button type="button"
                                 class="episode-btn w-full text-right p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-all flex items-center justify-between group mb-2"

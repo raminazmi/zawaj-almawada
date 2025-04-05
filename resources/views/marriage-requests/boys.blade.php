@@ -189,7 +189,7 @@
                                                             'widowed' => 'أرملة',
                                                             'divorced' => 'مطلقة'
                                                             ];
-                                                            echo $maritalStatus[$girl->marital_status] ?? 'غير محدد';
+                                                            echo $maritalStatus[$boy->marital_status] ?? 'غير محدد';
                                                             @endphp
                                                         </p>
                                                     </div>

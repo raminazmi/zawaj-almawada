@@ -24,8 +24,8 @@
                     ['name' => 'title', 'label' => 'عنوان الدورة', 'icon' => 'heading', 'type' => 'text'],
                     ['name' => 'youtube_playlist', 'label' => 'رابط اليوتيوب', 'icon' => 'youtube', 'type' => 'url'],
                     ['name' => 'registration_link', 'label' => 'رابط التسجيل', 'icon' => 'link', 'type' => 'url'],
-                    ['name' => 'ebook_url', 'label' => 'رابط الكتاب الإلكتروني', 'icon' => 'book', 'type' => 'url'],
-                    ['name' => 'intro_video', 'label' => 'رابط الفيديو التعريفي', 'icon' => 'video', 'type' => 'url'],
+                    ['name' => 'ebook_url', 'label' => 'رابط كتاب الدورة', 'icon' => 'book', 'type' => 'url'],
+                    ['name' => 'intro_video', 'label' => 'مقطع توضيحي للدورة', 'icon' => 'video', 'type' => 'url'],
                     ['name' => 'supporting_companies', 'label' => 'الشركات الداعمة (مفصولة بفواصل)', 'icon' =>
                     'building', 'type' => 'text'],
                     ['name' => 'honor_students', 'label' => 'الحاصلون على امتياز (مفصولة بفواصل)', 'icon' =>
@@ -49,7 +49,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
                                 <i class="fas fa-calendar-start text-purple-600 ml-2"></i>
-                                تاريخ البدء
+                                تاريخ بدء الدورة
                             </label>
                             <input type="date" name="start_date"
                                 value="{{ old('start_date', $course->start_date?->format('Y-m-d') ?? '') }}"
@@ -62,7 +62,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
                                 <i class="fas fa-calendar-end text-purple-600 ml-2"></i>
-                                تاريخ الانتهاء
+                                تاريخ انتهاء الدورة
                             </label>
                             <input type="date" name="end_date"
                                 value="{{ old('end_date', $course->end_date?->format('Y-m-d') ?? '') }}"
