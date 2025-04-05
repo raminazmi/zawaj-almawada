@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'zawajmawadda@gmail.com',
             'password' => Hash::make('123456789'),
             'is_admin' => true,
+            'admin_role' => 'main',
             'membership_number' => "000000",
         ]);
         $this->call([

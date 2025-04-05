@@ -56,6 +56,7 @@ class User extends Authenticatable
         'membership_number',
         'full_name',
         'village',
+        'admin_role',
     ];
 
     protected $hidden = [
@@ -122,5 +123,15 @@ class User extends Authenticatable
     public function isProfileApproved(): bool
     {
         return $this->profile_status === 'approved';
+    }
+
+    public function isMainAdmin(): bool
+    {
+        return $this->is_admin && $this->admin_role === 'main';
+    }
+
+    public function isSubAdmin(): bool
+    {
+        return $this->is_admin && $this->admin_role === 'sub';
     }
 }

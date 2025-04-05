@@ -25,11 +25,13 @@ use App\Http\Controllers\MarriageRequests\MarriageRequestController;
 use App\Http\Controllers\Admin\MarriageRequestAdminController;
 use App\Http\Middleware\AuthAdmin;
 use App\Http\Middleware\AuthUser;
+use App\Http\Middleware\CheckMainAdmin;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AddActivity\BusinessActivityController;
 use App\Http\Controllers\Admin\AdminCourseController;
 use App\Http\Controllers\Admin\ProfileApprovalController;
 use App\Http\Controllers\courses\CourseController;
+use App\Http\Controllers\Admin\Admin\AdminController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -121,6 +123,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/{id}/approve-final', [MarriageRequestAdminController::class, 'approveFinal'])->name('marriage-requests.approve-final');
             Route::post('/{id}/reject', [MarriageRequestAdminController::class, 'reject'])->name('marriage-requests.reject');
             Route::post('/{id}/pending', [MarriageRequestAdminController::class, 'pending'])->name('marriage-requests.pending');
+        });
+
+        Route::middleware(CheckMainAdmin::class)->group(function () {
+            Route::resource('admins', AdminController::class)->parameters(['admins' => 'user'])->except(['show']);
+            Route::prefix('admins')->group(function () {
+                Route::post('/{admin}/toggle-status', [AdminController::class, 'toggleStatus'])->name('admins.toggle-status');
+                Route::delete('/{admin}/force-delete', [AdminController::class, 'forceDelete'])->name('admins.force-delete');
+            });
         });
     });
 });

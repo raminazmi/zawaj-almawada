@@ -53,6 +53,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->enum('status', ['available', 'pending', 'engaged'])->default('available');
             $table->boolean('is_admin')->default(false);
+            $table->enum('admin_role', ['main', 'sub'])->nullable();
             $table->enum('profile_status', ['default', 'pending', 'approved', 'rejected'])->default('default');
             $table->timestamps();
         });
