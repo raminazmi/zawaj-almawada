@@ -20,7 +20,7 @@
                 </h3>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 15px;">
                     <div>
-                        <p style="margin: 5px 0;"><strong>الاسم:</strong> {{ $user->name }}</p>
+                        <p style="margin: 5px 0;"><strong>الاسم المستعار:</strong> {{ $user->name }}</p>
                         <p style="margin: 5px 0;"><strong>العمر:</strong> {{ $user->age ?? 'غير متوفر' }}</p>
                         <p style="margin: 5px 0;"><strong>الطول:</strong> {{ $user->height ?? 'غير متوفر' }} سم</p>
                         <p style="margin: 5px 0;"><strong>الوزن:</strong> {{ $user->weight ?? 'غير متوفر' }} كجم</p>

@@ -8,14 +8,14 @@
         <div class="col-span-1 md:col-span-2">
             <div class="bg-purple-50 border border-purple-200 rounded-lg p-3 flex items-center text-sm text-purple-700">
                 <i class="fas fa-lock text-purple-500 ml-2"></i>
-                <span>معلوماتك الخاصة (الاسم كاملا ، القرية ، الولاية ، القبيلة) آمنة ومحمية، لن تظهر لأحد إلا بعد
+                <span>معلوماتك الخاصة (الاسم الثلاثي ، القرية) آمنة ومحمية، لن تظهر لأحد إلا بعد
                     اكتمال
                     الخطوبة بنجاح. يرجى
                     كتابة
                     البيانات بطريقة صحيحة.</span>
             </div>
         </div>
-        <x-profile.input-field name="full_name" label="الاسم كاملا" value="{{ old('full_name', $user->full_name) }}"
+        <x-profile.input-field name="full_name" label="اسمك الثلاثي" value="{{ old('full_name', $user->full_name) }}"
             icon="user" :error="$errors->first('full_name')" />
         <x-profile.input-field name="village" label="القرية" value="{{ old('village', $user->village) }}" icon="home"
             :error="$errors->first('village')" />

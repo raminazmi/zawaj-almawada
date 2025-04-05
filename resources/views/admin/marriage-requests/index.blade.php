@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="min-h-screen bg-gradient-to-b from-purple-50 to-white">
+<section class="min-h-screen">
     <div class="max-w-7xl mx-auto px-4 py-8">
         <div class="text-center mb-12">
             <h2 class="text-2xl font-bold text-purple-800 inline-block relative pb-4">

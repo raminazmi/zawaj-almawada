@@ -45,7 +45,7 @@ class RegisteredUserController extends Controller
             'phone'    => ['nullable', 'string', 'max:20'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ], [
-            'name.required'    => 'الاسم المستعار مطلوب',
+            'name.required'    => 'الاسم مطلوب',
             'name.string'      => 'يجب أن يكون الاسم نصاً',
             'name.max'         => 'يجب ألا يتجاوز الاسم 255 حرفاً',
             'gender.required'  => 'يرجى اختيار الجنس',

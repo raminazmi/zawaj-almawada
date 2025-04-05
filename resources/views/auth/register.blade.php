@@ -13,7 +13,7 @@
                         <x-input-label for="name" :value="__('الاسم المستعار')" class="text-purple-900" />
                         <span class="text-red-500">*</span>
                     </div>
-                  <x-text-input id="name" name="name" type="text"
+                    <x-text-input id="name" name="name" type="text"
                         class="mt-1 block w-full rounded-xl border-purple-100 focus:border-purple-500 focus:ring-purple-500"
                         :value="old('name')" />
                     <x-input-error :messages="$errors->get('name')" class="mt-2" />
@@ -21,9 +21,9 @@
 
                 <div>
                     <div class="flex items-center gap-1">
-                    <x-input-label :value="__('الجنس')" class="text-purple-900" />
-                    <span class="text-red-500">*</span>
-                </div>
+                        <x-input-label :value="__('الجنس')" class="text-purple-900" />
+                        <span class="text-red-500">*</span>
+                    </div>
                     <div class="mt-1 flex gap-4">
                         <label class="flex items-center">
                             <input type="radio" name="gender" value="male" id="gender-male"
@@ -41,9 +41,9 @@
 
                 <div>
                     <div class="flex items-center gap-1">
-                    <x-input-label for="country" :value="__('الدولة')" class="text-purple-900" />
-                    <span class="text-red-500">*</span>
-                </div>
+                        <x-input-label for="country" :value="__('الدولة')" class="text-purple-900" />
+                        <span class="text-red-500">*</span>
+                    </div>
                     <x-text-input id="country" name="country" type="text"
                         class="mt-1 block w-full rounded-xl border-purple-100 focus:border-purple-500 focus:ring-purple-500"
                         :value="old('country')" />
@@ -52,9 +52,9 @@
 
                 <div>
                     <div class="flex items-center gap-1">
-                    <x-input-label for="email" :value="__('البريد الإلكتروني')" class="text-purple-900" />
-                    <span class="text-red-500">*</span>
-                </div>
+                        <x-input-label for="email" :value="__('البريد الإلكتروني')" class="text-purple-900" />
+                        <span class="text-red-500">*</span>
+                    </div>
                     <x-text-input id="email" name="email" type="email"
                         class="mt-1 block w-full rounded-xl border-purple-100 focus:border-purple-500 focus:ring-purple-500"
                         :value="old('email')" />
@@ -71,9 +71,9 @@
 
                 <div>
                     <div class="flex items-center gap-1">
-                    <x-input-label for="password" :value="__('كلمة المرور')" class="text-purple-900" />
-                    <span class="text-red-500">*</span>
-                </div>
+                        <x-input-label for="password" :value="__('كلمة المرور')" class="text-purple-900" />
+                        <span class="text-red-500">*</span>
+                    </div>
 
                     <x-text-input id="password" name="password" type="password"
                         class="mt-1 block w-full rounded-xl border-purple-100 focus:border-purple-500 focus:ring-purple-500" />
@@ -82,8 +82,8 @@
 
                 <div>
                     <div class="flex items-center gap-1">
-                    <x-input-label for="password_confirmation" :value="__('تأكيد كلمة المرور')"
-                        class="text-purple-900" />
+                        <x-input-label for="password_confirmation" :value="__('تأكيد كلمة المرور')"
+                            class="text-purple-900" />
                         <span class="text-red-500">*</span>
                     </div>
 

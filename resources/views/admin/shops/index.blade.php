@@ -90,7 +90,7 @@
                                             @method('DELETE')
                                             @csrf
                                             <button type="submit"
-                                                class="px-4 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition-all">
+                                                class="px-3 py-1 bg-red-100 text-red-600 rounded-md hover:bg-red-200 transition-all">
                                                 حذف
                                             </button>
                                         </form>
@@ -100,6 +100,9 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="mt-6 mb-3 px-4">
+                    {{ $activities->links('pagination::tailwind') }}
                 </div>
             </div>
         </div>

@@ -152,9 +152,6 @@
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('marriage-requests.index') ? 'text-purple-700' : 'text-gray-900' }}">
                             برنامج الزواج الشرعي
                         </a>
-                        <a href="{{ route('profile.edit') }}"
-                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('profile.edit') ? 'text-purple-700' : 'text-gray-900' }}">
-                            تقديم طلب زواج</a>
                         @auth
                         <a href="{{ route('marriage-requests.status') }}"
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('marriage-requests.status') ? 'text-purple-700' : 'text-gray-900' }}">
@@ -224,14 +221,19 @@
                         </button>
                     </x-slot>
                     <x-slot name="content">
-                        <form method="POST" action="{{ route('logout') }}">
+                        <x-dropdown-link :href="route('profile.edit')"
+                            class="text-gray-900 hover:bg-pink-50 transition-colors">
+                            <i class="fas fa-user ml-2"></i> الملف الشخصي
+                        </x-dropdown-link>
+                        <form method="POST" action="{{ route('logout') }}" id="logout-form">
                             @csrf
-                            <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault(); this.closest('form').submit();"
-                                class="text-gray-900 hover:bg-pink-50 transition-colors">
-                                <i class="fas fa-sign-out-alt ml-2"></i> تسجيل الخروج
-                            </x-dropdown-link>
                         </form>
+
+                        <x-dropdown-link href="#"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                            class="text-gray-900 hover:bg-pink-50 transition-colors">
+                            <i class="fas fa-sign-out-alt ml-2"></i> تسجيل الخروج
+                        </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
             </div>
@@ -388,14 +390,18 @@
                 <div class="font-medium text-sm text-purple-600">{{ Auth::user()->email }}</div>
             </div>
             <div class="mt-3 space-y-1">
-                <form method="POST" action="{{ route('logout') }}">
+                <x-dropdown-link :href="route('profile.edit')" class="text-gray-900 hover:bg-pink-50 transition-colors">
+                    <i class="fas fa-user ml-2"></i> الملف الشخصي
+                </x-dropdown-link>
+                <form method="POST" action="{{ route('logout') }}" id="logout-mobile-form">
                     @csrf
-                    <x-responsive-nav-link :href="route('logout')"
-                        onclick="event.preventDefault(); this.closest('form').submit();"
-                        class="text-gray-900 hover:bg-pink-200 transition-colors">
-                        <i class="fas fa-sign-out-alt ml-2"></i> تسجيل الخروج
-                    </x-responsive-nav-link>
                 </form>
+
+                <x-responsive-nav-link href="#"
+                    onclick="event.preventDefault(); document.getElementById('logout-mobile-form').submit();"
+                    class="text-gray-900 hover:bg-pink-50 transition-colors">
+                    <i class="fas fa-sign-out-alt ml-2"></i> تسجيل الخروج
+                </x-responsive-nav-link>
             </div>
         </div>
         @endauth

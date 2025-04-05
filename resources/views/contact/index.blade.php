@@ -7,8 +7,8 @@
     <title>تواصل معنا</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/samim-font@4.0.5/dist/font-face.min.css" rel="stylesheet">
-<style>        
-body {
+    <style>
+        body {
             font-family: 'Samim', sans-serif;
             margin: 0;
             background-image: url('assets/images/frame.png');

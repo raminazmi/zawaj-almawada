@@ -20,7 +20,7 @@
                         <i class="fas fa-check-circle"></i>
                     </div>
                     <div class="mr-3">
-                        <p class="text-sm font-medium text-gray-500">الاسم</p>
+                        <p class="text-sm font-medium text-gray-500">الاسم المستعار</p>
                         <p class="text-sm text-gray-900">{{ $user->name ?? 'غير متوفر' }}</p>
                     </div>
                 </div>

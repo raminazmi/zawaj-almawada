@@ -10,11 +10,24 @@ export default {
               "./resources/**/*.blade.php",
     ],
 
+    darkMode: false,
+
     theme: {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                pagination: {
+                    light: {
+                        active: '#3b82f6',
+                        inactive: '#6b7280',
+                        bg: '#ffffff',
+                        border: '#e5e7eb',
+                        hover: '#f3f4f6',
+                    }
+                }
+            }
         },
     },
 

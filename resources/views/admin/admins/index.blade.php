@@ -16,13 +16,7 @@
             </div>
         </div>
 
-        <div class="mb-6 flex justify-between items-center">
-            <div class="flex gap-2">
-                <a href="{{ route('admin.dashboard') }}"
-                    class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all">
-                    العودة للوحة التحكم
-                </a>
-            </div>
+        <div class="mb-6 flex justify-end items-center">
             <a href="{{ route('admin.admins.create') }}"
                 class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -87,7 +81,7 @@
             </div>
 
             @if($admins->hasPages())
-            <div class="px-4 py-4 border-t border-gray-100">
+            <div class="mt-6 mb-3 px-4">
                 {{ $admins->links('pagination::tailwind') }}
             </div>
             @endif
