@@ -238,22 +238,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="bg-gray-50 px-6 py-4">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <i class="fas fa-info-circle text-green-500"></i>
-                </div>
-                <div class="mr-3">
-                    <p class="text-sm text-green-700">
-                        يمكنك تقديم مقياس التوافق الزواجي لمعرفة مدى التوافق بينك وبين هذا الشريك،
-                        <a href="{{ $link }}" class="font-medium text-green-600 hover:text-green-500">
-                            اضغط هنا للانتقال إلى المقياس
-                        </a>
-                    </p>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
