@@ -1,26 +1,29 @@
 <div class="space-y-6">
+    <div class="col-span-1 md:col-span-2">
+        <div class="bg-red-50 border-2 border-red-200 rounded-lg py-3 px-4 flex items-center text-sm text-red-400">
+            <i class="fas fa-shield-alt text-red-400 ml-2"></i>
+            <span>معلوماتك الخاصة (الاسم الثلاثي ، القرية) آمنة ومحمية، لن تظهر لأحد إلا بعد
+                اكتمال
+                الخطوبة بنجاح ومن ثم ترسل هذه البيانات للطرف الاخر. يرجى
+                كتابة
+                البيانات بطريقة صحيحة.</span>
+        </div>
+    </div>
+
     <h3 class="text-lg font-semibold text-purple-700 border-b-2 border-purple-200 pb-2">
         <i class="fas fa-id-card text-purple-600 mr-2"></i>
         المعلومات الأساسية
     </h3>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="col-span-1 md:col-span-2">
-            <div class="bg-purple-50 border border-purple-200 rounded-lg p-3 flex items-center text-sm text-purple-700">
-                <i class="fas fa-lock text-purple-500 ml-2"></i>
-                <span>معلوماتك الخاصة (الاسم الثلاثي ، القرية) آمنة ومحمية، لن تظهر لأحد إلا بعد
-                    اكتمال
-                    الخطوبة بنجاح. يرجى
-                    كتابة
-                    البيانات بطريقة صحيحة.</span>
-            </div>
-        </div>
         <x-profile.input-field name="full_name" label="اسمك الثلاثي" value="{{ old('full_name', $user->full_name) }}"
-            icon="user" :error="$errors->first('full_name')" />
+            icon="user" :error="$errors->first('full_name')" important />
+
         <x-profile.input-field name="village" label="القرية" value="{{ old('village', $user->village) }}" icon="home"
-            :error="$errors->first('village')" />
+            :error="$errors->first('village')" important />
         <x-profile.input-field name="state" label="الولاية" value="{{ old('state', $user->state) }}" icon="globe-asia"
             :error="$errors->first('state')" />
+
         <x-profile.input-field name="tribe" label="القبيلة" value="{{ old('tribe', $user->tribe) }}" icon="flag"
             :error="$errors->first('tribe')" />
         <div class="relative">

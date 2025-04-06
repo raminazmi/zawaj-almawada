@@ -43,6 +43,14 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-3">
                             <div>
+                                <p class="text-sm font-medium text-gray-500">البريد الالكتروني</p>
+                                <p class="text-gray-800">{{ $user->email ?? 'غير محدد'}}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">رقم الهاتف</p>
+                                <p class="text-gray-800">{{ $user->phone ?? 'غير محدد'}}</p>
+                            </div>
+                            <div>
                                 <p class="text-sm font-medium text-gray-500">الجنس</p>
                                 <p class="text-gray-800">{{ $user->gender == 'male' ? 'ذكر' : 'أنثى' }}</p>
                             </div>
@@ -59,19 +67,19 @@
                                 <p class="text-gray-800">{{ $user->state ?? 'غير محدد' }}</p>
                             </div>
                             <div>
-                                <p class="text-sm font-medium text-gray-500">القبيلة</p>
-                                <p class="text-gray-800">{{ $user->tribe ?? 'غير محدد' }}</p>
-                            </div>
-                            <div>
                                 <p class="text-sm font-medium text-gray-500">القرية</p>
                                 <p class="text-gray-800">{{ $user->village ?? 'غير محدد' }}</p>
                             </div>
                             <div>
-                                <p class="text-sm font-medium text-gray-500">النسب</p>
-                                <p class="text-gray-800">{{ $user->lineage ?? 'غير محدد' }}</p>
+                                <p class="text-sm font-medium text-gray-500">القبيلة</p>
+                                <p class="text-gray-800">{{ $user->tribe ?? 'غير محدد' }}</p>
                             </div>
                         </div>
                         <div class="space-y-3">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">النسب</p>
+                                <p class="text-gray-800">{{ $user->lineage ?? 'غير محدد' }}</p>
+                            </div>
                             <div>
                                 <p class="text-sm font-medium text-gray-500">الطول</p>
                                 <p class="text-gray-800">{{ $user->height ?? 'غير محدد' }} سم</p>

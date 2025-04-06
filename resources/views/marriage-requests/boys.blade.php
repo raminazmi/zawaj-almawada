@@ -130,7 +130,6 @@
                             </div>
                         </div>
 
-                        <!-- زر عرض الملف الشخصي -->
                         <div class="border-t pt-4">
                             <button type="button"
                                 onclick="document.getElementById('profileModal_{{ $boy->id }}').showModal()"
@@ -153,7 +152,6 @@
                                         </button>
                                     </div>
                                     <div class="space-y-6">
-                                        <!-- المعلومات الأساسية -->
                                         <div class="space-y-4">
                                             <h4
                                                 class="text-lg font-semibold text-purple-700 border-b border-purple-100 pb-2">
@@ -161,6 +159,18 @@
                                             </h4>
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div class="space-y-3">
+                                                    <div>
+                                                        <p class="text-sm font-medium text-gray-500">البلد</p>
+                                                        <p class="text-gray-800">{{ $boy->country ?? 'غير محدد' }}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-medium text-gray-500">الولاية</p>
+                                                        <p class="text-gray-800">{{ $boy->state ?? 'غير محدد' }}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-medium text-gray-500">القبيلة</p>
+                                                        <p class="text-gray-800">{{ $boy->tribe ?? 'غير محدد' }}</p>
+                                                    </div>
                                                     <div>
                                                         <p class="text-sm font-medium text-gray-500">الجنس</p>
                                                         <p class="text-gray-800">{{ $boy->gender == 'male' ? 'ذكر' :
@@ -171,30 +181,26 @@
                                                         <p class="text-gray-800">{{ $boy->age ?? 'غير محدد' }}</p>
                                                     </div>
                                                     <div>
-                                                        <p class="text-sm font-medium text-gray-500">البلد</p>
-                                                        <p class="text-gray-800">{{ $boy->country ?? 'غير محدد' }}</p>
-                                                    </div>
-                                                    <div>
                                                         <p class="text-sm font-medium text-gray-500">النسب</p>
                                                         <p class="text-gray-800">{{ $boy->lineage ?? 'غير محدد' }}</p>
                                                     </div>
+                                                </div>
+                                                <div class="space-y-3">
                                                     <div>
                                                         <p class="text-sm font-medium text-gray-500">الحالة الاجتماعية
                                                         </p>
                                                         <p class="text-gray-800">
                                                             @php
                                                             $maritalStatus = [
-                                                            'single' => 'عزباء',
-                                                            'married' => 'متزوجة',
-                                                            'widowed' => 'أرملة',
-                                                            'divorced' => 'مطلقة'
+                                                            'single' => 'أعزب',
+                                                            'married' => 'متزوج',
+                                                            'widowed' => 'أرمل',
+                                                            'divorced' => 'مطلق'
                                                             ];
                                                             echo $maritalStatus[$boy->marital_status] ?? 'غير محدد';
                                                             @endphp
                                                         </p>
                                                     </div>
-                                                </div>
-                                                <div class="space-y-3">
                                                     <div>
                                                         <p class="text-sm font-medium text-gray-500">الطول</p>
                                                         <p class="text-gray-800">{{ $boy->height ?? 'غير محدد' }} سم</p>

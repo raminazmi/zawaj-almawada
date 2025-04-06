@@ -157,8 +157,35 @@
                                                 class="text-lg font-semibold text-pink-700 border-b border-pink-100 pb-2">
                                                 <i class="fas fa-info-circle ml-2"></i>المعلومات الأساسية
                                             </h4>
+                                            <div class="col-span-full mt-4">
+                                                <div
+                                                    class="bg-purple-50 border border-purple-200 rounded-lg p-3 flex items-start text-sm text-purple-700">
+                                                    <i class="fas fa-info-circle text-purple-500 mt-1 ml-2"></i>
+                                                    <div class="mr-2">
+                                                        <p class="font-medium mb-1">إقرار وموافقة:</p>
+                                                        <p class="text-justify">
+                                                            تنويه: مشاركة بيانات الفتاة في برنامج الزواج الشرعي تمت
+                                                            بموافقة وتوجيه من ولي أمرها
+                                                            أو أحد أفراد أسرتها المسؤولين، وذلك وفقاً للضوابط الشرعية
+                                                            والنظامية المتبعة.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div class="space-y-3">
+                                                    <div>
+                                                        <p class="text-sm font-medium text-gray-500">البلد</p>
+                                                        <p class="text-gray-800">{{ $girl->country ?? 'غير محدد' }}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-medium text-gray-500">الولاية</p>
+                                                        <p class="text-gray-800">{{ $girl->state ?? 'غير محدد' }}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-medium text-gray-500">القبيلة</p>
+                                                        <p class="text-gray-800">{{ $girl->tribe ?? 'غير محدد' }}</p>
+                                                    </div>
                                                     <div>
                                                         <p class="text-sm font-medium text-gray-500">الجنس</p>
                                                         <p class="text-gray-800">{{ $girl->gender == 'male' ? 'ذكر' :
@@ -169,13 +196,11 @@
                                                         <p class="text-gray-800">{{ $girl->age ?? 'غير محدد' }}</p>
                                                     </div>
                                                     <div>
-                                                        <p class="text-sm font-medium text-gray-500">البلد</p>
-                                                        <p class="text-gray-800">{{ $girl->country ?? 'غير محدد' }}</p>
-                                                    </div>
-                                                    <div>
                                                         <p class="text-sm font-medium text-gray-500">النسب</p>
                                                         <p class="text-gray-800">{{ $girl->lineage ?? 'غير محدد' }}</p>
                                                     </div>
+                                                </div>
+                                                <div class="space-y-3">
                                                     <div>
                                                         <p class="text-sm font-medium text-gray-500">الحالة الاجتماعية
                                                         </p>
@@ -191,8 +216,6 @@
                                                             @endphp
                                                         </p>
                                                     </div>
-                                                </div>
-                                                <div class="space-y-3">
                                                     <div>
                                                         <p class="text-sm font-medium text-gray-500">الطول</p>
                                                         <p class="text-gray-800">{{ $girl->height ?? 'غير محدد' }} سم
