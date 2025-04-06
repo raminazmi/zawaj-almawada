@@ -39,8 +39,11 @@ class AuthenticatedSessionController extends Controller
             return redirect($previousUrl);
         }
 
-        if ($user->is_admin) {
+        if ($user->is_admin && $user->isMainAdmin()) {
             return redirect()->route('admin.questions.index');
+        }
+        if ($user->is_admin && $user->isSubAdmin()) {
+            return redirect()->route('admin.shops');
         }
 
         return redirect()->intended(route('exam.pledge', absolute: false));

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
+<div class="min-h-screen">
     <div class="max-w-7xl mx-auto px-4 py-8">
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
@@ -129,7 +129,6 @@
                             </div>
                         </div>
 
-                        <!-- زر عرض الملف الشخصي -->
                         <div class="border-t pt-4">
                             <button type="button"
                                 onclick="document.getElementById('profileModal_{{ $girl->id }}').showModal()"
@@ -153,7 +152,6 @@
                                         </button>
                                     </div>
                                     <div class="space-y-6">
-                                        <!-- المعلومات الأساسية -->
                                         <div class="space-y-4">
                                             <h4
                                                 class="text-lg font-semibold text-pink-700 border-b border-pink-100 pb-2">
@@ -224,7 +222,6 @@
                                             </div>
                                         </div>
 
-                                        <!-- المعلومات التعليمية والعملية -->
                                         <div class="space-y-4">
                                             <h4
                                                 class="text-lg font-semibold text-pink-700 border-b border-pink-100 pb-2">
@@ -285,7 +282,6 @@
                                             </div>
                                         </div>
 
-                                        <!-- المعلومات الدينية -->
                                         <div class="space-y-4">
                                             <h4
                                                 class="text-lg font-semibold text-pink-700 border-b border-pink-100 pb-2">
@@ -332,7 +328,6 @@
                                             </div>
                                         </div>
 
-                                        <!-- المعلومات الصحية -->
                                         <div class="space-y-4">
                                             <h4
                                                 class="text-lg font-semibold text-pink-700 border-b border-pink-100 pb-2">
@@ -386,7 +381,6 @@
                                             </div>
                                         </div>
 
-                                        <!-- معلومات إضافية -->
                                         <div class="space-y-4">
                                             <h4
                                                 class="text-lg font-semibold text-pink-700 border-b border-pink-100 pb-2">
@@ -413,7 +407,6 @@
                                             </div>
                                         </div>
 
-                                        <!-- الوصف الشخصي -->
                                         <div class="space-y-4">
                                             <h4
                                                 class="text-lg font-semibold text-pink-700 border-b border-pink-100 pb-2">

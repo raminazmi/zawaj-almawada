@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
+<div class="min-h-screen">
     <div class="max-w-4xl mx-auto px-4 py-8">
         <x-marriage-requests.header />
 

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="min-h-screen bg-gradient-to-b from-purple-50 to-white">
+<section class="min-h-screen">
     <div class="max-w-4xl mx-auto px-4 py-8">
         <h2 class="text-xl font-bold text-purple-800 text-center mb-4">
             تفاصيل الملف الشخصي
@@ -15,8 +15,8 @@
                             <i class="fas fa-user text-3xl text-purple-600"></i>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-white">{{ $user->name }}</h3>
-                            <p class="text-white">{{ $user->email }}</p>
+                            <h3 class="text-xl font-bold text-white">الاسم المستعار :{{ $user->name }}</h3>
+                            <p class="text-white">الاسم الكامل :{{ $user->full_name }}</p>
                         </div>
                     </div>
                     <div class="flex flex-col items-end">
@@ -36,7 +36,6 @@
             </div>
 
             <div class="p-6">
-                <!-- المعلومات الأساسية -->
                 <div class="space-y-4">
                     <h4 class="text-lg font-semibold text-purple-700 border-b border-purple-100 pb-2">
                         <i class="fas fa-info-circle ml-2"></i>المعلومات الأساسية
@@ -62,6 +61,10 @@
                             <div>
                                 <p class="text-sm font-medium text-gray-500">القبيلة</p>
                                 <p class="text-gray-800">{{ $user->tribe ?? 'غير محدد' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">القرية</p>
+                                <p class="text-gray-800">{{ $user->village ?? 'غير محدد' }}</p>
                             </div>
                             <div>
                                 <p class="text-sm font-medium text-gray-500">النسب</p>
@@ -107,7 +110,6 @@
                     </div>
                 </div>
 
-                <!-- المعلومات التعليمية والعملية -->
                 <div class="mt-6 space-y-4">
                     <h4 class="text-lg font-semibold text-purple-700 border-b border-purple-100 pb-2">
                         <i class="fas fa-graduation-cap ml-2"></i>المعلومات التعليمية والعملية
@@ -163,7 +165,6 @@
                     </div>
                 </div>
 
-                <!-- المعلومات الدينية -->
                 <div class="mt-6 space-y-4">
                     <h4 class="text-lg font-semibold text-purple-700 border-b border-purple-100 pb-2">
                         <i class="fas fa-mosque ml-2"></i>المعلومات الدينية
@@ -206,7 +207,6 @@
                     </div>
                 </div>
 
-                <!-- المعلومات الصحية -->
                 <div class="mt-6 space-y-4">
                     <h4 class="text-lg font-semibold text-purple-700 border-b border-purple-100 pb-2">
                         <i class="fas fa-heartbeat ml-2"></i>المعلومات الصحية
@@ -251,7 +251,6 @@
                     </div>
                 </div>
 
-                <!-- معلومات إضافية -->
                 <div class="mt-6 space-y-4">
                     <h4 class="text-lg font-semibold text-purple-700 border-b border-purple-100 pb-2">
                         <i class="fas fa-info ml-2"></i>معلومات إضافية
@@ -276,7 +275,6 @@
                     </div>
                 </div>
 
-                <!-- الوصف الشخصي -->
                 <div class="mt-6 space-y-4">
                     <h4 class="text-lg font-semibold text-purple-700 border-b border-purple-100 pb-2">
                         <i class="fas fa-align-left ml-2"></i>الوصف الشخصي
@@ -286,7 +284,6 @@
                     </div>
                 </div>
 
-                <!-- مواصفات الشريك -->
                 <div class="mt-6 space-y-4">
                     <h4 class="text-lg font-semibold text-purple-700 border-b border-purple-100 pb-2">
                         <i class="fas fa-heart ml-2"></i>مواصفات الشريك

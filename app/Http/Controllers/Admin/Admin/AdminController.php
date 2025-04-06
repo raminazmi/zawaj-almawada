@@ -12,11 +12,9 @@ class AdminController extends Controller
 {
     public function index()
     {
-        if (auth()->user()->isSubAdmin()) {
-            $admins = User::where('is_admin', false)->paginate(10);
-        } else {
-            $admins = User::paginate(10);
-        }
+        $admins = User::whereIsAdmin(true)
+            ->whereIn('admin_role', ['main', 'sub'])
+            ->paginate(10);
 
         return view('admin.admins.index', compact('admins'));
     }
@@ -42,6 +40,24 @@ class AdminController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'is_admin' => 'boolean',
             'admin_role' => [Rule::requiredIf($request->is_admin), 'nullable', 'in:main,sub'],
+        ], [
+            'name.required' => 'حقل الاسم مطلوب',
+            'name.string' => 'يجب أن يكون الاسم نصًا',
+            'name.max' => 'الاسم لا يمكن أن يتجاوز 255 حرفًا',
+
+            'email.required' => 'حقل البريد الإلكتروني مطلوب',
+            'email.email' => 'البريد الإلكتروني غير صالح',
+            'email.unique' => 'هذا البريد الإلكتروني مستخدم بالفعل',
+
+            'password.required' => 'حقل كلمة المرور مطلوب',
+            'password.string' => 'يجب أن تكون كلمة المرور نصًا',
+            'password.min' => 'كلمة المرور يجب أن تكون على الأقل 8 أحرف',
+            'password.confirmed' => 'تأكيد كلمة المرور غير متطابق',
+
+            'is_admin.boolean' => 'القيمة المحددة لحقل المسؤول غير صحيحة',
+
+            'admin_role.required' => 'حقل دور المسؤول مطلوب عند تفعيل الصلاحية',
+            'admin_role.in' => 'دور المسؤول المحدد غير صحيح (يجب أن يكون main أو sub)'
         ]);
 
         do {
@@ -88,6 +104,23 @@ class AdminController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
             'is_admin' => 'boolean',
             'admin_role' => [Rule::requiredIf($request->is_admin), 'nullable', 'in:main,sub'],
+        ], [
+            'name.required' => 'حقل الاسم مطلوب',
+            'name.string' => 'يجب أن يكون الاسم نصًا',
+            'name.max' => 'الاسم لا يمكن أن يتجاوز 255 حرفًا',
+
+            'email.required' => 'حقل البريد الإلكتروني مطلوب',
+            'email.email' => 'البريد الإلكتروني غير صالح',
+            'email.unique' => 'هذا البريد الإلكتروني مستخدم من قبل مستخدم آخر',
+
+            'password.string' => 'يجب أن تكون كلمة المرور نصًا',
+            'password.min' => 'كلمة المرور يجب أن تكون على الأقل 8 أحرف',
+            'password.confirmed' => 'تأكيد كلمة المرور غير متطابق',
+
+            'is_admin.boolean' => 'القيمة المحددة لحقل المسؤول غير صحيحة',
+
+            'admin_role.required' => 'حقل دور المسؤول مطلوب عند تفعيل الصلاحية',
+            'admin_role.in' => 'دور المسؤول المحدد غير صحيح (يجب أن يكون ادمن أو مشرف)'
         ]);
 
         if (!empty($validated['password'])) {

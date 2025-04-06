@@ -71,7 +71,7 @@ class BusinessActivityController extends Controller
 
     public function index()
     {
-        $activities = BusinessActivity::all();
+        $activities = BusinessActivity::paginate(10);
         return view('admin.shops.index', compact('activities'));
     }
 

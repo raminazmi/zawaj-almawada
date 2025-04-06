@@ -60,13 +60,13 @@
                             <input type="radio" name="admin_role" value="main" {{ $user->isMainAdmin() ? 'checked' : ''
                             }}
                             class="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
-                            <span class="ml-2 text-sm text-gray-700">أدمن</span>
+                            <span class="mr-2 text-sm text-gray-700">أدمن</span>
                         </label>
                         <label
                             class="flex items-center p-3 bg-white rounded-lg border @error('admin_role') border-red-500 @else border-gray-200 @enderror hover:border-purple-300 cursor-pointer">
                             <input type="radio" name="admin_role" value="sub" {{ $user->isSubAdmin() ? 'checked' : '' }}
                             class="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
-                            <span class="ml-2 text-sm text-gray-700">مشرف</span>
+                            <span class="mr-2 text-sm text-gray-700">مشرف</span>
                         </label>
                     </div>
                     @error('admin_role')

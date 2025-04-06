@@ -221,10 +221,12 @@
                         </button>
                     </x-slot>
                     <x-slot name="content">
+                        @if((auth()->check() && !auth()->user()->is_admin))
                         <x-dropdown-link :href="route('profile.edit')"
                             class="text-gray-900 hover:bg-pink-50 transition-colors">
                             <i class="fas fa-user ml-2"></i> الملف الشخصي
                         </x-dropdown-link>
+                        @endif
                         <form method="POST" action="{{ route('logout') }}" id="logout-form">
                             @csrf
                         </form>
@@ -390,9 +392,11 @@
                 <div class="font-medium text-sm text-purple-600">{{ Auth::user()->email }}</div>
             </div>
             <div class="mt-3 space-y-1">
+                @if((auth()->check() && !auth()->user()->is_admin))
                 <x-dropdown-link :href="route('profile.edit')" class="text-gray-900 hover:bg-pink-50 transition-colors">
                     <i class="fas fa-user ml-2"></i> الملف الشخصي
                 </x-dropdown-link>
+                @endif
                 <form method="POST" action="{{ route('logout') }}" id="logout-mobile-form">
                     @csrf
                 </form>
