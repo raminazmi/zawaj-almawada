@@ -137,6 +137,12 @@
                 </div>
                 @endforelse
             </div>
+
+            @if($pendingRequests->hasPages())
+            <div class="mt-6 px-4">
+                {{ $pendingRequests->links('pagination::tailwind') }}
+            </div>
+            @endif
         </div>
 
         <div>
@@ -267,6 +273,12 @@
                 </div>
                 @endforelse
             </div>
+
+            @if($allRequests->hasPages())
+            <div class="mt-6 px-4">
+                {{ $allRequests->links('pagination::tailwind') }}
+            </div>
+            @endif
         </div>
     </div>
 </section>

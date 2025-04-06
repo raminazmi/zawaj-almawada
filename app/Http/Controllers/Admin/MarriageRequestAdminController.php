@@ -22,12 +22,12 @@ class MarriageRequestAdminController extends Controller
         $pendingRequests = MarriageRequest::where('admin_approval_status', 'pending')
             ->with(['user', 'target', 'exam'])
             ->latest()
-            ->get();
+            ->paginate(2, ['*'], 'pending_page');
 
         $allRequests = MarriageRequest::where('admin_approval_status', '!=', 'pending')
             ->with(['user', 'target', 'exam'])
             ->latest()
-            ->get();
+            ->paginate(2, ['*'], 'processed_page');
 
         foreach ($pendingRequests as $request) {
             if (!$request->exam) {

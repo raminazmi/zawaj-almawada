@@ -17,13 +17,13 @@ class ProfileApprovalController extends Controller
         $pendingProfiles = User::where('profile_status', 'pending')
             ->where('is_admin', false)
             ->latest()
-            ->get();
+            ->paginate(2, ['*'], 'pending_page');
 
         $processedProfiles = User::whereIn('profile_status', ['approved', 'rejected'])
             ->where('is_admin', false)
             ->latest()
             ->take(20)
-            ->get();
+            ->paginate(2, ['*'], 'processed_page');
 
         return view('admin.profile-approvals.index', [
             'pendingProfiles' => $pendingProfiles,

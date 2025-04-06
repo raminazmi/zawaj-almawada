@@ -106,6 +106,12 @@
                 </div>
                 @endforelse
             </div>
+
+            @if($pendingProfiles->hasPages())
+            <div class="mt-6 px-4">
+                {{ $pendingProfiles->links('pagination::tailwind') }}
+            </div>
+            @endif
         </div>
 
         <div>
@@ -191,6 +197,12 @@
                 </div>
                 @endforelse
             </div>
+
+            @if($processedProfiles->hasPages())
+            <div class="mt-6 px-4">
+                {{ $processedProfiles->links('pagination::tailwind') }}
+            </div>
+            @endif
         </div>
     </div>
 </section>
