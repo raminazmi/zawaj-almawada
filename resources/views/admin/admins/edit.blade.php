@@ -5,7 +5,15 @@
     <div class="w-full max-w-2xl bg-white rounded-xl shadow-lg p-6 border border-purple-100">
         <div class="mb-6 text-center">
             <h2 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                تعديل المشرف #{{ $user->id }}
+                @if($user->id === 1)
+                تعديل الادمن الرئيسي
+                @elseif($user->admin_role === 'main')
+                تعديل الادمن
+                @else
+                تعديل المشرف
+                @endif
+                #{{
+                $user->id }}
             </h2>
             <p class="text-gray-500 mt-2">قم بتعديل الحقول التالية حسب الحاجة</p>
         </div>

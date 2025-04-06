@@ -42,18 +42,33 @@
                             <td class="px-4 py-4 text-right text-sm text-gray-700">{{ $admin->name }}</td>
                             <td class="px-4 py-4 text-right text-sm text-gray-700">{{ $admin->email }}</td>
                             <td class="px-4 py-4 text-center">
-                                <span
-                                    class="px-2 py-1 text-xs rounded-full {{ $admin->admin_role === 'main' ? 'bg-purple-100 text-purple-600' : 'bg-pink-100 text-pink-600' }}">
-                                    {{ $admin->admin_role === 'main' ? 'ادمن' : 'مشرف' }}
+                                @php
+                                $roleConfig = [
+                                'main' => [
+                                'class' => 'bg-purple-100 text-purple-600',
+                                'label' => $admin->id === 1 ? 'ادمن رئيسي' : 'ادمن'
+                                ],
+                                'sub' => [
+                                'class' => 'bg-pink-100 text-pink-600',
+                                'label' => 'مشرف'
+                                ]
+                                ][$admin->admin_role] ?? [
+                                'class' => 'bg-gray-100 text-gray-600',
+                                'label' => 'غير معروف'
+                                ];
+                                @endphp
+
+                                <span class="px-3 py-1 text-sm rounded-full font-medium {{ $roleConfig['class'] }}">
+                                    {{ $roleConfig['label'] }}
                                 </span>
                             </td>
-                            @if($admin->id !== 1 && auth()->user()->isMainAdmin())
+                            @if(auth()->user()->isMainAdmin())
                             <td class="px-4 py-4 text-center flex gap-2">
                                 <a href="{{ route('admin.admins.edit', $admin->id) }}"
                                     class="px-3 py-1 bg-blue-100 text-blue-600 rounded-md hover:bg-blue-200 transition-all">
                                     تعديل
                                 </a>
-
+                                @if($admin->id !== 1 && auth()->user()->isMainAdmin())
                                 <form action="{{ route('admin.admins.destroy', $admin->id) }}" method="POST"
                                     class="inline-block delete-admin">
                                     @method('DELETE')
@@ -63,6 +78,7 @@
                                         حذف
                                     </button>
                                 </form>
+                                @endif
                             </td>
                             @endif
                         </tr>
