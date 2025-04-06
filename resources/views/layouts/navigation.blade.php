@@ -32,10 +32,15 @@
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('exam.pledge') ? 'text-purple-700' : 'text-gray-900' }}">
                             مقياس التوافق الزواجي
                         </a>
-                        <a href="#"
+                        @php
+                        $readinessLink = \App\Models\ReadinessTestLink::first();
+                        @endphp
+                        @if($readinessLink)
+                        <a href="{{ $readinessLink->link }}"
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('readiness') ? 'text-purple-700' : 'text-gray-900' }}">
                             اختبار الجاهزية للحياة الزوجية
                         </a>
+                        @endif
                         <a href="{{ route('exam.user.index') }}"
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('exam.user.index') ? 'text-purple-700' : 'text-gray-900' }}">
                             اختباراتي
@@ -187,6 +192,12 @@
                     class="nav-link mx-6 {{ request()->routeIs('admin.users.index') ? 'active' : '' }}">
                     الأعضاء
                 </a>
+                @if(auth()->check() && auth()->user()->is_admin)
+                <a href="{{ route('admin.readiness_test_link.index') }}"
+                    class="nav-link mx-6 {{ request()->routeIs('admin.readiness_test_link.index') ? 'active' : '' }}">
+                    اختبار الجاهزية
+                </a>
+                @endif
                 @endif
                 <a href="{{ route('admin.shops') }}"
                     class="nav-link mx-6 {{ request()->routeIs('admin.shops') ? 'active' : '' }}">
@@ -194,7 +205,7 @@
                 </a>
                 <a href="{{ route('admin.profile-approvals.index') }}"
                     class="nav-link mx-6 {{ request()->routeIs('profile-approvals.index') ? 'active' : '' }}">
-                    طلبات قبول الملف الشخصي
+                    الملفات الشخصية
                 </a>
                 <a href="{{ route('admin.marriage-requests.index') }}"
                     class="nav-link mx-6 {{ request()->routeIs('admin.marriage-requests.index') ? 'active' : '' }}">
@@ -280,9 +291,14 @@
                 <a href="{{ route('exam.pledge') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
                     مقياس التوافق الزواجي
                 </a>
-                <a href="#" class="block text-sm hover:bg-pink-50 py-2 px-1">
+                @php
+                $readinessLink = \App\Models\ReadinessTestLink::first();
+                @endphp
+                @if($readinessLink)
+                <a href="{{ $readinessLink->link }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
                     اختبار الجاهزية للحياة الزوجية
                 </a>
+                @endif
                 <a href="{{ route('exam.user.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
                     اختباراتي
                 </a>
@@ -386,6 +402,11 @@
             <a href="{{ route('admin.questions.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">الأسئلة</a>
             <a href="{{ route('admin.admins.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">المشرفين</a>
             <a href="{{ route('admin.users.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">الأعضاء</a>
+            @if(auth()->check() && auth()->user()->is_admin)
+            <a href="{{ route('admin.readiness_test_link.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
+                اختبار الجاهزية
+            </a>
+            @endif
             @endif
             <a href="{{ route('admin.shops') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">المحلات</a>
             <a href="{{ route('admin.profile-approvals.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">

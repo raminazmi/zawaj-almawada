@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\AdminCourseController;
 use App\Http\Controllers\Admin\ProfileApprovalController;
 use App\Http\Controllers\courses\CourseController;
 use App\Http\Controllers\Admin\Admin\AdminController;
+use App\Http\Controllers\Admin\ReadinessTestLinkController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -109,6 +110,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/profile/{id}/reject', [MarriageRequestAdminController::class, 'rejectProfile'])->name('profile.reject');
 
         Route::resource('courses', AdminCourseController::class)->except('show');
+        Route::get('/readiness-test-link', [ReadinessTestLinkController::class, 'index'])->name('readiness_test_link.index');
+        Route::post('/readiness-test-link', [ReadinessTestLinkController::class, 'store'])->name('readiness_test_link.store');
+        Route::put('/readiness-test-link/{readinessTestLink}', [ReadinessTestLinkController::class, 'update'])->name('readiness_test_link.update');
+        Route::delete('/readiness-test-link/{readinessTestLink}', [ReadinessTestLinkController::class, 'destroy'])->name('readiness_test_link.destroy');
+
         Route::prefix('profile-approvals')->group(function () {
             Route::get('/', [ProfileApprovalController::class, 'index'])->name('profile-approvals.index');
             Route::post('/{id}/approve', [ProfileApprovalController::class, 'approve'])->name('profile-approvals.approve');
