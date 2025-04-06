@@ -12,11 +12,11 @@
         <div class="mb-6 flex justify-center gap-4 flex-wrap">
             <a href="{{ route('marriage-requests.status') }}"
                 class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all shadow-md hover:shadow-lg transform hover:scale-105">
-                <i class="fas fa-info-circle ml-2"></i>
+                <i class="fas fa-tasks ml-2"></i>
                 حالة طلباتي
             </a>
 
-            @if(!$isProfileComplete)
+            @if(!$isProfileComplete || Auth::user()->profile_status !== 'approved')
             <a href="{{ route('profile.edit') }}"
                 class="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all shadow-md hover:shadow-lg transform hover:scale-105">
                 <i class="fas fa-user-edit ml-2"></i>
@@ -464,17 +464,17 @@
                         </span>
 
                         @if($boy->status === 'available')
-                        @if($isProfileComplete)
+                        @if(!$isProfileComplete || Auth::user()->profile_status !== 'approved')
+                        <span class="text-sm text-red-600">
+                            <i class="fas fa-exclamation-circle mr-1"></i>
+                            يجب إكمال الملف الشخصي أولاً
+                        </span>
+                        @else
                         <a href="{{ route('marriage-requests.create-proposal', $boy->id) }}"
                             class="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105">
                             <i class="fas fa-paper-plane"></i>
                             تقديم طلب
                         </a>
-                        @else
-                        <span class="text-sm text-red-600">
-                            <i class="fas fa-exclamation-circle mr-1"></i>
-                            يجب إكمال الملف الشخصي أولاً
-                        </span>
                         @endif
                         @endif
                     </div>

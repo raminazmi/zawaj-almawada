@@ -46,7 +46,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('admin.shops');
         }
 
-        return redirect()->intended(route('exam.pledge', absolute: false));
+        return redirect()->intended(route('index'));
     }
 
     /**

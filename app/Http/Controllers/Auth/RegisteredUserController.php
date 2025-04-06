@@ -93,7 +93,7 @@ class RegisteredUserController extends Controller
             return redirect($redirectUrl);
         }
 
-        return redirect(route('exam.pledge'));
+        return redirect(route('index'));
     }
 
     /**
@@ -146,6 +146,7 @@ class RegisteredUserController extends Controller
                 'partner_expectations' => 'required|string|max:2000',
                 'full_name' => 'required|string|max:255',
                 'village' => 'required|string|max:255',
+                'legalAgreement' => 'required|accepted',
             ], [
                 'state.required' => 'حقل الولاية مطلوب',
                 'state.string' => 'يجب أن تكون الولاية نصاً',
@@ -244,6 +245,9 @@ class RegisteredUserController extends Controller
                 'village.required' => 'حقل القرية مطلوب',
                 'village.string' => 'يجب أن تكون القرية نصاً',
                 'village.max' => 'يجب ألا تتجاوز القرية 255 حرفاً',
+
+                'legalAgreement.required' => 'يجب الموافقة على الإقرار القانوني',
+                'legalAgreement.accepted' => 'يجب الموافقة على الإقرار القانوني',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('فشل التحقق: ' . json_encode($e->errors()));

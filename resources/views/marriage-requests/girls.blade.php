@@ -12,12 +12,12 @@
         <div class="mb-6 flex justify-center gap-4 flex-wrap">
             <a href="{{ route('marriage-requests.status') }}"
                 class="inline-flex items-center px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-all shadow-md hover:shadow-lg transform hover:scale-105">
-                <i class="fas fa-info-circle ml-2"></i>
+                <i class="fas fa-tasks ml-2"></i>
                 حالة طلباتي
             </a>
 
-            @if(!$isProfileComplete)
-            <a href="{{ route('profile.edit') }}"
+            @if(!$isProfileComplete || Auth::user()->profile_status !== 'approved') <a
+                href="{{ route('profile.edit') }}"
                 class="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all shadow-md hover:shadow-lg transform hover:scale-105">
                 <i class="fas fa-user-edit ml-2"></i>
                 إكمال الملف الشخصي
@@ -441,7 +441,6 @@
                                             </div>
                                         </div>
 
-                                        <!-- مواصفات الشريك -->
                                         <div class="space-y-4">
                                             <h4
                                                 class="text-lg font-semibold text-pink-700 border-b border-pink-100 pb-2">
@@ -476,17 +475,17 @@
                         </span>
 
                         @if($girl->status === 'available')
-                        @if($isProfileComplete)
-                        <a href="{{ route('marriage-requests.create-proposal', $girl->id) }}"
-                            class="px-4 py-2 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg hover:from-pink-700 hover:to-rose-700 transition-all flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105">
-                            <i class="fas fa-paper-plane"></i>
-                            إرسال طلب زواج
-                        </a>
-                        @else
+                        @if(!$isProfileComplete || Auth::user()->profile_status !== 'approved')
                         <span class="text-sm text-red-600">
                             <i class="fas fa-exclamation-circle mr-1"></i>
                             يرجى إكمال الملف الشخصي أولاً
                         </span>
+                        @else
+                        <a href="{{ route('marriage-requests.create-proposal', $girl->id) }}"
+                            class="px-4 py-2 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg hover:from-pink-700 hover:to-rose-700 transition-all flex items-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105">
+                            <i class="fas fa-paper-plane"></i>
+                            تقديم طلب
+                        </a>
                         @endif
                         @endif
                     </div>

@@ -86,6 +86,7 @@ class MarriageRequestController extends Controller
                 $testResult = $exam->calculateScore();
             }
         }
+        $isProfileComplete = $this->isProfileComplete(Auth::user());
 
         return view('marriage-requests.index', compact(
             'marriageRequest',
@@ -94,7 +95,8 @@ class MarriageRequestController extends Controller
             'totalImportant',
             'maleImportantScore',
             'femaleImportantScore',
-            'testResult'
+            'testResult',
+            'isProfileComplete'
         ));
     }
 
