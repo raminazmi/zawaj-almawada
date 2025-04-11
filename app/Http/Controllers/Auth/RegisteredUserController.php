@@ -152,7 +152,8 @@ class RegisteredUserController extends Controller
                 'partner_expectations' => 'required|string|max:2000',
                 'full_name' => 'required|string|max:255',
                 'village' => 'required|string|max:255',
-                'legalAgreement' => 'required|accepted'
+                'legalAgreement' => 'required|accepted',
+                'accepts_married' => $user->gender === 'female' ? 'sometimes|boolean' : 'nullable',
             ], [
                 'state.required' => 'حقل الولاية مطلوب',
                 'state.string' => 'يجب أن تكون الولاية نصاً',
@@ -233,6 +234,9 @@ class RegisteredUserController extends Controller
                 'is_hijabi.required' => 'حقل الحجاب مطلوب للإناث',
                 'is_hijabi.boolean' => 'قيمة الحجاب يجب أن تكون نعم أو لا',
                 'is_hijabi.boolean' => 'قيمة حالة الحجاب غير صالحة',
+
+                'accepts_married.required' => 'يرجى تحديد ما إذا كنتِ تقبلين بشخص متزوج أم لا',
+                'accepts_married.boolean' => 'قيمة القبول بشخص متزوج غير صالحة',
 
                 'religiosity_level.required' => 'حقل مستوى التدين مطلوب',
                 'religiosity_level.in' => 'قيمة مستوى التدين غير صالحة',

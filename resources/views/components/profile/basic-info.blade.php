@@ -15,6 +15,13 @@
 
         <x-profile.input-field name="tribe" label="القبيلة" value="{{ old('tribe', $user->tribe) }}" icon="flag"
             :error="$errors->first('tribe')" />
+        @if($user->gender === 'female')
+        <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">هل تقبلين بشخص متزوج؟</label>
+            <x-profile.radio-group name="accepts_married" :options="['1' => 'نعم', '0' => 'لا']"
+                :checked="old('accepts_married', $user->accepts_married)" :error="$errors->first('accepts_married')" />
+        </div>
+        @endif
         <div class="relative">
             <label class="block text-sm font-medium text-gray-700 mb-2">النسب</label>
             <div class="relative">

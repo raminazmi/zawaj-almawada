@@ -287,6 +287,16 @@
                                 <p class="text-gray-800">{{ $user->is_hijabi ? 'نعم' : 'لا' }}</p>
                             </div>
                             @endif
+                            @if($user->gender === 'female')
+                            <div class="mt-4">
+                                <span class="font-semibold text-gray-700">القبول بشخص متزوج: </span>
+                                <span class="text-gray-600">
+                                    {{ $user->accepts_married === true ? 'تقبل شخص متزوج' : ($user->accepts_married ===
+                                    false ? 'لا تقبل بشخص متزوج'
+                                    : 'غير محدد') }}
+                                </span>
+                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>
