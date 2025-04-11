@@ -115,14 +115,6 @@
                                 المحتوى التفاعلي
                             </h3>
                             <div class="space-y-2">
-                                <p>
-                                    <i class="fab fa-youtube text-red-500 ml-2"></i>
-                                    <span class="font-medium">قائمة التشغيل:</span>
-                                    <a href="{{ $course->youtube_playlist }}" target="_blank"
-                                        class="text-blue-600 hover:underline">
-                                        {{ Str::limit($course->youtube_playlist, 30) }}
-                                    </a>
-                                </p>
                                 @if($course->intro_video)
                                 <p>
                                     <i class="fas fa-video ml-2 text-purple-500"></i>
@@ -222,8 +214,6 @@
     </div>
 </div>
 
-@if($courses->isNotEmpty())
-@push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -251,6 +241,4 @@
         });
     });
 </script>
-@endpush
-@endif
 @endsection

@@ -37,6 +37,25 @@
             @enderror
         </div>
 
+        @if($user->gender === 'female')
+        <div class="space-y-2">
+            <label for="is_hijabi" class="block text-sm font-medium text-gray-700">حالة الحجاب</label>
+            <div class="relative">
+                <select id="is_hijabi" name="is_hijabi"
+                    class="w-full p-3 pl-10 pr-8 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 @error('is_hijabi') border-red-500 @enderror">
+                    <option value="1" @selected(old('is_hijabi', $user->is_hijabi) == 1)>محجبة</option>
+                    <option value="0" @selected(old('is_hijabi', $user->is_hijabi) == 0)>غير محجبة</option>
+                </select>
+                <i class="fas fa-female absolute left-3 top-4 text-gray-400"></i>
+            </div>
+            @error('is_hijabi')
+            <div class="mt-1 text-red-600 text-sm flex items-center">
+                <i class="fas fa-exclamation-circle ml-1"></i>{{ $message }}
+            </div>
+            @enderror
+        </div>
+        @endif
+
         <div class="bg-purple-50 p-4 rounded-xl">
             <label class="block text-sm font-medium text-purple-600 mb-2">هل لديك أبناء؟</label>
             <div class="flex items-center space-x-4 mb-2 gap-4">

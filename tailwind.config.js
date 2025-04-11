@@ -10,8 +10,6 @@ export default {
               "./resources/**/*.blade.php",
     ],
 
-    darkMode: false,
-
     theme: {
         extend: {
             fontFamily: {

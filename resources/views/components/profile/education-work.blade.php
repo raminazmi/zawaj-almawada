@@ -31,8 +31,8 @@
             :error="$errors->first('monthly_income')" />
 
         <x-profile.select-field name="religion" label="الدين" :options="[
-                'Islam' => 'الإسلام',
-                'Christianity' => 'المسيحية'
+                'Islam' => 'مسلم',
+                'Christianity' => 'غير مسلم'
             ]" :selected="old('religion', $user->religion)" icon="mosque" :error="$errors->first('religion')" />
 
         <x-profile.select-field name="housing_type" label="نوع السكن" :options="[

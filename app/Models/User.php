@@ -57,6 +57,10 @@ class User extends Authenticatable
         'full_name',
         'village',
         'admin_role',
+        'legal_agreement',
+        'is_hijabi',
+        'is_active',
+        'email_verified_at'
     ];
 
     protected $hidden = [
@@ -76,6 +80,7 @@ class User extends Authenticatable
             'wants_children' => 'boolean',
             'infertility' => 'boolean',
             'is_smoker' => 'boolean',
+            'is_hijabi' => 'boolean',
         ];
     }
 

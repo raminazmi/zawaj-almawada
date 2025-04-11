@@ -32,15 +32,10 @@
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('exam.pledge') ? 'text-purple-700' : 'text-gray-900' }}">
                             مقياس التوافق الزواجي
                         </a>
-                        @php
-                        $readinessLink = \App\Models\ReadinessTestLink::first();
-                        @endphp
-                        @if($readinessLink)
-                        <a href="{{ $readinessLink->link }}"
-                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('readiness') ? 'text-purple-700' : 'text-gray-900' }}">
+                        <a href="{{ route('readiness_test.index') }}"
+                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('readiness_test.index') ? 'text-purple-700' : 'text-gray-900' }}">
                             اختبار الجاهزية للحياة الزوجية
                         </a>
-                        @endif
                         <a href="{{ route('exam.user.index') }}"
                             class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('exam.user.index') ? 'text-purple-700' : 'text-gray-900' }}">
                             اختباراتي
@@ -174,7 +169,6 @@
                                 @endauth
                             </div>
                         </div>
-
                     </div>
                 </div>
                 @endif
@@ -192,12 +186,6 @@
                     class="nav-link mx-6 {{ request()->routeIs('admin.users.index') ? 'active' : '' }}">
                     الأعضاء
                 </a>
-                @if(auth()->check() && auth()->user()->is_admin)
-                <a href="{{ route('admin.readiness_test_link.index') }}"
-                    class="nav-link mx-6 {{ request()->routeIs('admin.readiness_test_link.index') ? 'active' : '' }}">
-                    اختبار الجاهزية
-                </a>
-                @endif
                 @endif
                 <a href="{{ route('admin.shops') }}"
                     class="nav-link mx-6 {{ request()->routeIs('admin.shops') ? 'active' : '' }}">
@@ -217,6 +205,48 @@
                     دورة التأهيل للزواج
                 </a>
                 @endif
+                <div class="relative" x-data="{ isOpen: false }" @click.away="isOpen = false">
+                    <button @click="isOpen = !isOpen" class="nav-link flex items-center gap-2">
+                        المزيد
+                        <i class="fas fa-chevron-down text-xs ml-1 transition-transform"
+                            :class="{ 'rotate-180': isOpen }"></i>
+                    </button>
+                    <div x-show="isOpen" x-cloak
+                        class="absolute bg-white shadow-lg mt-2 w-56 rounded-md border border-gray-200 z-50">
+                        <div class="relative" x-data="{ subOpen: false }" @click.away="subOpen = false">
+                            <button @click="subOpen = !subOpen"
+                                class="w-full text-left px-4 py-2 text-sm hover:bg-pink-50 flex justify-between items-center gap-2">
+                                <a href="{{ route('admin.marriage-requests.expired') }}"
+                                    class="block text-sm hover:bg-pink-50 {{ request()->routeIs('admin.marriage-requests.expired') ? 'text-purple-700' : 'text-gray-900' }}">
+                                    الطلبات المنتهية
+                                </a>
+                            </button>
+                            <button @click="subOpen = !subOpen"
+                                class="w-full text-left px-4 py-2 text-sm hover:bg-pink-50 flex justify-between items-center gap-2">
+                                <a href="{{ route('admin.marriage-requests.pending-overdue') }}"
+                                    class="block text-sm hover:bg-pink-50 {{ request()->routeIs('admin.marriage-requests.pending-overdue') ? 'text-purple-700' : 'text-gray-900' }}">
+                                    الطلبات لم يتم الرد عليها
+                                </a>
+                            </button>
+                            @if(auth()->user()->isMainAdmin())
+                            <button @click="subOpen = !subOpen"
+                                class="w-full text-left px-4 py-2 text-sm hover:bg-pink-50 flex justify-between items-center gap-2">
+                                <a href="{{ route('admin.readiness_test_link.index') }}"
+                                    class="block text-sm hover:bg-pink-50 {{ request()->routeIs('admin.readiness_test_link.index') ? 'text-purple-700' : 'text-gray-900' }}">
+                                    اختبار الجاهزية
+                                </a>
+                            </button>
+                            <button @click="subOpen = !subOpen"
+                                class="w-full text-left px-4 py-2 text-sm hover:bg-pink-50 flex justify-between items-center gap-2">
+                                <a href="{{ route('admin.marriage_video_link.index') }}"
+                                    class="block text-sm hover:bg-pink-50 {{ request()->routeIs('admin.marriage_video_link.index') ? 'text-purple-700' : 'text-gray-900' }}">
+                                    فيديو الزواج الشرعي
+                                </a>
+                            </button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
                 @endif
             </div>
 
@@ -291,14 +321,9 @@
                 <a href="{{ route('exam.pledge') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
                     مقياس التوافق الزواجي
                 </a>
-                @php
-                $readinessLink = \App\Models\ReadinessTestLink::first();
-                @endphp
-                @if($readinessLink)
-                <a href="{{ $readinessLink->link }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
+                <a href="{{ route('readiness_test.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
                     اختبار الجاهزية للحياة الزوجية
                 </a>
-                @endif
                 <a href="{{ route('exam.user.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
                     اختباراتي
                 </a>
@@ -402,11 +427,6 @@
             <a href="{{ route('admin.questions.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">الأسئلة</a>
             <a href="{{ route('admin.admins.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">المشرفين</a>
             <a href="{{ route('admin.users.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">الأعضاء</a>
-            @if(auth()->check() && auth()->user()->is_admin)
-            <a href="{{ route('admin.readiness_test_link.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
-                اختبار الجاهزية
-            </a>
-            @endif
             @endif
             <a href="{{ route('admin.shops') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">المحلات</a>
             <a href="{{ route('admin.profile-approvals.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
@@ -418,7 +438,17 @@
             <a href="{{ route('admin.courses.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
                 دورة التأهيل للزواج
             </a>
+            <a href="{{ route('admin.readiness_test_link.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
+                اختبار الجاهزية
+            </a>
+            <a href="{{ route('admin.marriage_video_link.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
+                فيديو الزواج الشرعي
+            </a>
             @endif
+            <a href="{{ route('admin.marriage-requests.expired') }}"
+                class="block text-sm hover:bg-pink-50 py-2 px-1">الطلبات المنتهية</a>
+            <a href="{{ route('admin.marriage-requests.pending-overdue') }}"
+                class="block text-sm hover:bg-pink-50 py-2 px-1">الطلبات لم يتم الرد عليها</a>
         </div>
         @endif
 

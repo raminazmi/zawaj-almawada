@@ -9,7 +9,7 @@
             </h2>
         </div>
         <div class="bg-white rounded-3xl shadow-2xl border border-purple-100 overflow-hidden">
-            <div class="p-8">
+            <div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full bg-white rounded-xl shadow-lg">
                         <thead class="bg-gradient-to-r from-pink-400 to-purple-500 text-white">

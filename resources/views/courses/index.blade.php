@@ -29,14 +29,6 @@
                         </a>
                         @endif
 
-                        <a href="{{ $course->youtube_playlist }}" target="_blank"
-                            class="card-hover p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-600 transition-all">
-                            <div class="flex items-center">
-                                <i class="fab fa-youtube text-red-600 text-xl ml-2"></i>
-                                <span class="text-gray-700">قائمة التشغيل الكاملة</span>
-                            </div>
-                        </a>
-
                         @if($course->exam_link)
                         <a href="{{ $course->exam_link }}" target="_blank"
                             class="card-hover p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-600 transition-all">
@@ -54,7 +46,8 @@
                             <div class="flex items-center mb-2">
                                 <i class="fas fa-calendar-alt text-purple-600 ml-2"></i>
                                 <h4 class="text-sm font-semibold text-purple-800">فترة الدورة</h4>
-                            </div> <label class="block text-sm font-medium text-gray-700 mb-2">
+                            </div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
                                 تاريخ بدء الدورة : {{ $course->start_date->translatedFormat('d M Y') }}<br>
                             </label>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -139,14 +132,6 @@
                             </button>
                             @endforeach
                         </div>
-
-                        <div class="mt-auto">
-                            <a href="{{ $course->youtube_playlist }}" target="_blank"
-                                class="w-full p-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all flex items-center justify-center text-center">
-                                <i class="fab fa-youtube ml-2"></i>
-                                مشاهدة جميع الحلقات على يوتيوب
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -167,7 +152,8 @@
             </svg>
             <h3 class="mt-4 text-xl font-medium text-gray-900">لا يوجد دورات متاحة حالياً</h3>
             <p class="mt-2 text-gray-500">سيتم إضافة دورات جديدة قريباً، يمكنك متابعتنا للاطلاع على آخر التحديثات</p>
-        </div> @endif
+        </div>
+        @endif
     </div>
 </div>
 

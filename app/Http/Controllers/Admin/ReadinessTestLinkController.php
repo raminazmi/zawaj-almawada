@@ -11,7 +11,6 @@ class ReadinessTestLinkController extends Controller
 {
     public function index()
     {
-        // Retrieve the single link instance or a new instance if none exists
         $link = ReadinessTestLink::firstOrNew();
         return view('admin.readiness_test_link.index', compact('link'));
     }

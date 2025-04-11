@@ -17,6 +17,9 @@ class AuthUser
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
+        if (Auth::check() && !Auth::user()->email_verified_at) {
+            return redirect()->route('verification.notice');
+        }
         if (!$user || $user->is_admin) {
             abort(403);
         }

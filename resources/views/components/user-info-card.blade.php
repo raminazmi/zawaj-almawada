@@ -104,6 +104,30 @@
                         </p>
                     </div>
                 </div>
+
+                @if($user->gender === 'female')
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 h-5 w-5 text-green-500">
+                        <i class="fas fa-female"></i>
+                    </div>
+                    <div class="mr-3">
+                        <p class="text-sm font-medium text-gray-500">محجبة</p>
+                        <p class="text-gray-800">{{ $user->is_hijabi ? 'نعم' : 'لا' }}</p>
+                    </div>
+                </div>
+                @endif
+
+                @if($user->gender === 'male')
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 h-5 w-5 text-green-500">
+                        <i class="fas fa-male"></i>
+                    </div>
+                    <div class="mr-3">
+                        <p class="text-sm font-medium text-gray-500">يدخن</p>
+                        <p class="text-gray-800">{{ $user->is_smoker ? 'نعم' : 'لا' }}</p>
+                    </div>
+                </div>
+                @endif
             </div>
 
             <div class="space-y-4">

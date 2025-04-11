@@ -275,10 +275,18 @@
                             </div>
                         </div>
                         <div class="space-y-3">
+                            @if($user->gender === 'male')
                             <div>
-                                <p class="text-sm font-medium text-gray-500">مدخن/مدخنة</p>
+                                <p class="text-sm font-medium text-gray-500">مدخن</p>
                                 <p class="text-gray-800">{{ $user->is_smoker ? 'نعم' : 'لا' }}</p>
                             </div>
+                            @endif
+                            @if($user->gender === 'female')
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">محجبة</p>
+                                <p class="text-gray-800">{{ $user->is_hijabi ? 'نعم' : 'لا' }}</p>
+                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>

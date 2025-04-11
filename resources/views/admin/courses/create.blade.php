@@ -21,7 +21,6 @@
                 <div class="space-y-4">
                     @foreach([
                     ['name' => 'title', 'label' => 'عنوان الدورة', 'icon' => 'heading', 'type' => 'text'],
-                    ['name' => 'youtube_playlist', 'label' => 'رابط اليوتيوب', 'icon' => 'youtube', 'type' => 'url'],
                     ['name' => 'registration_link', 'label' => 'رابط التسجيل', 'icon' => 'link', 'type' => 'url'],
                     ['name' => 'ebook_url', 'label' => 'رابط كتاب الدورة', 'icon' => 'book', 'type' => 'url'],
                     ['name' => 'intro_video', 'label' => 'مقطع توضيحي للدورة', 'icon' => 'video', 'type' => 'url'],

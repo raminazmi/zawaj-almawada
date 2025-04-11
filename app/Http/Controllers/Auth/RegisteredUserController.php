@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Mail\ProfileApprovalNotification;
 use App\Mail\ProfilePendingNotification;
+use App\Mail\VerificationCodeMail;
 use App\Models\User;
+use App\Models\VerificationCode;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -85,15 +87,18 @@ class RegisteredUserController extends Controller
             'membership_number' => $membershipNumber,
         ]);
 
-        event(new Registered($user));
+        $code = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
+
+        VerificationCode::create([
+            'user_id' => $user->id,
+            'code' => $code,
+            'expires_at' => now()->addMinutes(30)
+        ]);
+
+        Mail::to($user->email)->send(new VerificationCodeMail($user, $code));
         Auth::login($user);
 
-        if (session()->has('previous_url')) {
-            $redirectUrl = session('previous_url');
-            return redirect($redirectUrl);
-        }
-
-        return redirect(route('index'));
+        return redirect(route('verification.notice'));
     }
 
     /**
@@ -140,13 +145,14 @@ class RegisteredUserController extends Controller
                 'wants_children' => 'required|boolean',
                 'infertility' => 'required|boolean',
                 'is_smoker' => $user->gender === 'male' ? 'sometimes|boolean' : 'nullable',
+                'is_hijabi' => $user->gender === 'female' ? 'sometimes|boolean' : 'nullable',
                 'religiosity_level' => 'required|in:high,medium,low',
                 'prayer_commitment' => 'required|in:yes,sometimes,no',
                 'personal_description' => 'required|string|max:2000',
                 'partner_expectations' => 'required|string|max:2000',
                 'full_name' => 'required|string|max:255',
                 'village' => 'required|string|max:255',
-                'legalAgreement' => 'required|accepted',
+                'legalAgreement' => 'required|accepted'
             ], [
                 'state.required' => 'حقل الولاية مطلوب',
                 'state.string' => 'يجب أن تكون الولاية نصاً',
@@ -224,6 +230,10 @@ class RegisteredUserController extends Controller
                 'is_smoker.boolean' => 'قيمة التدخين يجب أن تكون نعم أو لا',
                 'is_smoker.nullable' => 'حقل التدخين غير مسموح للإناث',
 
+                'is_hijabi.required' => 'حقل الحجاب مطلوب للإناث',
+                'is_hijabi.boolean' => 'قيمة الحجاب يجب أن تكون نعم أو لا',
+                'is_hijabi.boolean' => 'قيمة حالة الحجاب غير صالحة',
+
                 'religiosity_level.required' => 'حقل مستوى التدين مطلوب',
                 'religiosity_level.in' => 'قيمة مستوى التدين غير صالحة',
 
@@ -255,7 +265,12 @@ class RegisteredUserController extends Controller
         }
 
         try {
-            $user->update(array_merge($validated, ['profile_status' => 'pending']));
+            $updateData = $validated;
+            if (isset($updateData['legalAgreement'])) {
+                $updateData['legal_agreement'] = $updateData['legalAgreement'] === 'on';
+                unset($updateData['legalAgreement']);
+            }
+            $user->update(array_merge($updateData, ['profile_status' => 'pending']));
             Mail::to($user->email)->send(new ProfilePendingNotification($user));
             $admins = User::where('is_admin', true)->get();
             foreach ($admins as $admin) {

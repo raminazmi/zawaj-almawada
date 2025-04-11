@@ -6,7 +6,7 @@
             <label for="familyConsent" class="mr-3 block text-sm text-gray-700">
                 <span class="font-medium text-purple-800">موافقة الأسرة:</span>
                 <span class="block mt-1 text-justify">
-                    مشاركة بياناتي كفتاة في برنامج الزواج الشرعي تمت بموافقة وتوجيه من ولي أمرها أو أحد أفراد أسرتها
+                    مشاركة بياناتي كفتاة في برنامج الزواج الشرعي تمت بموافقة وتوجيه من ولي أمري أو أحد أفراد أسرتي
                 </span>
             </label>
         </div>

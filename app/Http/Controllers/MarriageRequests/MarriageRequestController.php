@@ -21,6 +21,7 @@ use Illuminate\Support\Str;
 
 class MarriageRequestController extends Controller
 {
+
     public function isProfileComplete($user)
     {
         $requiredFields = [
@@ -60,6 +61,11 @@ class MarriageRequestController extends Controller
     }
 
     public function index()
+    {
+        return view('marriage-requests.marriage-program');
+    }
+
+    public function show()
     {
         if (!auth()->user()->age || !auth()->user()->gender) {
             session(['previous_url' => route('marriage-requests.index')]);

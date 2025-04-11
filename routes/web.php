@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AddActivity\AddActivityController;
-use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\Dashbaord\DashboardController;
 use App\Http\Controllers\Admin\Question\QuestionController;
 use App\Http\Controllers\Admin\Shops\ShopsController;
@@ -32,7 +31,10 @@ use App\Http\Controllers\Admin\AdminCourseController;
 use App\Http\Controllers\Admin\ProfileApprovalController;
 use App\Http\Controllers\courses\CourseController;
 use App\Http\Controllers\Admin\Admin\AdminController;
+use App\Http\Controllers\Admin\MarriageVideoLinkController;
 use App\Http\Controllers\Admin\ReadinessTestLinkController;
+use App\Http\Controllers\ReadinessTest\ReadinessTestController;
+
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -59,7 +61,7 @@ Route::get('/business-activities/{type}', [BusinessActivityController::class, 's
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
 Route::post('/register', [RegisteredUserController::class, 'store']);
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'verified')->group(function () {
     Route::middleware(AuthUser::class)->group(function () {
         Route::post('update-gender', [GenderController::class, 'update'])->name('gender.update');
         Route::get('personal-info', [HomeController::class, 'personalInfoStart'])->name('personal-info');
@@ -71,9 +73,11 @@ Route::middleware('auth')->group(function () {
         Route::get('my-exams', [UserExamController::class, 'index'])->name('exam.user.index');
         Route::get('my-exams/{id}', [UserExamController::class, 'show'])->name('exam.user.show');
         Route::get('profile/{id}', [ProfileApprovalController::class, 'show'])->name('profile-approvals.show');
+        Route::get('/readiness-test', [ReadinessTestController::class, 'index'])->name('readiness_test.index');
 
         Route::prefix('marriage-requests')->group(function () {
             Route::get('/', [MarriageRequestController::class, 'index'])->name('marriage-requests.index');
+            Route::get('/show', [MarriageRequestController::class, 'show'])->name('marriage-requests.show');
             Route::get('/create', [MarriageRequestController::class, 'create'])->name('marriage-requests.create');
             Route::get('/boys', [MarriageRequestController::class, 'boys'])->name('marriage-requests.boys');
             Route::get('/girls', [MarriageRequestController::class, 'girls'])->name('marriage-requests.girls');
@@ -89,15 +93,12 @@ Route::middleware('auth')->group(function () {
             Route::post('/final-approval/{id}', [MarriageRequestController::class, 'finalApproval'])->name('marriage-requests.final-approval');
             Route::get('/edit-profile', [RegisteredUserController::class, 'editProfile'])->name('profile.edit');
             Route::post('/update-profile', [RegisteredUserController::class, 'updateProfile'])->name('profile.update');
+            Route::post('/destroy-profile', [RegisteredUserController::class, 'destroyProfile'])->name('profile.destroy');
         });
     });
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('login', [LoginController::class, 'showLoginForm'])->name('login-form');
-    Route::post('login', [LoginController::class, 'login'])->name('login');
-    Route::post('logout', [LoginController::class, 'logout'])->name('logout');
-
     Route::middleware(AuthAdmin::class)->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('questions', QuestionController::class);
@@ -114,6 +115,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/readiness-test-link', [ReadinessTestLinkController::class, 'store'])->name('readiness_test_link.store');
         Route::put('/readiness-test-link/{readinessTestLink}', [ReadinessTestLinkController::class, 'update'])->name('readiness_test_link.update');
         Route::delete('/readiness-test-link/{readinessTestLink}', [ReadinessTestLinkController::class, 'destroy'])->name('readiness_test_link.destroy');
+        Route::resource('marriage_video_link', MarriageVideoLinkController::class)->except(['show']);
 
         Route::prefix('profile-approvals')->group(function () {
             Route::get('/', [ProfileApprovalController::class, 'index'])->name('profile-approvals.index');
@@ -129,6 +131,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/{id}/approve-final', [MarriageRequestAdminController::class, 'approveFinal'])->name('marriage-requests.approve-final');
             Route::post('/{id}/reject', [MarriageRequestAdminController::class, 'reject'])->name('marriage-requests.reject');
             Route::post('/{id}/pending', [MarriageRequestAdminController::class, 'pending'])->name('marriage-requests.pending');
+            Route::get('/expired', [MarriageRequestAdminController::class, 'expiredEngagements'])->name('marriage-requests.expired');
+            Route::delete('/expired/{id}', [MarriageRequestAdminController::class, 'deleteExpired'])->name('marriage-requests.delete-expired');
+            Route::delete('/expired', [MarriageRequestAdminController::class, 'deleteAllExpired'])->name('marriage-requests.delete-all-expired');
+            Route::get('/pending-overdue', [MarriageRequestAdminController::class, 'pendingRequestsOverdue'])->name('marriage-requests.pending-overdue');
+            Route::delete('/pending-overdue/{id}', [MarriageRequestAdminController::class, 'deletePendingOverdue'])->name('marriage-requests.delete-pending-overdue');
+            Route::delete('/pending-overdue', [MarriageRequestAdminController::class, 'deleteAllPendingOverdue'])->name('marriage-requests.delete-all-pending-overdue');
         });
 
         Route::middleware(CheckMainAdmin::class)->group(function () {

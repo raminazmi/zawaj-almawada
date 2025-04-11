@@ -217,4 +217,79 @@ class MarriageRequestAdminController extends Controller
 
         return back()->with('success', 'تم رفض الملف الشخصي');
     }
+
+    public function pendingRequestsOverdue()
+    {
+        $pendingRequests = MarriageRequest::where('status', 'pending')
+            ->where('created_at', '<', now()->subDays(7))
+            ->with(['user', 'target'])
+            ->paginate(10);
+
+        return view('admin.marriage-requests.pending-overdue', compact('pendingRequests'));
+    }
+
+    public function deletePendingOverdue($id)
+    {
+        $request = MarriageRequest::findOrFail($id);
+
+        $request->user->update(['status' => 'available']);
+        $request->target->update(['status' => 'available']);
+
+        $request->forceDelete();
+
+        return back()->with('success', 'تم حذف الطلب المعلق بنجاح وإعادة المستخدمين إلى حالة متاح');
+    }
+
+    public function deleteAllPendingOverdue()
+    {
+        $pendingRequests = MarriageRequest::where('status', 'pending')
+            ->where('created_at', '<', now()->subDays(7))
+            ->with(['user', 'target'])
+            ->get();
+
+        foreach ($pendingRequests as $request) {
+            $request->user->update(['status' => 'available']);
+            $request->target->update(['status' => 'available']);
+            $request->forceDelete();
+        }
+
+        return back()->with('success', 'تم حذف جميع الطلبات المعلقة المتجاوزة بنجاح وإعادة المستخدمين إلى حالة متاح');
+    }
+
+    public function expiredEngagements()
+    {
+        $expiredRequests = MarriageRequest::where('admin_approval_status', 'approved')
+            ->where('status', 'engaged')
+            ->where('created_at', '<', now()->subDays(60))
+            ->with(['user', 'target', 'exam'])
+            ->paginate(10);
+
+        return view('admin.marriage-requests.expired', compact('expiredRequests'));
+    }
+
+    public function deleteExpired($id)
+    {
+        $request = MarriageRequest::findOrFail($id);
+        $request->user->update(['status' => 'available']);
+        $request->target->update(['status' => 'available']);
+        $request->forceDelete();
+        return back()->with('success', 'تم حذف الطلب بنجاح وإعادة المستخدمين إلى حالة متاح');
+    }
+
+    public function deleteAllExpired()
+    {
+        $expiredRequests = MarriageRequest::where('admin_approval_status', 'approved')
+            ->where('status', 'engaged')
+            ->where('created_at', '<', now()->subDays(60))
+            ->with(['user', 'target'])
+            ->get();
+
+        foreach ($expiredRequests as $request) {
+            $request->user->update(['status' => 'available']);
+            $request->target->update(['status' => 'available']);
+            $request->forceDelete();
+        }
+
+        return back()->with('success', 'تم حذف جميع الطلبات المنتهية بنجاح وإعادة المستخدمين إلى حالة متاح');
+    }
 }

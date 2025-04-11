@@ -49,6 +49,7 @@ class CreateUsersTable extends Migration
             $table->text('personal_description')->nullable();
             $table->text('partner_expectations')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->boolean('is_active')->default(false);
             $table->string('password');
             $table->rememberToken();
             $table->enum('status', ['available', 'pending', 'engaged'])->default('available');
