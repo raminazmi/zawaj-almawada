@@ -14,18 +14,41 @@ class MarriageVideoLinkController extends Controller
         return view('admin.marriage_video_link.index', compact('link'));
     }
 
+    public function convertToEmbedUrl($url)
+    {
+        if (empty($url)) {
+            return null;
+        }
+        if (str_contains($url, 'youtube.com/embed')) {
+            return $url;
+        }
+        $pattern = '~
+        (?:youtube\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)
+        ([^"&?/\s]{11})
+    ~ix';
+        if (preg_match($pattern, $url, $matches)) {
+            $videoId = $matches[1];
+            return "https://www.youtube.com/embed/{$videoId}";
+        }
+        return $url;
+    }
+
     public function store(Request $request)
     {
-        $request->validate([
+        $validated =  $request->validate([
             'link' => 'required|url',
         ], [
             'link.required' => 'حقل الرابط مطلوب',
             'link.url' => 'الرابط يجب أن يكون عنوان URL صالح',
         ]);
 
+        if (!empty($validated['link'])) {
+            $validated['link'] = $this->convertToEmbedUrl($validated['link']);
+        }
+
         MarriageVideoLink::updateOrCreate(
             ['id' => MarriageVideoLink::first()?->id],
-            ['link' => $request->link]
+            ['link' => $validated['link']]
         );
 
         return redirect()->route('admin.marriage_video_link.index')
@@ -34,11 +57,18 @@ class MarriageVideoLinkController extends Controller
 
     public function update(Request $request, MarriageVideoLink $marriageVideoLink)
     {
-        $request->validate([
+        $validated = $request->validate([
             'link' => 'required|url',
+        ], [
+            'link.required' => 'حقل الرابط مطلوب',
+            'link.url' => 'الرابط يجب أن يكون عنوان URL صالح',
         ]);
 
-        $marriageVideoLink->update(['link' => $request->link]);
+        if (!empty($validated['link'])) {
+            $validated['link'] = $this->convertToEmbedUrl($validated['link']);
+        }
+
+        $marriageVideoLink->update(['link' => $validated['link']]);
 
         return redirect()->route('admin.marriage_video_link.index')
             ->with('success', 'تم تحديث الرابط بنجاح');

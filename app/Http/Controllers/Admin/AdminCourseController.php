@@ -20,6 +20,25 @@ class AdminCourseController extends Controller
         return view('admin.courses.create');
     }
 
+    public function convertToEmbedUrl($url)
+    {
+        if (empty($url)) {
+            return null;
+        }
+        if (str_contains($url, 'youtube.com/embed')) {
+            return $url;
+        }
+        $pattern = '~
+        (?:youtube\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)
+        ([^"&?/\s]{11})
+    ~ix';
+        if (preg_match($pattern, $url, $matches)) {
+            $videoId = $matches[1];
+            return "https://www.youtube.com/embed/{$videoId}";
+        }
+        return $url;
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -62,8 +81,19 @@ class AdminCourseController extends Controller
             'honor_students' => 'الطلاب المتميزين',
         ]);
 
-        $validated['supporting_companies'] = explode(',', $validated['supporting_companies']);
-        $validated['honor_students'] = !empty($validated['honor_students']) ? explode(',', $validated['honor_students']) : [];
+        if (!empty($validated['intro_video'])) {
+            $validated['intro_video'] = $this->convertToEmbedUrl($validated['intro_video']);
+        }
+
+        function arabicCommaSplit($input)
+        {
+            if (empty($input)) return [];
+            $normalized = str_replace(['،', ';', '|', '/'], ',', $input);
+            return array_map('trim', explode(',', $normalized));
+        }
+
+        $validated['supporting_companies'] = arabicCommaSplit($validated['supporting_companies']);
+        $validated['honor_students'] = arabicCommaSplit($validated['honor_students'] ?? '');
 
         $course = Course::create($validated);
 
@@ -73,7 +103,7 @@ class AdminCourseController extends Controller
                     $course->episodes()->create([
                         'episode_number' => $index + 1,
                         'title' => $episodeData['title'],
-                        'url' => $episodeData['url'],
+                        'url' => $this->convertToEmbedUrl($episodeData['url']),
                     ]);
                 }
             }
@@ -129,8 +159,12 @@ class AdminCourseController extends Controller
             'honor_students' => 'الطلاب المتميزين',
         ]);
 
+        if (!empty($validated['intro_video'])) {
+            $validated['intro_video'] = $this->convertToEmbedUrl($validated['intro_video']);
+        }
+
         $validated['supporting_companies'] = array_filter(
-            array_map('trim', explode(',', $validated['supporting_companies'])),
+            array_map('trim', explode('،', $validated['supporting_companies'])),
             function ($item) {
                 return !empty($item);
             }
@@ -138,7 +172,7 @@ class AdminCourseController extends Controller
 
         $validated['honor_students'] = !empty($validated['honor_students'])
             ? array_filter(
-                array_map('trim', explode(',', $validated['honor_students'])),
+                array_map('trim', explode('،', $validated['honor_students'])),
                 function ($item) {
                     return !empty($item);
                 }
@@ -154,7 +188,7 @@ class AdminCourseController extends Controller
                     $course->episodes()->create([
                         'episode_number' => $index + 1,
                         'title' => $episodeData['title'],
-                        'url' => $episodeData['url'],
+                        'url' => $this->convertToEmbedUrl($episodeData['url']),
                     ]);
                 }
             }
