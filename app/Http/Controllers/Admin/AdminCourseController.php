@@ -85,15 +85,8 @@ class AdminCourseController extends Controller
             $validated['intro_video'] = $this->convertToEmbedUrl($validated['intro_video']);
         }
 
-        function arabicCommaSplit($input)
-        {
-            if (empty($input)) return [];
-            $normalized = str_replace(['،', ';', '|', '/'], ',', $input);
-            return array_map('trim', explode(',', $normalized));
-        }
-
-        $validated['supporting_companies'] = arabicCommaSplit($validated['supporting_companies']);
-        $validated['honor_students'] = arabicCommaSplit($validated['honor_students'] ?? '');
+        $validated['supporting_companies'] = explode('،', $validated['supporting_companies']);
+        $validated['honor_students'] = !empty($validated['honor_students']) ? explode('،', $validated['honor_students']) : [];
 
         $course = Course::create($validated);
 
