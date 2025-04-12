@@ -36,7 +36,7 @@
                             {{ $field['label'] }}
                         </label>
                         <input type="{{ $field['type'] }}" name="{{ $field['name'] }}"
-                            value="{{ old($field['name'], is_array($course->{$field['name']}) ? implode(',', $course->{$field['name']}) : $course->{$field['name']}) }}"
+                            value="{{ old($field['name'], is_array($course->{$field['name']}) ? implode('،', $course->{$field['name']}) : $course->{$field['name']}) }}"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         @error($field['name'])
                         <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
