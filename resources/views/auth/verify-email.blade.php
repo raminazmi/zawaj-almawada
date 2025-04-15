@@ -23,8 +23,8 @@
 
                 <div class="mb-6">
                     <div class="flex justify-center gap-2 mb-4" dir="rtl">
-                        @for ($i = 0; $i < 4; $i++) <input type="text" name="digit-{{ $i }}" id="digit-{{ $i }}"
-                            maxlength="1"
+                        @for ($i = 0; $i < 4; $i++) <input type="text" inputmode="numeric" pattern="[0-9]*"
+                            name="digit-{{ $i }}" id="digit-{{ $i }}" maxlength="1"
                             class="w-16 h-16 border-2 border-purple-200 rounded-lg text-2xl font-bold text-center digit-input"
                             oninput="moveToNext(this, {{ $i }})" onkeydown="handleBackspace(this, {{ $i }})"
                             style="direction: rtl;">

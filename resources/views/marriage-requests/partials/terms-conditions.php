@@ -97,7 +97,7 @@
             class="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-purple-50 hover:border-purple-100">
             <p class="text-gray-700 leading-relaxed">في حال اكتشاف أي تضليل أو معلومات غير صحيحة بعد الخطبة، يجب
                 الإبلاغ عن ذلك على بريد البرنامج:
-                zawajmawadda@gmail.com
+                info@zawaj-almawada.com
                 وسيتم حظر المخالف نهائيا من الاستخدام.</p>
         </div>
     </div>

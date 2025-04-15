@@ -3,29 +3,13 @@
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-2xl font-bold text-center text-purple-600 mb-12 animate-fade-in-down">دورة التأهيل للحياة
-            الزوجية</h1>
+        <h1 class="text-2xl font-bold text-center text-purple-600 mb-12 animate-fade-in-down">{{ $course->title }}</h1>
 
-        @if($courses->isEmpty())
-        <div class="bg-white rounded-xl shadow-lg p-8 text-center">
-            <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <h3 class="mt-4 text-xl font-medium text-gray-900">لا يوجد دورات متاحة حالياً</h3>
-            <p class="mt-2 text-gray-500">سيتم إضافة دورات جديدة قريباً، يمكنك متابعتنا للاطلاع على آخر التحديثات</p>
-        </div>
-        @else
-        @foreach($courses as $course)
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl mb-8">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
                 <div class="lg:col-span-2 space-y-6">
                     <div class="space-y-4">
-                        <h2 class="text-2xl font-semibold text-gray-800">
-                            <a href="{{ route('courses.show', $course->id) }}" class="hover:underline">
-                                {{ $course->title }}
-                            </a>
-                        </h2>
+                        <h2 class="text-2xl font-semibold text-gray-800">{{ $course->title }}</h2>
                         <p class="text-gray-600 leading-relaxed">{{ $course->description }}</p>
                     </div>
 
@@ -144,7 +128,7 @@
                             <button type="button"
                                 class="episode-btn w-full text-right p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-all flex items-center justify-between group mb-2"
                                 data-url="{{ $episode->url }}" data-title="{{ $episode->title }}"
-                                data-index="{{ $loop->index }}" data-course-id="{{ $course->id }}">
+                                data-index="{{ $loop->index }}">
                                 <div class="flex items-center">
                                     <span class="text-purple-600 text-sm font-medium">#{{ $episode->episode_number
                                         }}</span>
@@ -166,13 +150,6 @@
                 </a>
             </div>
         </div>
-        @endforeach
-
-        <!-- إضافة ترقيم الصفحات -->
-        <div class="mt-8">
-            {{ $courses->links() }}
-        </div>
-        @endif
     </div>
 </div>
 
@@ -265,8 +242,7 @@
 
 <script>
     let currentEpisodeIndex = 0;
-    let currentCourseId = null;
-    let episodes = [];
+    const episodes = @json($course->episodes);
 
     function closeVideoModal() {
         document.getElementById('videoModal').classList.add('hidden');
@@ -288,8 +264,6 @@
 
     document.querySelectorAll('.episode-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            currentCourseId = btn.dataset.courseId;
-            episodes = @json($courses->keyBy('id')->toArray())[currentCourseId].episodes;
             showVideo(parseInt(btn.dataset.index));
         });
     });

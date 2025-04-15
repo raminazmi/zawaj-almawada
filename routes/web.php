@@ -48,6 +48,7 @@ Route::get('/legal-counseling', [LegalCounselingController::class, 'index'])->na
 Route::get('/psychic-counseling', [PsychicCounselingController::class, 'index'])->name('psychic-counseling');
 Route::get('/legitimate-counseling', [LegitimateCounselingController::class, 'index'])->name('legitimate-counseling');
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
+Route::get('/courses/{course}', [CourseController::class, 'show'])->name('courses.show');
 
 Route::controller(GoogleController::class)->group(function () {
     Route::get('auth/google', 'redirectToGoogle')->name('auth.google');

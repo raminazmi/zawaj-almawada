@@ -68,10 +68,18 @@
                     </button>
                     <div x-show="isOpen" x-cloak
                         class="absolute bg-white shadow-lg mt-2 w-48 rounded-md border border-gray-200 z-50">
-                        <a href="{{ route('courses.index') }}"
-                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('courses.index') ? 'text-purple-700' : 'text-gray-900' }}">
-                            دورة التأهيل للزواج
+                        @if($courses->isEmpty())
+                        <p class="block px-4 py-2 text-sm hover:bg-pink-50">
+                            لا يوجد دورات حاليا
+                        </p>
+                        @else
+                        @foreach($courses as $course)
+                        <a href="{{ route('courses.show', $course->id) }}"
+                            class="block px-4 py-2 text-sm hover:bg-pink-50 {{ request()->routeIs('courses.show', $course->id) ? 'text-purple-700' : 'text-gray-900' }}">
+                            {{ $course->title }}
                         </a>
+                        @endforeach
+                        @endif
                     </div>
                 </div>
                 <div class="relative" x-data="{ isOpen: false }" @click.away="isOpen = false">
@@ -202,7 +210,7 @@
                 @if(auth()->user()->isMainAdmin())
                 <a href="{{ route('admin.courses.index') }}"
                     class="nav-link mx-6 {{ request()->routeIs('admin.courses.index') ? 'active' : '' }}">
-                    دورة التأهيل للزواج
+                    الدورات
                 </a>
                 @endif
                 <div class="relative" x-data="{ isOpen: false }" @click.away="isOpen = false">
@@ -347,9 +355,17 @@
                 <i class="fas fa-chevron-down text-xs transition-transform" :class="{ 'rotate-180': isOpen }"></i>
             </button>
             <div x-show="isOpen" x-cloak class="pl-4 space-y-2">
-                <a href="{{ route('courses.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">دورة
-                    التأهيل
-                    للزواج</a>
+                @if($courses->isEmpty())
+                <p class="block text-sm hover:bg-pink-50 py-2 px-1">
+                    لا يوجد دورات حاليا
+                </p>
+                @else
+                @foreach($courses as $course)
+                <a href="{{ route('courses.show', $course->id) }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
+                    {{ $course->title }}
+                </a>
+                @endforeach
+                @endif
             </div>
         </div>
         <div x-data="{ isOpen: false }">
@@ -436,7 +452,7 @@
                 class="block text-sm hover:bg-pink-50 py-2 px-1">طلبات الزواج</a>
             @if(auth()->user()->isMainAdmin())
             <a href="{{ route('admin.courses.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
-                دورة التأهيل للزواج
+                الدورات
             </a>
             <a href="{{ route('admin.readiness_test_link.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
                 اختبار الجاهزية

@@ -146,7 +146,7 @@
                             </li>
                             <li class="flex items-center">
                                 <i class="fas fa-envelope ml-2 text-[#d4b341]"></i>
-                                zawajmawadda@gmail.com
+                                info@zawaj-almawada.com
                             </li>
                         </ul>
                     </div>

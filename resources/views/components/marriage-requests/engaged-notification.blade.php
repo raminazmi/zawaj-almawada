@@ -5,8 +5,14 @@
             <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
                 <i class="fas fa-check-circle text-green-600 text-3xl"></i>
             </div>
-            <h2 class="text-2xl font-bold text-gray-800">مبروك! تمت الخطوبة بنجاح</h2>
+            <h2 class="text-2xl font-bold text-gray-800">مبروك! تمت الخطوبة بنجاح مع </h2>
             <p class="text-lg text-emerald-600 font-medium">{{ $partner->name ?? 'غير محدد' }}</p>
+            <p class="text-md font-medium">
+                يرجى من الشاب إبلاغ والدته أو أخواته البدء في البحث عن الفتاة حسب عنوانها، والتواصل معها أو مع أهلها
+                تمهيداً للتقدم للخطوبة بشكل رسمي خلال شهر، وعلى الفتاة الانتظار وإذا لم يتقدم لها بشكل رسمي سوف تفتح
+                المنصة
+                لها لاستقبال خطوبة جديدة بعد شهر.
+            </p>
         </div>
 
         @if($partner)
@@ -38,7 +44,7 @@
                     <p class="font-medium">{{ $partner->tribe }}</p>
                 </div>
             </div>
-
+            <x-target-info-card :target="$marriageRequest->target" :link="$marriageRequest->compatibility_test_link" />
             @if($testResult)
             <div class="mt-8 pt-6 border-t border-gray-100">
                 <h4 class="text-lg font-semibold text-gray-800 mb-4">

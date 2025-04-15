@@ -256,7 +256,16 @@
                                                     </div>
                                                     <div>
                                                         <p class="text-sm font-medium text-gray-500">قطاع العمل</p>
-                                                        <p class="text-gray-800">{{ $boy->work_sector ?? 'غير محدد' }}
+                                                        <p class="text-gray-800">
+                                                            @php
+                                                            $work_sector = [
+                                                            'government' => 'قطاع حكومي',
+                                                            'private' => 'قطاع خاص',
+                                                            'self_employed' => 'أعمال حرة',
+                                                            'unemployed' => 'باحث عن عمل'
+                                                            ];
+                                                            echo $work_sector[$boy->work_sector] ?? 'غير محدد';
+                                                            @endphp
                                                         </p>
                                                     </div>
                                                     <div>
@@ -299,7 +308,15 @@
                                                 <div class="space-y-3">
                                                     <div>
                                                         <p class="text-sm font-medium text-gray-500">الدين</p>
-                                                        <p class="text-gray-800">{{ $boy->religion ?? 'غير محدد' }}</p>
+                                                        <p class="text-gray-800">
+                                                            @php
+                                                            $religion = [
+                                                            'Islam' => 'مسلم',
+                                                            'Christianity' => 'غير مسلم'
+                                                            ];
+                                                            echo $religion[$boy->religion] ?? 'غير محدد';
+                                                            @endphp
+                                                        </p>
                                                     </div>
                                                     <div>
                                                         <p class="text-sm font-medium text-gray-500">الالتزام بالصلاة

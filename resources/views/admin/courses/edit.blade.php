@@ -85,19 +85,30 @@
                             <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
                             @enderror
                         </div>
-
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
-                                <i class="fas fa-link text-blue-600 ml-2"></i>
-                                رابط الامتحان
+                                <i class="fas fa-clock text-blue-600 ml-2"></i>
+                                توقيت الامتحان
                             </label>
-                            <input type="url" name="exam_link" value="{{ old('exam_link', $course->exam_link) }}"
+                            <input type="time" name="exam_time" value="{{ old('exam_time', $course->exam_time ?? '') }}"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg">
-                            @error('exam_link')
+                            @error('exam_time')
                             <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-link text-blue-600 ml-2"></i>
+                            رابط الامتحان
+                        </label>
+                        <input type="url" name="exam_link" value="{{ old('exam_link', $course->exam_link) }}"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+                        @error('exam_link')
+                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
+                        @enderror
+                    </div>
+
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             <i class="fas fa-align-left text-purple-600 ml-2"></i>

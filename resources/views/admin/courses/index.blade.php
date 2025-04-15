@@ -1,224 +1,244 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-8">
+<div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col sm:flex-row justify-between items-center mb-8 space-y-4 sm:space-y-0">
-            <div class="flex items-center bg-white px-6 py-3 rounded-full shadow-sm border border-purple-200">
-                <h1
-                    class="text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                    دورة التأهيل للزواج
-                </h1>
-            </div>
-
-            @if($courses->isEmpty())
+            <h1 class="text-2xl font-bold text-center text-purple-600 animate-fade-in-down">الدورات
+            </h1>
             <a href="{{ route('admin.courses.create') }}"
                 class="flex items-center px-6 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg shadow-md hover:opacity-90 transition-all">
                 <i class="fas fa-plus-circle ml-2"></i>
                 إضافة دورة
             </a>
-            @endif
         </div>
 
         @if($courses->isEmpty())
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
-            <i class="fas fa-book-open text-4xl text-gray-400 mb-4"></i>
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">لا يوجد دورة حالياً</h3>
-            <p class="text-gray-600 max-w-md mx-auto">يمكنك بدء دورة جديدة لتقديم محتوى تأهيلي للمستخدمين</p>
+        <div class="bg-white rounded-xl shadow-lg p-8 text-center">
+            <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 class="mt-4 text-xl font-medium text-gray-900">لا يوجد دورات متاحة حالياً</h3>
+            <p class="mt-2 text-gray-500">يمكنك إضافة دورات جديدة بالضغط على زر "إضافة دورة".</p>
         </div>
         @else
         @foreach($courses as $course)
-        <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 mb-6">
-            <div class="p-6">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-2 md:mb-0">
-                        <i class="fas fa-graduation-cap text-purple-600 ml-2"></i>
-                        {{ $course->title }}
-                    </h2>
-                    <div class="flex space-x-3 gap-2 mt-2 md:mt-0">
-                        <a href="{{ route('admin.courses.edit', $course->id) }}"
-                            class="flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg shadow-sm hover:opacity-90">
-                            <i class="fas fa-edit ml-2"></i>
-                            تعديل
-                        </a>
-                        <form action="{{ route('admin.courses.destroy', $course->id) }}" method="POST"
-                            class="delete-course">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                class="flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg shadow-sm hover:opacity-90">
-                                <i class="fas fa-trash ml-2"></i>
-                                حذف
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div class="space-y-4">
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <h3 class="text-lg font-semibold mb-3 text-purple-600">
-                                <i class="fas fa-info-circle ml-2"></i>
-                                المعلومات الأساسية
-                            </h3>
-                            <div class="space-y-2">
-                                <p>
-                                    <i class="fas fa-calendar-day text-blue-500 ml-2"></i>
-                                    <span class="font-medium">تاريخ بدء الدورة :</span>
-                                    {{ $course->start_date->translatedFormat('d M Y') }}
-                                </p>
-                                <p>
-                                    <i class="fas fa-calendar-times text-red-500 ml-2"></i>
-                                    <span class="font-medium">تاريخ انتهاء الدورة :</span>
-                                    {{ $course->end_date->translatedFormat('d M Y') }}
-                                </p>
-                                <p>
-                                    <i class="fas fa-link text-green-500 ml-2"></i>
-                                    <span class="font-medium">رابط التسجيل:</span>
-                                    <a href="{{ $course->registration_link }}" target="_blank"
-                                        class="text-blue-600 hover:underline">
-                                        {{ Str::limit($course->registration_link, 30) }}
-                                    </a>
-                                </p>
-                            </div>
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl mb-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                        <h2 class="text-2xl font-semibold text-gray-800">{{ $course->title }}</h2>
+                        <div class="flex space-x-3 gap-2 mt-2 md:mt-0">
+                            <a href="{{ route('admin.courses.edit', $course->id) }}"
+                                class="flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg shadow-sm hover:opacity-90">
+                                <i class="fas fa-edit ml-2"></i>
+                                تعديل
+                            </a>
+                            <form action="{{ route('admin.courses.destroy', $course->id) }}" method="POST"
+                                class="delete-course">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    class="flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg shadow-sm hover:opacity-90">
+                                    <i class="fas fa-trash ml-2"></i>
+                                    حذف
+                                </button>
+                            </form>
                         </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <p class="text-gray-600 leading-relaxed">{{ $course->description }}</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        @if($course->intro_video)
+                        <a href="{{ $course->intro_video }}" target="_blank"
+                            class="card-hover p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-600 transition-all">
+                            <div class="flex items-center">
+                                <i class="fas fa-play-circle text-red-500 text-xl ml-2"></i>
+                                <span class="text-gray-700">مقطع توضيحي للدورة</span>
+                            </div>
+                        </a>
+                        @endif
+
+                        @if($course->exam_link)
+                        <a href="{{ $course->exam_link }}" target="_blank"
+                            class="card-hover p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-600 transition-all">
+                            <div class="flex items-center">
+                                <i class="fas fa-clipboard-check text-green-600 text-xl ml-2"></i>
+                                <span class="text-gray-700">رابط دخول الامتحان</span>
+                            </div>
+                        </a>
+                        @endif
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600">
+                        @if($course->start_date && $course->end_date)
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-calendar-alt text-purple-600 ml-2"></i>
+                                <h4 class="text-sm font-semibold text-purple-800">فترة الدورة</h4>
+                            </div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                تاريخ بدء الدورة: {{ $course->start_date->translatedFormat('d M Y') }}<br>
+                            </label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                تاريخ انتهاء الدورة: {{ $course->end_date->translatedFormat('d M Y') }}
+                            </label>
+                        </div>
+                        @endif
 
                         @if($course->exam_date)
-                        <div class="bg-blue-50 p-4 rounded-lg">
-                            <h3 class="text-lg font-semibold mb-3 text-blue-600">
-                                <i class="fas fa-file-alt ml-2"></i>
-                                معلومات الامتحان
-                            </h3>
-                            <div class="space-y-2">
-                                <p>
-                                    <i class="fas fa-calendar-check ml-2"></i>
-                                    <span class="font-medium">تاريخ الامتحان:</span>
-                                    {{ $course->exam_date->translatedFormat('d M Y') }}
-                                </p>
-                                <p>
-                                    <i class="fas fa-external-link-alt ml-2"></i>
-                                    <span class="font-medium">رابط الامتحان:</span>
-                                    <a href="{{ $course->exam_link }}" target="_blank"
-                                        class="text-blue-600 hover:underline">
-                                        {{ Str::limit($course->exam_link, 30) }}
-                                    </a>
-                                </p>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-calendar-check ml-2 text-purple-600"></i>
+                                <h4 class="text-sm font-semibold text-purple-800">معلومات الامتحان</h4>
                             </div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                تاريخ الامتحان: {{ $course->exam_date->translatedFormat('d M Y') }}
+                            </label>
+                            @if($course->exam_time)
+                            <label class="block text-sm font-medium text-gray-700">
+                                توقيت الامتحان: {{ str_replace(['AM', 'PM'], ['ص', 'م'],
+                                \Carbon\Carbon::parse($course->exam_time)->format('h:i A')) }}
+                            </label>
+                            @endif
                         </div>
                         @endif
                     </div>
 
-                    <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600">
+                        @if(count($course->honor_students ?? []) > 0)
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-award text-green-600 ml-2"></i>
+                                <h4 class="text-sm font-semibold text-green-800">الحاصلون على امتياز</h4>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($course->honor_students as $student)
+                                <span class="px-3 py-1 bg-white text-green-700 rounded-full text-sm shadow-sm">
+                                    {{ $student }}
+                                </span>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endif
+
+                        @if(count($course->supporting_companies ?? []) > 0)
                         <div class="bg-purple-50 p-4 rounded-lg">
-                            <h3 class="text-lg font-semibold mb-3 text-purple-600">
-                                <i class="fas fa-photo-video ml-2"></i>
-                                المحتوى التفاعلي
-                            </h3>
-                            <div class="space-y-2">
-                                @if($course->intro_video)
-                                <p>
-                                    <i class="fas fa-video ml-2 text-purple-500"></i>
-                                    <span class="font-medium">الفيديو التعريفي:</span>
-                                    <a href="{{ $course->intro_video }}" target="_blank"
-                                        class="text-blue-600 hover:underline">
-                                        {{ Str::limit($course->intro_video, 30) }}
-                                    </a>
-                                </p>
-                                @endif
+                            <h4 class="text-sm font-semibold text-purple-800 mb-2">
+                                <i class="fas fa-handshake ml-2"></i>
+                                المؤسسات الراعية
+                            </h4>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($course->supporting_companies as $company)
+                                <span class="px-3 py-1 bg-white text-purple-700 rounded-full text-sm shadow-sm">
+                                    {{ $company }}
+                                </span>
+                                @endforeach
                             </div>
                         </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            @if($course->supporting_companies)
-                            <div class="bg-purple-50 p-4 rounded-lg border border-purple-100">
-                                <h3 class="text-lg font-semibold mb-3 text-purple-600 flex items-center">
-                                    <i class="fas fa-handshake ml-2"></i>
-                                    الشركات الداعمة
-                                </h3>
-                                <ul class="space-y-2">
-                                    @foreach(is_array($course->supporting_companies) ? $course->supporting_companies :
-                                    explode(',', $course->supporting_companies ?? '') as $company)
-                                    @if(trim($company))
-                                    <li
-                                        class="flex items-center text-gray-700 bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                                        <i class="fas fa-building text-purple-500 ml-2"></i>
-                                        {{ trim($company) }}
-                                    </li>
-                                    @endif
-                                    @endforeach
-                                </ul>
-                            </div>
-                            @endif
-
-                            @if($course->honor_students)
-                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                                <h3 class="text-lg font-semibold mb-3 text-blue-600 flex items-center">
-                                    <i class="fas fa-award ml-2"></i>
-                                    الحاصلون على امتياز
-                                </h3>
-                                <ul class="space-y-2">
-                                    @foreach(is_array($course->honor_students) ? $course->honor_students :
-                                    explode(',', $course->honor_students ?? '') as $student)
-                                    @if(trim($student))
-                                    <li
-                                        class="flex items-center text-gray-700 bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                                        <i class="fas fa-user-graduate text-blue-500 ml-2"></i>
-                                        {{ trim($student) }}
-                                    </li>
-                                    @endif
-                                    @endforeach
-                                </ul>
-                            </div>
-                            @endif
-                        </div>
+                        @endif
                     </div>
                 </div>
 
-                <div class="bg-gray-50 p-4 rounded-lg mb-6">
-                    <h3 class="text-lg font-semibold mb-3 text-gray-700">
-                        <i class="fas fa-align-left text-purple-600 ml-2"></i>
-                        وصف الدورة
-                    </h3>
-                    <p class="text-gray-700 leading-relaxed">{{ $course->description }}</p>
-                </div>
+                <div class="lg:col-span-1">
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 max-h-auto flex flex-col">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                            <i class="fas fa-list-ol ml-2 text-purple-600"></i>
+                            محتويات الدورة
+                        </h3>
 
-                @if($course->episodes->count() > 0)
-                <div class="border-t pt-6">
-                    <h3 class="text-xl font-semibold mb-4 flex items-center">
-                        <i class="fas fa-list-ol text-purple-600 ml-2"></i>
-                        حلقات الدورة
-                    </h3>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        @foreach($course->episodes as $episode)
                         <div
-                            class="bg-white p-4 rounded-lg border border-gray-200 hover:border-purple-300 transition-colors">
-                            <div class="flex items-center justify-between mb-2">
-                                <h4 class="font-medium text-gray-800">
-                                    <i class="fas fa-play-circle text-purple-600 ml-2"></i>
-                                    {{ $episode->title }}
-                                </h4>
-                            </div>
-                            <a href="{{ $episode->url }}" target="_blank" class="text-blue-600 hover:underline text-sm">
-                                {{ Str::limit($episode->url, 40) }}
+                            class="flex-grow overflow-y-auto max-h-[400px] mb-4 pr-2 scrollbar-thin scrollbar-thumb-purple-300 scrollbar-track-gray-100">
+                            @if($course->ebook_url)
+                            <a href="{{ $course->ebook_url }}" target="_blank"
+                                class="w-full text-right p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-all flex items-center justify-between group mb-2">
+                                <div class="flex items-center">
+                                    <span class="text-gray-700 mr-2 text-sm truncate">كتاب الدورة الإلكتروني</span>
+                                </div>
+                                <i class="fas fa-book-open text-gray-400 group-hover:text-purple-600 ml-2"></i>
                             </a>
+                            @endif
+
+                            @foreach($course->episodes as $episode)
+                            <button type="button"
+                                class="episode-btn w-full text-right p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-all flex items-center justify-between group mb-2"
+                                data-url="{{ $episode->url }}" data-title="{{ $episode->title }}"
+                                data-index="{{ $loop->index }}" data-course-id="{{ $course->id }}">
+                                <div class="flex items-center">
+                                    <span class="text-purple-600 text-sm font-medium">#{{ $episode->episode_number
+                                        }}</span>
+                                    <span class="text-gray-700 mr-2 text-sm truncate">{{ $episode->title }}</span>
+                                </div>
+                                <i class="fas fa-play-circle text-gray-400 group-hovr:text-purple-600 ml-2"></i>
+                            </button>
+                            @endforeach
                         </div>
-                        @endforeach
                     </div>
                 </div>
-                @endif
+            </div>
+
+            <div class="px-6 pb-6">
+                <a href="{{ $course->registration_link }}" target="_blank"
+                    class="block w-full text-center bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg">
+                    <i class="fas fa-user-plus ml-2"></i>
+                    سجل الآن في الدورة
+                </a>
             </div>
         </div>
         @endforeach
+
+        <!-- إضافة ترقيم الصفحات -->
+        <div class="mt-8">
+            {{ $courses->links() }}
+        </div>
         @endif
+    </div>
+</div>
+
+<div id="videoModal" class="hidden fixed inset-0 z-50">
+    <div id="closeModal" class="bg-black bg-opacity-75 backdrop-blur-sm">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl overflow-hidden shadow-xl w-full max-w-4xl relative transform transition-all"
+                onclick="event.stopPropagation()">
+                <div class="aspect-w-16 aspect-h-9 bg-black">
+                    <iframe id="videoFrame" class="w-full h-96" src="" frameborder="0"
+                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+
+                <div class="p-4 bg-gray-50">
+                    <h3 id="videoTitle" class="text-lg font-semibold text-gray-800 mb-2"></h3>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <button id="prevEpisode" class="video-nav-btn mx-4">
+                                <i class="fas fa-chevron-right"></i>
+                                السابق
+                            </button>
+                            <span id="currentEpisode" class="text-sm text-gray-600"></span>
+                            <button id="nextEpisode" class="video-nav-btn">
+                                التالي
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                        </div>
+                        <div class="w-24 h-1 bg-gray-200 rounded-full overflow-hidden">
+                            <div id="progressBar" class="h-full bg-purple-600 transition-all duration-300"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // تأكيد الحذف
         const deleteForms = document.querySelectorAll('.delete-course');
-        
         deleteForms.forEach(form => {
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
@@ -239,6 +259,112 @@
                 });
             });
         });
+
+        // إعداد مودال الفيديو
+        let currentEpisodeIndex = 0;
+        let currentCourseId = null;
+        let episodes = [];
+
+        function closeVideoModal() {
+            document.getElementById('videoModal').classList.add('hidden');
+            document.getElementById('videoFrame').src = '';
+        }
+
+        document.getElementById('closeModal').addEventListener('click', closeVideoModal);
+        document.getElementById('videoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeVideoModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !document.getElementById('videoModal').classList.contains('hidden')) {
+                closeVideoModal();
+            }
+        });
+
+        document.querySelectorAll('.episode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentCourseId = btn.dataset.courseId;
+                episodes = @json($courses->keyBy('id')->toArray())[currentCourseId].episodes;
+                showVideo(parseInt(btn.dataset.index));
+            });
+        });
+
+        const showVideo = (index) => {
+            currentEpisodeIndex = index;
+            const episode = episodes[index];
+            const videoUrl = episode.url.replace('watch?v=', 'embed/') + '?autoplay=1';
+
+            document.getElementById('videoFrame').src = videoUrl;
+            document.getElementById('videoTitle').textContent = `الحلقة ${episode.episode_number}: ${episode.title}`;
+            document.getElementById('currentEpisode').textContent = `${index + 1}/${episodes.length}`;
+            document.getElementById('progressBar').style.width = `${((index + 1) / episodes.length) * 100}%`;
+            document.getElementById('videoModal').classList.remove('hidden');
+
+            document.getElementById('prevEpisode').disabled = index === 0;
+            document.getElementById('nextEpisode').disabled = index === episodes.length - 1;
+        };
+
+        document.getElementById('prevEpisode').addEventListener('click', () => {
+            if (currentEpisodeIndex > 0) showVideo(currentEpisodeIndex - 1);
+        });
+
+        document.getElementById('nextEpisode').addEventListener('click', () => {
+            if (currentEpisodeIndex < episodes.length - 1) showVideo(currentEpisodeIndex + 1);
+        });
     });
 </script>
+
+<style>
+    .date-badge {
+        @apply px-3 py-1 bg-white text-purple-700 rounded-full text-sm shadow-sm border border-purple-200;
+    }
+
+    .info-card {
+        @apply p-4 rounded-lg transition-all duration-300 hover: shadow-md;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+        background: #d8b4fe;
+        border-radius: 10px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+        background: #c084fc;
+    }
+
+    .card-hover:hover {
+        transform: translateY(-2px);
+    }
+
+    .video-nav-btn {
+        @apply px-4 py-2 bg-white text-gray-700 rounded-md hover: bg-purple-600 hover:text-white transition-all flex items-center gap-2 border border-gray-200;
+    }
+
+    .animate-fade-in-down {
+        animation: fadeInDown 0.5s ease-out;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
 @endsection

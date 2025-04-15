@@ -62,11 +62,6 @@ class MarriageRequestController extends Controller
 
     public function index()
     {
-        return view('marriage-requests.marriage-program');
-    }
-
-    public function show()
-    {
         if (!auth()->user()->age || !auth()->user()->gender) {
             session(['previous_url' => route('marriage-requests.index')]);
             return redirect()->route('personal-info');
@@ -94,7 +89,7 @@ class MarriageRequestController extends Controller
         }
         $isProfileComplete = $this->isProfileComplete(Auth::user());
 
-        return view('marriage-requests.index', compact(
+        return view('marriage-requests.marriage-program', compact(
             'marriageRequest',
             'partner',
             'exam',
@@ -104,6 +99,18 @@ class MarriageRequestController extends Controller
             'testResult',
             'isProfileComplete'
         ));
+    }
+
+    public function show()
+    {
+        if (!auth()->user()->age || !auth()->user()->gender) {
+            session(['previous_url' => route('marriage-requests.index')]);
+            return redirect()->route('personal-info');
+        }
+
+        $isProfileComplete = $this->isProfileComplete(Auth::user());
+
+        return view('marriage-requests.index', compact('isProfileComplete'));
     }
 
     public function create()

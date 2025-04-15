@@ -20,6 +20,7 @@ class Course extends Model
         'intro_video',
         'exam_link',
         'exam_date',
+        'exam_time',
         'start_date',
         'end_date',
         'honor_students',

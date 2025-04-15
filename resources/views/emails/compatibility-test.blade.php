@@ -11,7 +11,7 @@
     <div class="content">
         <h2>مرحبًا،</h2>
         <p>لقد تم قبول طلب الخطوبة من <strong>{{ $sender->name }}</strong>. يرجى تقديم مقياس مدى التوافق بينك وبين
-            شريك حياتك:</p>
+            خطيبك:</p>
         <div style="text-align: center; margin: 2rem 0;">
             <a href="{{ $request->compatibility_test_link }}"
                 style="display: inline-block; padding: 12px 24px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold;">
