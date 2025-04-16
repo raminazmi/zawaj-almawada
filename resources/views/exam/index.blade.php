@@ -163,31 +163,48 @@ $token = request('token') ?? request()->route('token');
         e.preventDefault();
         let id = $(this).data('id');
         let answer = $(this).data('answer');
+
+        // Show loading indicator
+        $(this).html('<i class="fas fa-spinner fa-spin"></i>');
+        $('.action__btn').attr('disabled', true);
+
         $.ajax({
-            url: "{{ route('exam.save-answer') }}",
-            type: "POST",
-            beforeSend: function() {
-                $('.action__btn').attr('disabled', true);
-            },
-            data: {
-                question_id: id,
-                answer: answer,
-                exam_id: "{{ $exam->id ?? '' }}",
-                _token: "{{ csrf_token() }}",
-                is_important: getImportant(),
-            },
-            success: function(response) {
+            url: "{{ route('exam.save-answer') }}"
+            , type: "POST"
+            , data: {
+                question_id: id
+                , answer: answer
+                , exam_id: "{{ $exam->id ?? '' }}"
+                , _token: "{{ csrf_token() }}"
+                , is_important: $('#is_important').is(':checked')
+            , }
+            , success: function(response) {
                 $('#questions_container').html(response.html);
                 if (response.lastQuestion) {
-                    window.location.href = "{{ url('/my-exams') }}" + '/' + response.examId;
+                    setTimeout(() => {
+                        window.location.href = "{{ url('/my-exams') }}" + '/' + response.examId;
+                    }, 1000);
                 }
-            },
-            error: function(xhr) {
-                alert('حدث خطأ. حاول مرة أخرى.');
+            }
+            , error: function(xhr) {
+                // Reset buttons
+                $('.action__btn').html(function() {
+                    return $(this).data('answer') == 1 ? '✅ نعم' : '❌ لا';
+                });
                 $('.action__btn').attr('disabled', false);
+
+                if (xhr.status === 419) {
+                    alert('انتهت جلستك. يرجى تسجيل الدخول مرة أخرى');
+                    window.location.reload();
+                } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                    alert(xhr.responseJSON.message);
+                } else {
+                    alert('حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى');
+                }
             }
         });
     });
+
 </script>
 <script>
     function showInstructionsModal() {
@@ -216,29 +233,29 @@ $token = request('token') ?? request()->route('token');
         video.src = '';
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const startTestButton = document.getElementById("startTestButton");
         const swearCheckbox = document.getElementById('swearCheckbox');
         const agreeInstructionsButton = document.getElementById("agreeInstructionsButton");
         const continueTestButton = document.getElementById("continueTestButton");
 
         // Only initialize pledge-related logic if token exists
-        @if ($token)
+        @if($token)
         if (swearCheckbox && startTestButton) {
-            swearCheckbox.addEventListener("change", function () {
+            swearCheckbox.addEventListener("change", function() {
                 startTestButton.disabled = !swearCheckbox.checked;
             });
         }
 
         if (startTestButton) {
-            startTestButton.addEventListener("click", function (e) {
+            startTestButton.addEventListener("click", function(e) {
                 e.preventDefault();
                 showInstructionsModal();
             });
         }
 
         if (agreeInstructionsButton) {
-            agreeInstructionsButton.addEventListener("click", function (e) {
+            agreeInstructionsButton.addEventListener("click", function(e) {
                 e.preventDefault();
                 closeInstructionsModal();
                 showVideoModal();
@@ -246,7 +263,7 @@ $token = request('token') ?? request()->route('token');
         }
 
         if (continueTestButton) {
-            continueTestButton.addEventListener("click", function (e) {
+            continueTestButton.addEventListener("click", function(e) {
                 e.preventDefault();
                 // Hide pledge section and show questions section
                 document.getElementById('pledge_section').classList.add('hidden');
@@ -257,5 +274,6 @@ $token = request('token') ?? request()->route('token');
         }
         @endif
     });
+
 </script>
 @endsection

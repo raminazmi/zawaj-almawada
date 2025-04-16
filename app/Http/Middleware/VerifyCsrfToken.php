@@ -12,6 +12,8 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
+        'logout',
+        'api/*',
         'exam',  // استثناء صفحة الامتحان
         'exam/save-answer', // استثناء حفظ الإجابات
     ];

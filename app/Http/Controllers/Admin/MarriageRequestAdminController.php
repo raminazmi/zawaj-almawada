@@ -20,6 +20,10 @@ class MarriageRequestAdminController extends Controller
     public function index()
     {
         $pendingRequests = MarriageRequest::where('admin_approval_status', 'pending')
+            ->whereHas('exam', function ($query) {
+                $query->where('male_finished', true)
+                    ->where('female_finished', true);
+            })
             ->with(['user', 'target', 'exam'])
             ->latest()
             ->paginate(2, ['*'], 'pending_page');

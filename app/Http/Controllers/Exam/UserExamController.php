@@ -29,7 +29,6 @@ class UserExamController extends Controller
         $totalImportant = $maleImportantScore['total'] + $femaleImportantScore['total'];
 
         $user = Auth::user();
-        // التحقق من وجود طلب زواج نشط (كمرسل أو مستهدف)
         $activeRequest = MarriageRequest::where(function ($query) use ($user) {
             $query->where('user_id', $user->id)
                 ->orWhere('target_user_id', $user->id);

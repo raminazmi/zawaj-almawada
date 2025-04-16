@@ -11,10 +11,23 @@ class AuthAdmin
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $user = Auth::user();
-        if (!$user || !$user->is_admin) {
-            abort(403);
+        if (!Auth::check()) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'انتهت جلستك. يرجى تسجيل الدخول مرة أخرى',
+                    'session_expired' => true
+                ], 401);
+            }
+
+            return redirect()->route('login')
+                ->with('error', 'انتهت جلستك. يرجى تسجيل الدخول مرة أخرى');
         }
+
+        $user = Auth::user();
+        if (!$user->is_admin) {
+            abort(403, 'غير مصرح لك بالوصول إلى هذه الصفحة');
+        }
+
         return $next($request);
     }
 }

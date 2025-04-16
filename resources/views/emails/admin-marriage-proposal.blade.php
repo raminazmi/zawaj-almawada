@@ -95,7 +95,7 @@
                     <p style="margin: 5px 0;"><strong>العمر:</strong> {{ $target->age ?? 'غير متوفر' }}</p>
                     <p style="margin: 5px 0;"><strong>البلد:</strong> {{ $target->country ?? 'غير متوفر' }}</p>
                     <p style="margin: 5px 0;"><strong>الحالة الاجتماعية:</strong>
-                        @phpظظظ
+                        @php
                         $maritalStatus = [
                         'single' => 'أعزب/عزباء',
                         'married' => 'متزوج/ة',

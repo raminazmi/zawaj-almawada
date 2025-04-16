@@ -31,6 +31,10 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
         $request->session()->regenerate();
+        $user = Auth::user();
+        if ($user->status === 'pending') {
+            return redirect()->route('marriage-requests.index');
+        }
 
         $user = Auth::user();
         $previousUrl = session('previous_url');

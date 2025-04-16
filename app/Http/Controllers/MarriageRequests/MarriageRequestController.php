@@ -351,12 +351,12 @@ class MarriageRequestController extends Controller
         //     new RequestApproved($marriageRequest->target, $marriageRequest->user, $marriageRequest, $exam)
         // );
 
-        $admins = User::where('is_admin', true)->get();
-        foreach ($admins as $admin) {
-            Mail::to($admin->email)->send(
-                new AdminMarriageProposalNotification($marriageRequest)
-            );
-        }
+        // $admins = User::where('is_admin', true)->get();
+        // foreach ($admins as $admin) {
+        //     Mail::to($admin->email)->send(
+        //         new AdminMarriageProposalNotification($marriageRequest)
+        //     );
+        // }
 
         return redirect()->back()->with('success', 'تم الموافقة على الطلب وإرسال الإشعارات');
     }
@@ -400,12 +400,12 @@ class MarriageRequestController extends Controller
                     new RequestApproved($marriageRequest->target, $marriageRequest->user, $marriageRequest, $exam)
                 );
 
-                $admins = User::where('is_admin', true)->get();
-                foreach ($admins as $admin) {
-                    Mail::to($admin->email)->send(
-                        new AdminMarriageProposalNotification($marriageRequest)
-                    );
-                }
+                // $admins = User::where('is_admin', true)->get();
+                // foreach ($admins as $admin) {
+                //     Mail::to($admin->email)->send(
+                //         new AdminMarriageProposalNotification($marriageRequest)
+                //     );
+                // }
             } catch (\Exception $e) {
                 \Log::error('فشل إرسال البريد: ' . $e->getMessage());
                 return redirect()->back()->with('error', 'حدث خطأ أثناء إرسال الإشعارات');

@@ -9,20 +9,23 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthUser
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = Auth::user();
-        if (Auth::check() && !Auth::user()->email_verified_at) {
+        if (!Auth::check()) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Session expired'], 401);
+            }
+            return redirect()->route('login')->with('error', 'Your session has expired');
+        }
+
+        if (!Auth::user()->email_verified_at) {
             return redirect()->route('verification.notice');
         }
-        if (!$user || $user->is_admin) {
+
+        if (Auth::user()->is_admin) {
             abort(403);
         }
+
         return $next($request);
     }
 }
