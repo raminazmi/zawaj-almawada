@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="w-full max-w-md space-y-8">
-        <div class="rounded-2xl p-6 shadow-md">
+        <div class="rounded-2xl p-4 pt-2 ">
             <div class="text-center">
                 <h2 class="text-2xl font-bold text-purple-900 mb-2">تفعيل الحساب</h2>
                 <p class="text-gray-600 mb-6">لقد أرسلنا كود التحقق إلى بريدك الإلكتروني</p>
@@ -22,7 +22,7 @@
                 @endif
 
                 <div class="mb-6">
-                    <div class="flex justify-center gap-2 mb-4" dir="rtl">
+                    <div class="flex justify-center gap-2 mb-6" dir="rtl">
                         @for ($i = 0; $i < 4; $i++) <input type="text" inputmode="numeric" pattern="[0-9]*"
                             name="digit-{{ $i }}" id="digit-{{ $i }}" maxlength="1"
                             class="w-16 h-16 border-2 border-purple-200 rounded-lg text-2xl font-bold text-center digit-input"
@@ -39,6 +39,16 @@
                             {{ __('تفعيل الحساب') }}
                         </x-primary-button>
                     </form>
+                </div>
+
+                <div class="text-sm text-gray-500 my-3">
+                    <div class="flex items-center gap-2 bg-purple-50 p-3 rounded-lg border border-purple-200">
+                        <i class="fas fa-info-circle text-purple-600"></i>
+                        <span class="text-purple-800">
+                            إذا لم تجد الرسالة في صندوق الوارد، رجاءً تحقق من مجلد
+                            <span class="font-semibold">الرسائل غير المرغوب فيها (Spam)</span>
+                        </span>
+                    </div>
                 </div>
 
                 <div class="text-sm text-gray-500">
