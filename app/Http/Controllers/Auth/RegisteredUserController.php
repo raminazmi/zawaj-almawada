@@ -18,6 +18,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
 
 class RegisteredUserController extends Controller
 {
@@ -39,6 +40,15 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret' => '6LcGfxorAAAAAA83FbvtB6Os6w5sk-sPemW0CCqn',
+            'response' => $request->recaptcha_token,
+        ]);
+
+        if (!$response->json()['success']) {
+            return back()->withErrors(['recaptcha' => 'فشل التحقق من reCAPTCHA.']);
+        }
+
         $request->validate([
             'name'     => ['required', 'string', 'max:255'],
             'gender'   => ['required', 'in:male,female'],

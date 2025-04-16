@@ -7,7 +7,7 @@
 
             <form id="registerForm" method="POST" action="{{ route('register') }}" class="space-y-6">
                 @csrf
-
+                <input type="hidden" name="recaptcha_token" id="recaptchaToken">
                 <div>
                     <div class="flex items-center gap-1">
                         <x-input-label for="name" :value="__('الاسم المستعار')" class="text-purple-900" />
@@ -106,4 +106,12 @@
             </form>
         </div>
     </div>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LcGfxorAAAAANWWrRaHrvRUM59RRXrbtl1QqHYt"></script>
+    <script>
+        grecaptcha.ready(function() {
+                grecaptcha.execute('6LcGfxorAAAAANWWrRaHrvRUM59RRXrbtl1QqHYt', { action: 'register' }).then(function(token) {
+                    document.getElementById('recaptchaToken').value = token;
+                });
+            });
+    </script>
 </x-guest-layout>
