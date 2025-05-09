@@ -62,7 +62,10 @@
                 </div>
 
                 <div>
-                    <x-input-label for="phone" :value="__('رقم الهاتف (اختياري)')" class="text-purple-900" />
+                    <div class="flex items-center gap-1">
+                        <x-input-label for="phone" :value="__('رقم الهاتف')" class="text-purple-900" />
+                        <span class="text-red-500">*</span>
+                    </div>
                     <x-text-input id="phone" name="phone" type="tel"
                         class="mt-1 block w-full rounded-xl border-purple-100 focus:border-purple-500 focus:ring-purple-500"
                         :value="old('phone')" />
