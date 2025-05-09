@@ -5,6 +5,11 @@ namespace App\Http\Controllers\MarriageRequests;
 use App\Mail\MarriageProposalNotification;
 use App\Mail\CompatibilityTestNotification;
 use App\Mail\FinalApprovalNotification;
+use App\Mail\RequestApproved;
+use App\Mail\RequestRejected;
+use App\Mail\TargetRequestRejected;
+use App\Mail\UserConfirmationNotification;
+use App\Mail\UserRejectedNotification;
 use App\Models\MarriageRequest;
 use App\Models\User;
 use App\Models\Exam;
@@ -14,14 +19,10 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use App\Mail\AdminMarriageProposalNotification;
 use App\Mail\CompatibilityTestLinkNotification;
-use App\Mail\RequestApproved;
-use App\Mail\RequestRejected;
-use App\Mail\TargetRequestRejected;
 use Illuminate\Support\Str;
 
 class MarriageRequestController extends Controller
 {
-
     public function isProfileComplete($user)
     {
         $requiredFields = [
@@ -291,6 +292,36 @@ class MarriageRequestController extends Controller
         }
 
         $user = Auth::user();
+
+        $pendingApprovalRequest = MarriageRequest::where(function ($query) use ($user) {
+            $query->where('user_id', $user->id)
+                ->orWhere('target_user_id', $user->id);
+        })
+            ->where('status', 'approved')
+            ->whereNotNull('exam_id')
+            ->whereHas('exam', function ($query) {
+                $query->where('male_finished', true)
+                    ->where('female_finished', true);
+            })
+            ->where(function ($query) use ($user) {
+                $query->where(function ($q) use ($user) {
+                    $q->where('user_id', $user->id)
+                        ->whereNull('user_approval');
+                })
+                    ->orWhere(function ($q) use ($user) {
+                        $q->where('target_user_id', $user->id)
+                            ->whereNull('target_approval');
+                    });
+            })
+            ->first();
+
+        if ($pendingApprovalRequest && (
+            ($pendingApprovalRequest->user_id === $user->id && is_null($pendingApprovalRequest->user_approval)) ||
+            ($pendingApprovalRequest->target_user_id === $user->id && is_null($pendingApprovalRequest->target_approval))
+        )) {
+            return redirect()->route('marriage-requests.showResultsAndConfirm', $pendingApprovalRequest->id);
+        }
+
         $pendingRequests = MarriageRequest::where(function ($query) use ($user) {
             $query->where('user_id', $user->id)
                 ->orWhere('target_user_id', $user->id);
@@ -343,21 +374,6 @@ class MarriageRequestController extends Controller
 
         $marriageRequest->update(['status' => 'approved']);
 
-        // Mail::to($marriageRequest->user->email)->send(
-        //     new RequestApproved($marriageRequest->user, $marriageRequest->target, $marriageRequest, $exam)
-        // );
-
-        // Mail::to($marriageRequest->target->email)->send(
-        //     new RequestApproved($marriageRequest->target, $marriageRequest->user, $marriageRequest, $exam)
-        // );
-
-        // $admins = User::where('is_admin', true)->get();
-        // foreach ($admins as $admin) {
-        //     Mail::to($admin->email)->send(
-        //         new AdminMarriageProposalNotification($marriageRequest)
-        //     );
-        // }
-
         return redirect()->back()->with('success', 'تم الموافقة على الطلب وإرسال الإشعارات');
     }
 
@@ -399,13 +415,6 @@ class MarriageRequestController extends Controller
                 Mail::to($marriageRequest->target->email)->send(
                     new RequestApproved($marriageRequest->target, $marriageRequest->user, $marriageRequest, $exam)
                 );
-
-                // $admins = User::where('is_admin', true)->get();
-                // foreach ($admins as $admin) {
-                //     Mail::to($admin->email)->send(
-                //         new AdminMarriageProposalNotification($marriageRequest)
-                //     );
-                // }
             } catch (\Exception $e) {
                 \Log::error('فشل إرسال البريد: ' . $e->getMessage());
                 return redirect()->back()->with('error', 'حدث خطأ أثناء إرسال الإشعارات');
@@ -430,6 +439,52 @@ class MarriageRequestController extends Controller
         }
 
         return redirect()->back()->with('success', 'تم الرد على الطلب بنجاح');
+    }
+
+    public function showResultsAndConfirm($id)
+    {
+        $marriageRequest = MarriageRequest::with('exam')->findOrFail($id);
+        if (!$marriageRequest->exam || !$marriageRequest->exam->male_finished || !$marriageRequest->exam->female_finished) {
+            return redirect()->back()->with('error', 'لم يكتمل المقياس بعد');
+        }
+        $score = $marriageRequest->exam->calculateScore();
+        $maleImportantScore = $marriageRequest->exam->importantScore('male');
+        $femaleImportantScore = $marriageRequest->exam->importantScore('female');
+        $totalImportant = $maleImportantScore['total'] + $femaleImportantScore['total'];
+        $otherPartyName = null;
+        if ($marriageRequest) {
+            $otherPartyName = $marriageRequest->user_id === Auth::user()->id
+                ? ($marriageRequest->target->name ?? 'غير محدد')
+                : ($marriageRequest->user->name ?? 'غير محدد');
+        }
+        return view('marriage-requests.confirm', compact('marriageRequest', 'otherPartyName', 'score', 'maleImportantScore', 'femaleImportantScore', 'totalImportant'));
+    }
+
+    public function confirm(Request $request, $id)
+    {
+        $marriageRequest = MarriageRequest::findOrFail($id);
+        $user = Auth::user();
+        $action = $request->input('action');
+
+        if ($user->id == $marriageRequest->user_id) {
+            $marriageRequest->update(['user_approval' => $action == 'accept' ? true : false]);
+        } elseif ($user->id == $marriageRequest->target_user_id) {
+            $marriageRequest->update(['target_approval' => $action == 'accept' ? true : false]);
+        }
+
+        if ($marriageRequest->user_approval && $marriageRequest->target_approval) {
+            $marriageRequest->update(['status' => 'awaiting_admin_approval']);
+            Mail::to($marriageRequest->user->email)->send(new UserConfirmationNotification($marriageRequest->user, $marriageRequest));
+            Mail::to($marriageRequest->target->email)->send(new UserConfirmationNotification($marriageRequest->target, $marriageRequest));
+        } elseif ($marriageRequest->user_approval === false || $marriageRequest->target_approval === false) {
+            $marriageRequest->update(['status' => 'rejected']);
+            $marriageRequest->user->update(['status' => 'available']);
+            $marriageRequest->target->update(['status' => 'available']);
+            Mail::to($marriageRequest->user->email)->send(new UserRejectedNotification($marriageRequest->user, $marriageRequest));
+            Mail::to($marriageRequest->target->email)->send(new UserRejectedNotification($marriageRequest->target, $marriageRequest));
+        }
+
+        return redirect()->route('marriage-requests.status')->with('success', 'تم تسجيل ردك بنجاح');
     }
 
     public function submitTest($id)

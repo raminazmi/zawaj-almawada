@@ -5,12 +5,21 @@ namespace App\Http\Controllers\Home;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Actions\Exam\InitExamAction;
+use App\Models\MarriageRequest;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        return view('home.index');
+        $marriageRequest = null;
+
+        if (Auth::check()) {
+            $user = Auth::user();
+            $marriageRequest = $user->activeMarriageRequest ?? $user->targetMarriageRequest;
+        }
+
+        return view('home.index', compact('marriageRequest'));
     }
 
     public function personalInfoStart(InitExamAction $action)

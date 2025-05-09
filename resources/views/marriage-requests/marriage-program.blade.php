@@ -112,35 +112,44 @@
             </div>
 
             @elseif(Auth::user()->status !== 'available')
-            <div class="bg-orange-50 border-l-4 border-orange-400 p-6 rounded-xl shadow-sm mb-8">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0 pt-1">
-                        <i class="fas fa-exclamation-triangle text-orange-400 text-xl"></i>
-                    </div>
-                    <div class="mr-3 flex-1">
-                        <h3 class="text-lg font-medium text-gray-800">طلب قيد المراجعة</h3>
-                        <div class="mt-2 text-gray-600">
-                            <p>لديك طلب خطوبة نشط مع
-                                <span class="font-medium">
-                                    @if($marriageRequest)
-                                    {{ $marriageRequest->user_id === Auth::id() ? $marriageRequest->target->name :
-                                    $marriageRequest->user->name ?? 'غير محدد' }}
-                                    @else
-                                    غير محدد
-                                    @endif
-                                </span>
-                            </p>
-                        </div>
-                        <div class="mt-4">
-                            <a href="{{ route('marriage-requests.status') }}"
-                                class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all">
-                                <i class="fas fa-clock ml-2"></i>
-                                متابعة حالة الطلب
-                            </a>
+            <section class="py-0 px-4 sm:px-8 lg:px-16">
+                <div class="container mx-auto px-4">
+                    <div
+                        class="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-100 p-8 rounded-2xl shadow-lg">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 pt-1">
+                                <i class="fas fa-hourglass-half text-[#d4b341] text-2xl"></i>
+                            </div>
+                            <div class="mr-3 flex items-center justify-between gap-2 w-full flex-wrap">
+                                <div>
+                                    <h3 class="text-xl font-bold text-purple-900">طلب قيد المراجعة</h3>
+                                    <div class="mt-2 text-gray-700">
+                                        <p>لديك طلب خطوبة نشط مع
+                                            <span class="font-medium">
+                                                @if($marriageRequest)
+                                                {{ $marriageRequest->user_id === Auth::id() ?
+                                                $marriageRequest->target->name
+                                                :
+                                                $marriageRequest->user->name ?? 'غير محدد' }}
+                                                @else
+                                                غير محدد
+                                                @endif
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <a href="{{ route('marriage-requests.status') }}"
+                                        class="inline-flex items-center px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-sm font-medium rounded-lg transition-all transform hover:scale-105 shadow-md">
+                                        <i class="fas fa-clock ml-2"></i>
+                                        متابعة حالة الطلب
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
             @endif
         </div>
         @endif

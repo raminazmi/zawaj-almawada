@@ -13,39 +13,40 @@
 <div class="flex items-center gap-2 mt-4">
     <span class="font-medium text-gray-600">الحالة:</span>
     @if($request->admin_approval_status === 'approved')
-    <span @class([ 'px-3 py-1 rounded-full text-sm font-medium' , 'bg-green-100 text-green-800'=>
-        $request->admin_approval_status === 'approved' ])>
+    <span @class(['px-3 py-1 rounded-full text-sm font-medium', 'bg-green-100 text-green-800'=>
+        $request->admin_approval_status === 'approved'])>
         مكتمل ومعتمد
     </span>
-    @endif
-    @if($request->admin_approval_status === 'rejected')
-    <span @class([ 'px-3 py-1 rounded-full text-sm font-medium' , 'bg-red-100 text-red-800'=>
-        $request->admin_approval_status === 'rejected' ])>
+    @elseif($request->admin_approval_status === 'rejected')
+    <span @class(['px-3 py-1 rounded-full text-sm font-medium', 'bg-red-100 text-red-800'=>
+        $request->admin_approval_status === 'rejected'])>
         مرفوض من الإدارة
+    </span>
+    @elseif($request->admin_approval_status === 'pending')
+    <span @class(['px-3 py-1 rounded-full text-sm font-medium', 'bg-orange-100 text-orange-800'=>
+        $request->admin_approval_status === 'pending'])>
+        بانتظار موافقة الإدارة
     </span>
     @endif
     @if($request->status === 'rejected')
-    <span @class([ 'px-3 py-1 rounded-full text-sm font-medium' , 'bg-red-100 text-red-800'=> $request->status ===
-        'rejected' ])>
-        مرفوض من أحد الطرفين
+    <span @class(['px-3 py-1 rounded-full text-sm font-medium', 'bg-red-100 text-red-800'=> $request->status ===
+        'rejected'])>
+        مرفوض من احد الطرفين
     </span>
-    @endif
-    @if($request->status === 'pending')
-    <span @class([ 'px-3 py-1 rounded-full text-sm font-medium' , 'bg-yellow-100 text-yellow-800'=> $request->status ===
-        'pending' ])>
-        قيد المراجعة من قبل أحد الطرفين
+    @elseif($request->status === 'pending')
+    <span @class(['px-3 py-1 rounded-full text-sm font-medium', 'bg-yellow-100 text-yellow-800'=> $request->status ===
+        'pending'])>
+        قيد المراجعة من الطرف الآخر
     </span>
-    @endif
-    @if($request->status === 'approved')
-    <span @class([ 'px-3 py-1 rounded-full text-sm font-medium' , 'bg-blue-100 text-blue-800'=> $request->status ===
-        'approved' ])>
-        موافق عليه من الطرفين
-    </span>
-    @endif
-    @if($request->admin_approval_status === 'pending')
-    <span @class([ 'px-3 py-1 rounded-full text-sm font-medium' , 'bg-orange-100 text-orange-800'=>
-        $request->admin_approval_status === 'pending' ])>
+    @elseif($request->status === 'approved' && ($request->user_approval === null || $request->target_approval === null))
+    <span @class(['px-3 py-1 rounded-full text-sm font-medium', 'bg-orange-100 text-orange-800'=> $request->status ===
+        'approved'])>
         بانتظار الموافقة النهائية
+    </span>
+    @elseif($request->status === 'awaiting_admin_approval')
+    <span @class(['px-3 py-1 rounded-full text-sm font-medium', 'bg-blue-100 text-blue-800'=> $request->status ===
+        'awaiting_admin_approval'])>
+        تم الموافقة النهائية من الطرفين
     </span>
     @endif
 </div>

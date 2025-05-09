@@ -9,17 +9,25 @@
         <div class="space-y-3 border-b pb-2">
             <x-marriage-requests.request-info :request="$request" />
 
-            @if($request->status === 'approved' && $request->compatibility_test_link)
-            <div style="text-align: end; margin: 5px 0;">
-                <a href="{{ $request->compatibility_test_link }}"
-                    style="display: inline-block; padding: 8px 18px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                    رابط المقياس
-                </a>
+            @if($request->status === 'approved' && $request->compatibility_test_link &&
+            ((auth()->user()->gender === 'male' && !$request->exam->male_finished) ||
+            (auth()->user()->gender === 'female' && !$request->exam->female_finished)))
+            <div class="flex flex-wrap justify-between items-center gap-4">
+                <p class="mt-2 text-gray-700">
+                    يجب عليك تقديم اختبار التوافق الزواجي لمعرفة مدى التوافق بينك وبين الطرف الآخر
+                </p>
+                <div style="text-align: end; margin: 5px 0;">
+                    <a href="{{ $request->compatibility_test_link }}"
+                        style="display: inline-block; padding: 8px 18px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                        رابط المقياس
+                    </a>
+                </div>
             </div>
             @endif
         </div>
 
-        @if(Auth::check() && Auth::id() === $request->user_id && ($request->status === 'approved' || $request->status
+        @if(Auth::check() && Auth::id() === $request->user_id && ($request->status === 'approved' ||
+        $request->status
         === 'pending'))
         <x-target-info-card :target="$request->target" :link="$request->compatibility_test_link" />
         @endif

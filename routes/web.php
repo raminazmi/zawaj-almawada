@@ -35,7 +35,6 @@ use App\Http\Controllers\Admin\MarriageVideoLinkController;
 use App\Http\Controllers\Admin\ReadinessTestLinkController;
 use App\Http\Controllers\ReadinessTest\ReadinessTestController;
 
-
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::get('/cv', [CvController::class, 'index'])->name('cv');
@@ -85,6 +84,12 @@ Route::middleware('auth', 'verified')->group(function () {
             Route::get('/create-proposal/{targetId}', [MarriageRequestController::class, 'createProposal'])->name('marriage-requests.create-proposal');
             Route::post('/store-proposal/{targetId}', [MarriageRequestController::class, 'storeProposal'])->name('marriage-requests.store-proposal');
             Route::get('/status', [MarriageRequestController::class, 'status'])->name('marriage-requests.status');
+            Route::post('/{id}/confirm', [MarriageRequestController::class, 'confirm'])->name('marriage-requests.confirm');
+            Route::get('/{id}/results-and-confirm', [MarriageRequestController::class, 'showResultsAndConfirm'])->name('marriage-requests.showResultsAndConfirm');
+            Route::get('/{id}/confirm', function ($id) {
+                return redirect()->route('marriage-requests.showResultsAndConfirm', $id);
+            })->name('marriage-requests.confirm.get');
+
             Route::get('/admin-approval', [MarriageRequestController::class, 'adminApproval'])->name('marriage-requests.admin-approval');
             Route::post('/approve/{id}', [MarriageRequestController::class, 'approve'])->name('marriage-requests.approve');
             Route::post('/reject/{id}', [MarriageRequestController::class, 'reject'])->name('marriage-requests.reject');

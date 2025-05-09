@@ -20,10 +20,14 @@ class MarriageRequest extends Model
         'test_link_sent',
         'admin_approval_status',
         'exam_id',
+        'user_approval',
+        'target_approval',
     ];
 
     protected $attributes = [
         'compatibility_test_link' => null,
+        'user_approval' => null,
+        'target_approval' => null,
     ];
 
     protected $casts = [
@@ -32,6 +36,8 @@ class MarriageRequest extends Model
         'created_at' => 'datetime:Y-m-d H:i',
         'updated_at' => 'datetime:Y-m-d H:i',
         'deleted_at' => 'datetime:Y-m-d H:i',
+        'user_approval' => 'boolean',
+        'target_approval' => 'boolean',
     ];
 
     public function __construct(array $attributes = [])

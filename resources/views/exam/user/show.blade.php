@@ -17,6 +17,43 @@
             </div>
         </div>
 
+        @if($marriageRequest && $otherPartyName && !in_array(Auth::user()->status, ['available', 'engaged']))
+        <div class="mb-6">
+            <div class="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-100 p-6 rounded-2xl shadow-lg">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 pt-1">
+                        <i class="fas fa-hourglass-half text-[#d4b341] text-2xl"></i>
+                    </div>
+                    <div class="mr-3 flex-1">
+                        <h3 class="text-lg font-semibold text-purple-900">طلب خطوبة نشط</h3>
+                        <p class="mt-2 text-gray-700">
+                            لديك طلب خطوبة مع
+                            <span class="font-medium">{{ $otherPartyName }}</span>.
+                            @if($marriageRequest->status === 'approved' && $marriageRequest->compatibility_test_link &&
+                            ((auth()->user()->gender === 'male' && !$marriageRequest->exam->male_finished) ||
+                            (auth()->user()->gender === 'female' && !$marriageRequest->exam->female_finished)))
+                            يرجى إكمال اختبار التوافق لمتابعة الطلب.
+                            @else
+                            يرجى انتظار تقديم الاختبار من الطرف الاخر لمتابعة الطلب.
+                            @endif
+                        </p>
+                    </div>
+
+                    @if($marriageRequest->status === 'approved' && $marriageRequest->compatibility_test_link &&
+                    ((auth()->user()->gender === 'male' && !$marriageRequest->exam->male_finished) ||
+                    (auth()->user()->gender === 'female' && !$marriageRequest->exam->female_finished)))
+                    <div style="text-align: end; margin: 5px 0;">
+                        <a href="{{ $marriageRequest->compatibility_test_link }}"
+                            style="display: inline-block; padding: 8px 18px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                            رابط المقياس
+                        </a>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+        @endif
+
         <div class="bg-white rounded-3xl shadow-xl border border-purple-100 overflow-hidden">
             <div class="bg-gradient-to-r from-purple-600 to-pink-600 p-6 py-4 text-center">
                 <h3 class="text-white text-lg font-semibold mb-2">نسبة التوافق الكلية</h3>

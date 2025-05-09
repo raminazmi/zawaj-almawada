@@ -83,11 +83,50 @@
 
 <body>
   @include('layouts.navigation')
-
-  <section class="relative islamic-pattern p-4 md:p-14 ">
+  <section class="relative islamic-pattern p-4 md:p-14">
+    @auth
+    @if(!in_array(Auth::user()->status, ['available', 'engaged']))
+    <section class="py-0 px-4 sm:px-8 lg:px-16">
+      <div class="container mx-auto px-4">
+        <div class="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-100 p-8 rounded-2xl shadow-lg">
+          <div class="flex items-start">
+            <div class="flex-shrink-0 pt-1">
+              <i class="fas fa-hourglass-half text-[#d4b341] text-2xl"></i>
+            </div>
+            <div class="mr-3 flex items-center justify-between gap-2 w-full flex-wrap">
+              <div>
+                <h3 class="text-xl font-bold text-purple-900">طلب خطوبة نشط</h3>
+                <div class="mt-2 text-gray-700">
+                  <p>لديك طلب خطوبة نشط مع
+                    <span class="font-medium">
+                      @if($marriageRequest)
+                      {{ $marriageRequest->user_id === Auth::id() ? $marriageRequest->target->name :
+                      $marriageRequest->user->name ?? 'غير محدد' }}
+                      @else
+                      غير محدد
+                      @endif
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <div class="mt-4">
+                <a href="{{ route('marriage-requests.status') }}"
+                  class="inline-flex items-center px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-sm font-medium rounded-lg transition-all transform hover:scale-105 shadow-md">
+                  <i class="fas fa-clock ml-2"></i>
+                  متابعة حالة الطلب
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    @endif
+    @endauth
     <div
       class="flex flex-col mt-10 py-8 px-4 sm:px-8 lg:px-16 rounded-3xl lg:flex-row items-center gap-8 lg:gap-16 bg-cover bg-center"
       style="background-image: url('assets/images/frame.png');">
+
       <div class="w-full lg:w-1/2 space-y-6 text-center lg:text-right bg-white bg-opacity-80 p-4 rounded-lg">
         <h1 class="text-3xl sm:text-4xl font-bold text-purple-900 leading-tight">
           مقياس التوافق الزواجي
@@ -133,7 +172,7 @@
             <i class="fas fa-brain"></i>
           </div>
           <h3 class="text-xl font-bold text-purple-900 mb-3">شعار المقياس</h3>
-          <p class="text-gray-700">إذا احسنت الاختيار ستنعم بالاستقرار</p>
+          <p class="text-gray-700">إذا احسنت الاختيار ستنعم بالاستقرار</p>
         </div>
 
         <div class="feature-card p-6 rounded-xl">
@@ -147,8 +186,6 @@
     </div>
   </section>
 
-
-
   <section class="py-12 px-4 sm:px-8 lg:px-16 space-y-8">
     <div class="container mx-auto px-4">
       <h2 class="section-title text-3xl font-bold text-purple-900 mb-12">
@@ -158,10 +195,36 @@
         يهدف هذا المقياس إلى تقييم درجة التوافق بين الشريكين قبل الزواج من خلال استكشاف الجوانب النفسية
         والاجتماعية والسلوكية.
       </p>
-
     </div>
   </section>
 
+  <section class="py-8 px-4 sm:px-8 lg:px-16 space-y-6">
+    <div class="container mx-auto px-4">
+      <h2 class="section-title text-3xl font-bold text-purple-900 mb-8">
+        برنامج الزواج الشرعي
+      </h2>
+      <div class="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-100 p-6 rounded-2xl shadow-lg">
+        <div class="flex flex-col items-center text-center p-4 rounded-2xl bg-white">
+          <div
+            class="w-16 h-16 bg-gradient-to-r from-purple-50 to-pink-50 rounded-full flex items-center justify-center mb-6">
+            <i class="fas fa-heart text-purple-900 text-3xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-purple-900 mb-4">
+            ابدأ رحلتك نحو زواج سعيد
+          </h3>
+          <p class="text-gray-700 leading-relaxed text-lg max-w-2xl mb-8">
+            انضم إلى برنامج الزواج الشرعي، حيث نضمن لك تجربة آمنة وموثوقة للعثور على شريك حياتك. استمتع بالخصوصية
+            الكاملة والتوجيه في كل خطوة.
+          </p>
+          <a href="{{ route('marriage-requests.index') }}"
+            class="bg-[#d4b341] hover:bg-yellow-700 text-white px-6 py-3 rounded-3xl transition-colors text-sm sm:text-base">
+            <i class="fas fa-user-friends ml-2"></i>
+            انضم الآن
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
   <section class="my-16 px-4 sm:px-8 lg:px-16">
     <div
       class="rounded-3xl p-6 border-2 flex flex-col items-center justify-center gap-12 bg-cover bg-center min-h-[250px]"
@@ -181,7 +244,7 @@
     </div>
   </section>
 
-  <footer class="bg-purple-900 text-white pt-12 ">
+  <footer class="bg-purple-900 text-white pt-12">
     <div class="container mx-auto px-12">
       <div class="grid grid-cols-1 md:grid-cols-5 gap-14 border-b border-purple-800 pb-12">
         <div class="md:col-span-2">
@@ -191,7 +254,7 @@
             المقبلين على
             الزواج والمتزوجين حديثاً، من تأهيل واستشارات وخدمات ومقاييس ودورات وكتب تمكنهم من بناء حياة أسرية سعيدة
             بعيداً عن
-            المشكلات والتفكك الاسري.
+            المشكلات و التفكك الأسري.
           </p>
         </div>
 
