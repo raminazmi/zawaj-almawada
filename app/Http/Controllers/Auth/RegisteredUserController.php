@@ -49,6 +49,10 @@ class RegisteredUserController extends Controller
             return back()->withErrors(['recaptcha' => 'فشل التحقق من reCAPTCHA.']);
         }
 
+        if (RateLimiter::tooManyAttempts('send-email:' . $request->ip(), 5)) {
+            return back()->withErrors(['email' => 'لقد تجاوزت الحد المسموح، حاول لاحقاً']);
+        }
+
         $request->validate([
             'name'     => ['required', 'string', 'max:255'],
             'gender'   => ['required', 'in:male,female'],
@@ -106,9 +110,16 @@ class RegisteredUserController extends Controller
             'expires_at' => now()->addMinutes(30)
         ]);
 
-        Mail::to($user->email)->send(new VerificationCodeMail($user, $code));
-        Auth::login($user);
+        try {
+            Mail::to($user->email)->send(new VerificationCodeMail($user, $code));
+            RateLimiter::hit('send-email:' . $request->ip());
+        } catch (\Exception $e) {
+            Log::error('فشل إرسال البريد: ' . $e->getMessage());
+            $user->delete();
+            return back()->withErrors(['email' => 'فشل إرسال الكود، حاول ببريد آخر']);
+        }
 
+        Auth::login($user);
         return redirect(route('verification.notice'));
     }
 

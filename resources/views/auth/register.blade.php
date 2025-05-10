@@ -112,9 +112,13 @@
     <script src="https://www.google.com/recaptcha/api.js?render=6LcGfxorAAAAANWWrRaHrvRUM59RRXrbtl1QqHYt"></script>
     <script>
         grecaptcha.ready(function() {
-                    grecaptcha.execute('6LcGfxorAAAAANWWrRaHrvRUM59RRXrbtl1QqHYt', { action: 'register' }).then(function(token) {
-                        document.getElementById('recaptchaToken').value = token;
-                    });
-                });
+    setInterval(() => {
+        grecaptcha.execute('6LcGfxorAAAAANWWrRaHrvRUM59RRXrbtl1QqHYt', {
+            action: 'register'
+        }).then(function(token) {
+            document.getElementById('recaptchaToken').value = token;
+        });
+    }, 120000);
+});
     </script>
 </x-guest-layout>
