@@ -34,6 +34,9 @@ use App\Http\Controllers\Admin\Admin\AdminController;
 use App\Http\Controllers\Admin\MarriageVideoLinkController;
 use App\Http\Controllers\Admin\ReadinessTestLinkController;
 use App\Http\Controllers\ReadinessTest\ReadinessTestController;
+use App\Http\Controllers\CourseExamController;
+use App\Http\Controllers\Admin\AdminCourseExamController;
+
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -75,6 +78,13 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::get('profile/{id}', [ProfileApprovalController::class, 'show'])->name('profile-approvals.show');
         Route::get('/readiness-test', [ReadinessTestController::class, 'index'])->name('readiness_test.index');
 
+        Route::get('/course-exams', [CourseExamController::class, 'index'])->name('course-exams.index');
+        Route::get('/course-exams/{exam}', [CourseExamController::class, 'show'])->name('course-exams.show');
+        Route::post('/course-exams/{exam}/submit', [CourseExamController::class, 'submit'])->name('course-exams.submit');
+        Route::get('/course-exams/result/{result}', [CourseExamController::class, 'result'])->name('course-exams.result');
+        Route::get('/course-exams/certificate/{result}', [CourseExamController::class, 'showCertificate'])
+            ->name('course-exams.certificate');
+
         Route::prefix('marriage-requests')->group(function () {
             Route::get('/', [MarriageRequestController::class, 'index'])->name('marriage-requests.index');
             Route::get('/show', [MarriageRequestController::class, 'show'])->name('marriage-requests.show');
@@ -106,7 +116,7 @@ Route::middleware('auth', 'verified')->group(function () {
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(AuthAdmin::class)->group(function () {
-        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
         Route::resource('questions', QuestionController::class);
         Route::resource('users', UserController::class);
         Route::resource('shops', BusinessActivityController::class);
@@ -122,6 +132,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/readiness-test-link/{readinessTestLink}', [ReadinessTestLinkController::class, 'update'])->name('readiness_test_link.update');
         Route::delete('/readiness-test-link/{readinessTestLink}', [ReadinessTestLinkController::class, 'destroy'])->name('readiness_test_link.destroy');
         Route::resource('marriage_video_link', MarriageVideoLinkController::class)->except(['show']);
+
+        Route::resource('exams', AdminCourseExamController::class);
+        Route::get('exams/{exam}/questions', [AdminCourseExamController::class, 'questions'])->name('exams.questions');
+        Route::get('exams/{exam}/questions/create', [AdminCourseExamController::class, 'createQuestion'])->name('exams.questions.create');
+        Route::post('exams/{exam}/questions', [AdminCourseExamController::class, 'storeQuestion'])->name('exams.questions.store');
+        Route::get('exams/{exam}/questions/{question}/edit', [AdminCourseExamController::class, 'editQuestion'])->name('exams.questions.edit');
+        Route::put('exams/{exam}/questions/{question}', [AdminCourseExamController::class, 'updateQuestion'])->name('exams.questions.update');
+        Route::delete('exams/{exam}/questions/{question}', [AdminCourseExamController::class, 'destroyQuestion'])->name('exams.questions.destroy');
+
+
+        // مسارات الأدمن
+        Route::get('/exams/create', [AdminCourseExamController::class, 'create'])->name('exams.create');
+        Route::post('/exams', [AdminCourseExamController::class, 'store'])->name('exams.store');
+        Route::get('/exams/{exam}/edit', [AdminCourseExamController::class, 'edit'])->name('exams.edit');
+        Route::put('/exams/{exam}', [AdminCourseExamController::class, 'update'])->name('exams.update');
+        Route::delete('/exams/{exam}', [AdminCourseExamController::class, 'destroy'])->name('exams.destroy');
+        Route::get('/exams/{exam}/results', [AdminCourseExamController::class, 'results'])->name('exams.results');
+        Route::post('/exams/resend-certificate/{result}', [AdminCourseExamController::class, 'resendCertificate'])->name('exams.resend-certificate');
+        Route::get('exams/{exam}/questions', [AdminCourseExamController::class, 'questions'])->name('exams.questions');
 
         Route::prefix('profile-approvals')->group(function () {
             Route::get('/', [ProfileApprovalController::class, 'index'])->name('profile-approvals.index');

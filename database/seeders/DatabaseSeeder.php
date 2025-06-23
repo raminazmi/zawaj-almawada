@@ -20,10 +20,13 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('123456789'),
             'is_admin' => true,
             'admin_role' => 'main',
+            'phone' => '00000000',
             'membership_number' => "000000",
         ]);
         $this->call([
             QuestionsSeeder::class,
+            UserSeeder::class,
+            CourseExamSeeder::class,
         ]);
     }
 }

@@ -44,7 +44,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         if ($user->is_admin && $user->isMainAdmin()) {
-            return redirect()->route('admin.questions.index');
+            return redirect()->route('admin.dashboard.index');
         }
         if ($user->is_admin && $user->isSubAdmin()) {
             return redirect()->route('admin.shops');

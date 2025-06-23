@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="min-h-screen">
+<div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-12">
     <div class="max-w-7xl mx-auto px-4 py-8">
         <div class="text-center mb-12">
             <h2 class="text-2xl font-bold text-purple-800 inline-block relative pb-4">
@@ -281,8 +281,8 @@
             @endif
         </div>
     </div>
-</section>
-@endsection
+    </section>
+    @endsection
 
-<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>

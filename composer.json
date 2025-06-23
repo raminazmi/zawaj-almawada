@@ -7,10 +7,18 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-gd": "*",
+        "ext-mbstring": "*",
+        "ext-zip": "*",
+        "guzzlehttp/guzzle": "^7.9",
+        "intervention/image": "^3.11",
         "laravel/breeze": "^2.3",
         "laravel/framework": "^11.31",
         "laravel/socialite": "^5.16",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "mpdf/mpdf": "^8.2",
+        "omaralalwi/gpdf": "^1.0",
+        "spatie/browsershot": "^5.0"
     },
     "require-dev": {
         "driftingly/rector-laravel": "^2.0",

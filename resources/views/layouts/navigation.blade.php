@@ -179,82 +179,10 @@
                         </div>
                     </div>
                 </div>
-                @endif
-                @if(auth()->check() && auth()->user()->is_admin)
-                @if(auth()->user()->isMainAdmin())
-                <a href="{{ route('admin.questions.index') }}"
-                    class="nav-link mx-6 {{ request()->routeIs('admin.questions.index') ? 'active' : '' }}">
-                    الأسئلة
+                <a href="{{ route('course-exams.index') }}"
+                    class="nav-link mx-6 {{ request()->routeIs('course-exams.*') ? 'active' : '' }}">
+                    اختبارات الدورات
                 </a>
-                <a href="{{ route('admin.admins.index') }}"
-                    class="nav-link mx-6 {{ request()->routeIs('admin.admins.index') ? 'active' : '' }}">
-                    المشرفين
-                </a>
-                <a href="{{ route('admin.users.index') }}"
-                    class="nav-link mx-6 {{ request()->routeIs('admin.users.index') ? 'active' : '' }}">
-                    الأعضاء
-                </a>
-                @endif
-                <a href="{{ route('admin.shops') }}"
-                    class="nav-link mx-6 {{ request()->routeIs('admin.shops') ? 'active' : '' }}">
-                    المحلات
-                </a>
-                <a href="{{ route('admin.profile-approvals.index') }}"
-                    class="nav-link mx-6 {{ request()->routeIs('profile-approvals.index') ? 'active' : '' }}">
-                    الملفات الشخصية
-                </a>
-                <a href="{{ route('admin.marriage-requests.index') }}"
-                    class="nav-link mx-6 {{ request()->routeIs('admin.marriage-requests.index') ? 'active' : '' }}">
-                    طلبات الزواج
-                </a>
-                @if(auth()->user()->isMainAdmin())
-                <a href="{{ route('admin.courses.index') }}"
-                    class="nav-link mx-6 {{ request()->routeIs('admin.courses.index') ? 'active' : '' }}">
-                    الدورات
-                </a>
-                @endif
-                <div class="relative" x-data="{ isOpen: false }" @click.away="isOpen = false">
-                    <button @click="isOpen = !isOpen" class="nav-link flex items-center gap-2">
-                        المزيد
-                        <i class="fas fa-chevron-down text-xs ml-1 transition-transform"
-                            :class="{ 'rotate-180': isOpen }"></i>
-                    </button>
-                    <div x-show="isOpen" x-cloak
-                        class="absolute bg-white shadow-lg mt-2 w-56 rounded-md border border-gray-200 z-50">
-                        <div class="relative" x-data="{ subOpen: false }" @click.away="subOpen = false">
-                            <button @click="subOpen = !subOpen"
-                                class="w-full text-left px-4 py-2 text-sm hover:bg-pink-50 flex justify-between items-center gap-2">
-                                <a href="{{ route('admin.marriage-requests.expired') }}"
-                                    class="block text-sm hover:bg-pink-50 {{ request()->routeIs('admin.marriage-requests.expired') ? 'text-purple-700' : 'text-gray-900' }}">
-                                    الطلبات المنتهية
-                                </a>
-                            </button>
-                            <button @click="subOpen = !subOpen"
-                                class="w-full text-left px-4 py-2 text-sm hover:bg-pink-50 flex justify-between items-center gap-2">
-                                <a href="{{ route('admin.marriage-requests.pending-overdue') }}"
-                                    class="block text-sm hover:bg-pink-50 {{ request()->routeIs('admin.marriage-requests.pending-overdue') ? 'text-purple-700' : 'text-gray-900' }}">
-                                    الطلبات لم يتم الرد عليها
-                                </a>
-                            </button>
-                            @if(auth()->user()->isMainAdmin())
-                            <button @click="subOpen = !subOpen"
-                                class="w-full text-left px-4 py-2 text-sm hover:bg-pink-50 flex justify-between items-center gap-2">
-                                <a href="{{ route('admin.readiness_test_link.index') }}"
-                                    class="block text-sm hover:bg-pink-50 {{ request()->routeIs('admin.readiness_test_link.index') ? 'text-purple-700' : 'text-gray-900' }}">
-                                    اختبار الجاهزية
-                                </a>
-                            </button>
-                            <button @click="subOpen = !subOpen"
-                                class="w-full text-left px-4 py-2 text-sm hover:bg-pink-50 flex justify-between items-center gap-2">
-                                <a href="{{ route('admin.marriage_video_link.index') }}"
-                                    class="block text-sm hover:bg-pink-50 {{ request()->routeIs('admin.marriage_video_link.index') ? 'text-purple-700' : 'text-gray-900' }}">
-                                    فيديو الزواج الشرعي
-                                </a>
-                            </button>
-                            @endif
-                        </div>
-                    </div>
-                </div>
                 @endif
             </div>
 
@@ -276,25 +204,18 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
-                            class="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-full text-gray-900 bg-pink-50 hover:bg-pink-200 focus:outline-none transition-all duration-300">
+                            class="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-full text-gray-900 bg-gray-100 hover:bg-gray-200 focus:outline-none transition-all duration-300">
                             <div>{{ Auth::user()->name }}</div>
                             <div class="mr-2"><i class="fas fa-chevron-down text-sm"></i></div>
                         </button>
                     </x-slot>
                     <x-slot name="content">
-                        @if((auth()->check() && !auth()->user()->is_admin))
-                        <x-dropdown-link :href="route('profile.edit')"
-                            class="text-gray-900 hover:bg-pink-50 transition-colors">
-                            <i class="fas fa-user ml-2"></i> الملف الشخصي
-                        </x-dropdown-link>
-                        @endif
                         <form method="POST" action="{{ route('logout') }}" id="logout-form">
                             @csrf
                         </form>
-
                         <x-dropdown-link href="#"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                            class="text-gray-900 hover:bg-pink-50 transition-colors">
+                            class="text-gray-900 hover:bg-gray-100 transition-colors">
                             <i class="fas fa-sign-out-alt ml-2"></i> تسجيل الخروج
                         </x-dropdown-link>
                     </x-slot>
@@ -317,8 +238,7 @@
             <i class="fas fa-info ml-2"></i> السيرة الذاتية
         </a>
         <div class="nav-link block py-2">
-            <a href="{{ route('business-activities.create') }}"><i class="fas fa-plus ml-2"></i> أضف نشاطك
-                التجاري</a>
+            <a href="{{ route('business-activities.create') }}"><i class="fas fa-plus ml-2"></i> أضف نشاطك التجاري</a>
         </div>
         <div x-data="{ isOpen: false }">
             <button @click="isOpen = !isOpen" class="nav-link block w-full text-left py-2 flex justify-between">
@@ -436,36 +356,9 @@
                 </div>
             </div>
         </div>
-        @endif
-        @if(auth()->check() && auth()->user()->is_admin)
-        <div class="pl-4 space-y-2">
-            @if(auth()->user()->isMainAdmin())
-            <a href="{{ route('admin.questions.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">الأسئلة</a>
-            <a href="{{ route('admin.admins.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">المشرفين</a>
-            <a href="{{ route('admin.users.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">الأعضاء</a>
-            @endif
-            <a href="{{ route('admin.shops') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">المحلات</a>
-            <a href="{{ route('admin.profile-approvals.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
-                طلبات قبول الملف الشخصي
-            </a>
-            <a href="{{ route('admin.marriage-requests.index') }}"
-                class="block text-sm hover:bg-pink-50 py-2 px-1">طلبات الزواج</a>
-            @if(auth()->user()->isMainAdmin())
-            <a href="{{ route('admin.courses.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
-                الدورات
-            </a>
-            <a href="{{ route('admin.readiness_test_link.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
-                اختبار الجاهزية
-            </a>
-            <a href="{{ route('admin.marriage_video_link.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
-                فيديو الزواج الشرعي
-            </a>
-            @endif
-            <a href="{{ route('admin.marriage-requests.expired') }}"
-                class="block text-sm hover:bg-pink-50 py-2 px-1">الطلبات المنتهية</a>
-            <a href="{{ route('admin.marriage-requests.pending-overdue') }}"
-                class="block text-sm hover:bg-pink-50 py-2 px-1">الطلبات لم يتم الرد عليها</a>
-        </div>
+        <a href="{{ route('course-exams.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
+            اختبارات الدورات
+        </a>
         @endif
 
         @guest

@@ -63,10 +63,10 @@ class AdminController extends Controller
         do {
             $membershipNumber = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
         } while (User::where('membership_number', $membershipNumber)->exists());
-
         $validated['is_admin'] = 1;
         $validated['password'] = Hash::make($validated['password']);
         $validated['membership_number'] = $membershipNumber;
+        $validated['phone'] = '0000000000';
 
         User::create($validated);
 

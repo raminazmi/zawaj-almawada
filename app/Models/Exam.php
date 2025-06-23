@@ -7,6 +7,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Exam extends Model
 {
+    protected $fillable = [
+        'title',
+        'description',
+        'duration',
+        'start_time',
+        'end_time',
+        'is_active'
+    ];
+
     public function calculateScore()
     {
         if (!$this->male_finished || !$this->female_finished) {
@@ -120,12 +129,10 @@ class Exam extends Model
         ];
     }
 
-
     public function answers(): HasMany
     {
         return $this->hasMany(UserAnswer::class);
     }
-
 
     public function male()
     {
@@ -134,5 +141,15 @@ class Exam extends Model
     public function female()
     {
         return $this->belongsTo(User::class, 'female_user_id');
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+
+    public function results()
+    {
+        return $this->hasMany(ExamResult::class);
     }
 }

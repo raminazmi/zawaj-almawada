@@ -70,21 +70,19 @@ class User extends Authenticatable
         'email',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'has_children' => 'boolean',
-            'has_disability' => 'boolean',
-            'has_deformity' => 'boolean',
-            'wants_children' => 'boolean',
-            'infertility' => 'boolean',
-            'is_smoker' => 'boolean',
-            'is_hijabi' => 'boolean',
-            'accepts_married' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'is_admin' => 'boolean',
+        'has_children' => 'boolean',
+        'has_disability' => 'boolean',
+        'has_deformity' => 'boolean',
+        'wants_children' => 'boolean',
+        'infertility' => 'boolean',
+        'is_smoker' => 'boolean',
+        'is_hijabi' => 'boolean',
+        'accepts_married' => 'boolean',
+    ];
 
     public function activeMarriageRequest()
     {
@@ -140,5 +138,10 @@ class User extends Authenticatable
     public function isSubAdmin(): bool
     {
         return $this->is_admin && $this->admin_role === 'sub';
+    }
+
+    public function isAdmin()
+    {
+        return $this->is_admin;
     }
 }
