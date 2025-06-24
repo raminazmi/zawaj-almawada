@@ -95,9 +95,6 @@
                     @forelse($stats['latestUsers'] as $user)
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
-                            <img class="h-10 w-10 rounded-full object-cover mr-4"
-                                src="{{ optional($user->profile)->image ? asset('storage/' . $user->profile->image) : '/assets/images/default-avatar.png' }}"
-                                alt="{{ $user->name }}">
                             <div>
                                 <p class="font-semibold text-gray-700">{{ $user->name }}</p>
                                 <p class="text-sm text-gray-500">{{ $user->created_at->diffForHumans() }}</p>
@@ -117,15 +114,25 @@
                     @forelse($stats['latestMarriageRequests'] as $request)
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
-                            <img class="h-10 w-10 rounded-full object-cover mr-4"
-                                src="{{ optional($request->user->profile)->image ? asset('storage/' . $request->user->profile->image) : '/assets/images/default-avatar.png' }}"
-                                alt="{{ $request->user->name }}">
                             <div>
                                 <p class="font-semibold text-gray-700">{{ $request->user->name }}</p>
                                 <p class="text-sm text-gray-500">
                                     الحالة: <span
-                                        class="font-bold @if($request->status == 'pending') text-orange-500 @elseif($request->status == 'approved') text-green-500 @else text-red-500 @endif">{{
-                                        $request->status }}</span>
+                                        class="font-bold @if($request->status == 'pending') text-yellow-500 @elseif($request->status == 'approved') text-green-500 @elseif($request->status == 'rejected') text-red-500 @elseif($request->status == 'engaged') text-blue-500 @elseif($request->status == 'awaiting_admin_approval') text-blue-500 @endif">
+                                        @if($request->status === 'rejected')
+                                        مرفوض من احد الطرفين
+                                        @elseif($request->status === 'pending')
+                                        قيد المراجعة من الطرف الآخر
+                                        @elseif($request->status === 'approved' && ($request->user_approval === null ||
+                                        $request->target_approval ===
+                                        null))
+                                        بانتظار الموافقة النهائية
+                                        @elseif($request->status === 'awaiting_admin_approval')
+                                        تم الموافقة النهائية من الطرفين
+                                        @elseif($request->status === 'engaged')
+                                        مخطوب
+                                        @endif
+                                    </span>
                                 </p>
                             </div>
                         </div>
