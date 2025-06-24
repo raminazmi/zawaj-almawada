@@ -37,7 +37,6 @@ use App\Http\Controllers\ReadinessTest\ReadinessTestController;
 use App\Http\Controllers\CourseExamController;
 use App\Http\Controllers\Admin\AdminCourseExamController;
 
-
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::get('/cv', [CvController::class, 'index'])->name('cv');
@@ -141,12 +140,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('exams/{exam}/questions/{question}', [AdminCourseExamController::class, 'destroyQuestion'])->name('exams.questions.destroy');
         Route::post('/exams/resend-certificate/{result}', [AdminCourseExamController::class, 'resendCertificate'])->name('exams.resend-certificate');
 
-
-        // مسارات الأدمن
+        // إزالة التعريفات الصريحة المتكررة
         Route::get('/exams/create', [AdminCourseExamController::class, 'create'])->name('exams.create');
         Route::post('/exams', [AdminCourseExamController::class, 'store'])->name('exams.store');
         Route::get('/exams/{exam}/edit', [AdminCourseExamController::class, 'edit'])->name('exams.edit');
-        Route::put('/exams/{exam}', [AdminCourseExamController::class, 'update'])->name('exams.update');
+        // إزالة Route::put('/exams/{exam}', ...) لأنها متكررة مع Resource
         Route::delete('/exams/{exam}', [AdminCourseExamController::class, 'destroy'])->name('exams.destroy');
         Route::get('/exams/{exam}/results', [AdminCourseExamController::class, 'results'])->name('exams.results');
         Route::post('/exams/resend-certificate/{result}', [AdminCourseExamController::class, 'resendCertificate'])->name('exams.resend-certificate');
