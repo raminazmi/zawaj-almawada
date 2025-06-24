@@ -100,11 +100,19 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
                             <i class="fas fa-link text-blue-600 ml-2"></i>
-                            رابط الامتحان
+                            امتحان الدورة
                         </label>
-                        <input type="url" name="exam_link" value="{{ old('exam_link', $course->exam_link) }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg">
-                        @error('exam_link')
+                        <select name="course_exam_id"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option value="">-- اختر امتحاناً --</option>
+                            @foreach($exams as $exam)
+                            <option value="{{ $exam->id }}" {{ old('course_exam_id', $course->course_exam_id) ==
+                                $exam->id ? 'selected' : '' }}>
+                                {{ $exam->title }}
+                            </option>
+                            @endforeach
+                        </select>
+                        @error('course_exam_id')
                         <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
                         @enderror
                     </div>

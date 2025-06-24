@@ -14,11 +14,10 @@ class Course extends Model
         'description',
         'course_description',
         'ebook_url',
-        'youtube_playlist',
         'registration_link',
         'supporting_companies',
         'intro_video',
-        'exam_link',
+        'course_exam_id',
         'exam_date',
         'exam_time',
         'start_date',
@@ -39,5 +38,10 @@ class Course extends Model
     public function episodes()
     {
         return $this->hasMany(Episode::class);
+    }
+
+    public function courseExam()
+    {
+        return $this->belongsTo(CourseExam::class, 'course_exam_id');
     }
 }

@@ -11,20 +11,22 @@ class CourseExamQuestion extends Model
 
     protected $fillable = [
         'course_exam_id',
-        'text',
-        'type_id',
+        'question',
+        'question_type_id',
+        'correct_answer'
     ];
 
-    protected $casts = [
-        // 'options' => 'array', // احذف هذا السطر، الخيارات أصبحت مودل منفصل
-    ];
-
+    /**
+     * العلاقة مع نوع السؤال
+     */
     public function type()
     {
-        // تصحيح المفتاح الخارجي للعلاقة
-        return $this->belongsTo(QuestionType::class, 'type_id');
+        return $this->belongsTo(QuestionType::class, 'question_type_id');
     }
 
+    /**
+     * العلاقة مع الخيارات
+     */
     public function options()
     {
         return $this->hasMany(CourseExamQuestionOption::class);

@@ -33,6 +33,20 @@ class LoginRequest extends FormRequest
     }
 
     /**
+     * Get custom error messages for validation.
+     */
+    public function messages(): array
+    {
+        return [
+            'email.required' => 'البريد الإلكتروني مطلوب',
+            'email.string'   => 'يجب أن يكون البريد الإلكتروني نصاً',
+            'email.email'    => 'يجب إدخال بريد إلكتروني صالح',
+            'password.required' => 'كلمة المرور مطلوبة',
+            'password.string'   => 'يجب أن تكون كلمة المرور نصاً',
+        ];
+    }
+
+    /**
      * Attempt to authenticate the request's credentials.
      *
      * @throws \Illuminate\Validation\ValidationException

@@ -11,6 +11,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700&display=swap" rel="stylesheet">
   @vite(['resources/css/app.css', 'resources/js/app.js'])
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700&display=swap');
+
     @font-face {
       font-family: 'Samim';
       src: url('/assets/fonts/alfont_com_ArbFONTS-Samim.ttf') format('truetype');
@@ -19,7 +21,7 @@
     }
 
     body {
-      font-family: 'Samim', sans-serif;
+      font-family: 'Almarai', sans-serif;
       background-color: #f9fafb;
     }
 

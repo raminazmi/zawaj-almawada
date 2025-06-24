@@ -81,9 +81,8 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::get('/course-exams', [CourseExamController::class, 'index'])->name('course-exams.index');
         Route::get('/course-exams/{exam}', [CourseExamController::class, 'show'])->name('course-exams.show');
         Route::post('/course-exams/{exam}/submit', [CourseExamController::class, 'submit'])->name('course-exams.submit');
-        Route::get('/course-exams/result/{result}', [CourseExamController::class, 'result'])->name('course-exams.result');
-        Route::get('/course-exams/certificate/{result}', [CourseExamController::class, 'showCertificate'])
-            ->name('course-exams.certificate');
+        Route::get('/course-exams/results/{result}', [CourseExamController::class, 'result'])->name('course-exams.result');
+        Route::get('/course-exams/results/{result}/download', [CourseExamController::class, 'downloadCertificate'])->name('course-exams.certificate.download');
 
         Route::prefix('marriage-requests')->group(function () {
             Route::get('/', [MarriageRequestController::class, 'index'])->name('marriage-requests.index');
@@ -140,6 +139,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('exams/{exam}/questions/{question}/edit', [AdminCourseExamController::class, 'editQuestion'])->name('exams.questions.edit');
         Route::put('exams/{exam}/questions/{question}', [AdminCourseExamController::class, 'updateQuestion'])->name('exams.questions.update');
         Route::delete('exams/{exam}/questions/{question}', [AdminCourseExamController::class, 'destroyQuestion'])->name('exams.questions.destroy');
+        Route::post('/exams/resend-certificate/{result}', [AdminCourseExamController::class, 'resendCertificate'])->name('exams.resend-certificate');
 
 
         // مسارات الأدمن

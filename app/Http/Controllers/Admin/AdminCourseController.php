@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\CourseExam;
 use App\Models\Episode;
 use Illuminate\Http\Request;
 
@@ -11,13 +12,14 @@ class AdminCourseController extends Controller
 {
     public function index()
     {
-        $courses = Course::latest()->paginate(10);
+        $courses = Course::with('courseExam')->latest()->paginate(10);
         return view('admin.courses.index', compact('courses'));
     }
 
     public function create()
     {
-        return view('admin.courses.create');
+        $exams = CourseExam::all();
+        return view('admin.courses.create', compact('exams'));
     }
 
     public function convertToEmbedUrl($url)
@@ -49,7 +51,7 @@ class AdminCourseController extends Controller
             'registration_link' => 'required|url|max:255',
             'supporting_companies' => 'required|string|max:500',
             'intro_video' => 'nullable|url|max:255',
-            'exam_link' => 'nullable|url|max:255',
+            'course_exam_id' => 'nullable|exists:course_exams,id',
             'exam_date' => 'nullable|date',
             'exam_time' => 'nullable|date_format:H:i',
             'start_date' => 'nullable|date',
@@ -76,7 +78,7 @@ class AdminCourseController extends Controller
             'registration_link' => 'رابط التسجيل',
             'supporting_companies' => 'الشركات الداعمة',
             'intro_video' => 'الفيديو التعريفي',
-            'exam_link' => 'رابط الامتحان',
+            'course_exam_id' => 'امتحان الدورة',
             'exam_date' => 'تاريخ الامتحان',
             'exam_time' => 'توقيت الامتحان',
             'start_date' => 'تاريخ البدء',
@@ -110,7 +112,8 @@ class AdminCourseController extends Controller
 
     public function edit(Course $course)
     {
-        return view('admin.courses.edit', compact('course'));
+        $exams = CourseExam::all();
+        return view('admin.courses.edit', compact('course', 'exams'));
     }
 
     public function update(Request $request, Course $course)
@@ -123,7 +126,7 @@ class AdminCourseController extends Controller
             'registration_link' => 'required|url|max:255',
             'supporting_companies' => 'required|string|max:500',
             'intro_video' => 'nullable|url|max:255',
-            'exam_link' => 'nullable|url|max:255',
+            'course_exam_id' => 'nullable|exists:course_exams,id',
             'exam_date' => 'nullable|date',
             'exam_time' => 'nullable|date_format:H:i',
             'start_date' => 'nullable|date',
@@ -150,7 +153,7 @@ class AdminCourseController extends Controller
             'registration_link' => 'رابط التسجيل',
             'supporting_companies' => 'الشركات الداعمة',
             'intro_video' => 'الفيديو التعريفي',
-            'exam_link' => 'رابط الامتحان',
+            'course_exam_id' => 'امتحان الدورة',
             'exam_date' => 'تاريخ الامتحان',
             'exam_time' => 'توقيت الامتحان',
             'start_date' => 'تاريخ البدء',

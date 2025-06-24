@@ -20,6 +20,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\AdminMarriageProposalNotification;
 use App\Mail\CompatibilityTestLinkNotification;
 use Illuminate\Support\Str;
+use App\Policies\UserPolicy;
 
 class MarriageRequestController extends Controller
 {
@@ -109,7 +110,21 @@ class MarriageRequestController extends Controller
             return redirect()->route('personal-info');
         }
 
-        $isProfileComplete = $this->isProfileComplete(Auth::user());
+        $user = Auth::user();
+        $request = MarriageRequest::where('user_id', $user->id)
+            ->orWhere('target_user_id', $user->id)
+            ->with(['user', 'targetUser', 'exam'])
+            ->first();
+
+        if (!$request) {
+            return redirect()->route('marriage-requests.index')->with('info', 'ليس لديك طلبات حالية');
+        }
+
+        // Authorize viewing the other user's profile
+        $otherUser = ($request->user_id === $user->id) ? $request->targetUser : $request->user;
+        $this->authorize('view', $otherUser);
+
+        $isProfileComplete = $this->isProfileComplete($user);
 
         return view('marriage-requests.index', compact('isProfileComplete'));
     }
@@ -170,20 +185,25 @@ class MarriageRequestController extends Controller
             'partner_expectations'
         ];
 
-        $girls = User::where('gender', 'female')
+        $user = Auth::user();
+        $girlsQuery = User::where('gender', 'female')
             ->where('status', 'available')
             ->where(function ($query) use ($requiredFields) {
                 foreach ($requiredFields as $field) {
                     $query->whereNotNull($field);
                 }
-            })
-            ->get();
+            });
 
-        if (Auth::user()->status !== 'available') {
+        // Only show girls with show_profile = true
+        $girlsQuery->where('show_profile', true);
+
+        $girls = $girlsQuery->get();
+
+        if ($user->status !== 'available') {
             return redirect()->route('marriage-requests.status')->with('info', 'لديك طلب خطوبة نشط بالفعل');
         }
 
-        $isProfileComplete = $this->isProfileComplete(Auth::user());
+        $isProfileComplete = $this->isProfileComplete($user);
 
         return view('marriage-requests.girls', compact('girls', 'isProfileComplete'));
     }
@@ -195,6 +215,10 @@ class MarriageRequestController extends Controller
         }
 
         $target = User::findOrFail($targetId);
+
+        // Authorize viewing the target user's profile before creating a proposal
+        $this->authorize('view', $target);
+
         if ($target->status !== 'available') {
             return redirect()->back()->with('error', 'هذا الشخص غير متاح حاليًا لتقديم طلب خطوبة');
         }

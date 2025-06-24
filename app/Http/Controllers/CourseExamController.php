@@ -3,102 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\CourseExam;
-use App\Models\CourseExamQuestion;
 use App\Models\CourseExamResult;
 use Illuminate\Http\Request;
-use Omaralalwi\Gpdf\Gpdf;
-use Omaralalwi\Gpdf\GpdfConfig;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ExamCertificate;
 use Spatie\Browsershot\Browsershot;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class CourseExamController extends Controller
 {
+    /**
+     * عرض قائمة الاختبارات المتاحة
+     */
     public function index()
     {
-        $exams = CourseExam::with('questions')->get();
+        $exams = CourseExam::getActiveExams();
         return view('course-exams.index', compact('exams'));
     }
 
-    public function create()
-    {
-        return view('course-exams.create');
-    }
-
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'duration' => 'required|integer|min:1',
-            'start_time' => 'required|date',
-            'end_time' => 'required|date|after:start_time',
-            'is_active' => 'boolean',
-            'questions' => 'required|array|min:1',
-            'questions.*.question' => 'required|string',
-            'questions.*.options' => 'required|array|min:2',
-            'questions.*.correct_answer' => 'required|string',
-            'questions.*.points' => 'required|integer|min:1',
-        ]);
-
-        $exam = CourseExam::create([
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'duration' => $validated['duration'],
-            'start_time' => $validated['start_time'],
-            'end_time' => $validated['end_time'],
-            'is_active' => $validated['is_active'] ?? false,
-        ]);
-
-        foreach ($validated['questions'] as $questionData) {
-            $exam->questions()->create([
-                'question' => $questionData['question'],
-                'options' => $questionData['options'],
-                'correct_answer' => $questionData['correct_answer'],
-                'points' => $questionData['points'],
-            ]);
-        }
-
-        return redirect()->route('admin.exams.index')
-            ->with('success', 'تم إنشاء الاختبار بنجاح');
-    }
-
-    public function edit(CourseExam $exam)
-    {
-        return view('course-exams.edit', compact('exam'));
-    }
-
-    public function update(Request $request, CourseExam $exam)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'duration' => 'required|integer|min:1',
-            'start_time' => 'required|date',
-            'end_time' => 'required|date|after:start_time',
-            'is_active' => 'boolean',
-        ]);
-
-        $exam->update($validated);
-
-        return redirect()->route('admin.exams.index')
-            ->with('success', 'تم تحديث الاختبار بنجاح');
-    }
-
-    public function destroy(CourseExam $exam)
-    {
-        $exam->delete();
-        return redirect()->route('admin.exams.index')
-            ->with('success', 'تم حذف الاختبار بنجاح');
-    }
-
-    public function results(CourseExam $exam)
-    {
-        $results = $exam->results()->with('user')->get();
-        return view('course-exams.results', compact('exam', 'results'));
-    }
-
+    /**
+     * عرض الاختبار
+     */
     public function show(CourseExam $exam)
     {
         if (!$exam->is_active || now() < $exam->start_time || now() > $exam->end_time) {
@@ -106,123 +34,156 @@ class CourseExamController extends Controller
                 ->with('error', 'الاختبار غير متاح حالياً');
         }
 
+        $user = auth()->user();
+        $result = $exam->results()->where('user_id', $user->id)->first();
+        if (!$result) {
+            $result = $exam->results()->create([
+                'user_id' => $user->id,
+                'score' => 0,
+                'answers' => json_encode([]),
+                'exam_started_at' => now(),
+            ]);
+        } elseif ($result->exam_started_at && now()->diffInMinutes($result->exam_started_at) > 60) {
+            return redirect()->route('course-exams.index')->with('error', 'انتهى وقت الاختبار المخصص لك.');
+        }
+
+        $exam->load('questions.options');
         return view('course-exams.show', compact('exam'));
     }
 
+    /**
+     * تقديم الإجابات
+     */
     public function submit(Request $request, CourseExam $exam)
     {
-        // التحقق من أن الطلب هو POST
-        if (!$request->isMethod('post')) {
-            return redirect()->route('course-exams.show', $exam)
-                ->with('error', 'يرجى إرسال الإجابات من خلال النموذج');
-        }
-
-        // التحقق من وجود الإجابات
-        if (!$request->has('answers')) {
-            return redirect()->route('course-exams.show', $exam)
-                ->with('error', 'يرجى الإجابة على جميع الأسئلة');
-        }
-
-        $answers = $request->input('answers');
-        $score = 0;
-
-        foreach ($exam->questions as $question) {
-            if (isset($answers[$question->id]) && $answers[$question->id] == $question->correct_answer) {
-                $score += $question->points;
+        try {
+            $user = auth()->user();
+            $result = $exam->results()->where('user_id', $user->id)->first();
+            if (!$result || ($result->exam_started_at && now()->diffInMinutes($result->exam_started_at) > 60)) {
+                return redirect()->route('course-exams.index')->with('error', 'انتهى وقت الاختبار المخصص لك.');
             }
+
+            if (!$request->isMethod('post')) {
+                return redirect()->route('course-exams.show', $exam)
+                    ->with('error', 'يرجى إرسال الإجابات من خلال النموذج');
+            }
+
+            $request->validate([
+                'answers' => 'required|array',
+                'answers.*' => 'string',
+            ]);
+
+            $answers = $request->input('answers');
+            $score = 0;
+
+            foreach ($exam->questions as $question) {
+                if (isset($answers[$question->id])) {
+                    $userAnswer = $answers[$question->id];
+
+                    if ($question->question_type_id == 1) { // اختيار من متعدد
+                        $correctOption = $question->options->firstWhere('is_correct', true);
+                        if ($correctOption && $userAnswer == $correctOption->text) {
+                            $score += $question->points ?? 1;
+                        }
+                    } elseif ($question->question_type_id == 2 || $question->question_type_id == 3) { // صح أو خطأ ونص قصير
+                        if ($question->correct_answer !== null && $userAnswer == $question->correct_answer) {
+                            $score += $question->points ?? 1;
+                        }
+                    }
+                }
+            }
+
+            $result->update([
+                'score' => $score,
+                'answers' => json_encode($answers),
+            ]);
+
+            $this->sendCertificate($result);
+
+            return redirect()->route('course-exams.result', $result)
+                ->with('success', 'تم إرسال الشهادة إلى بريدك الإلكتروني');
+        } catch (\Exception $e) {
+            Log::error('خطأ أثناء تقديم الإجابات', ['message' => $e->getMessage()]);
+            return back()->with('error', 'حدث خطأ أثناء تقديم الإجابات.');
         }
-
-        $result = CourseExamResult::create([
-            'course_exam_id' => $exam->id,
-            'user_id' => auth()->id(),
-            'score' => $score,
-            'answers' => $answers
-        ]);
-
-        // تحميل العلاقات المطلوبة
-        $result->load(['user', 'exam']);
-
-        // إرسال الشهادة بالبريد الإلكتروني
-        $this->sendCertificate($result);
-
-        return redirect()->route('course-exams.result', $result)
-            ->with('success', 'تم إرسال الشهادة إلى بريدك الإلكتروني');
     }
 
+    /**
+     * عرض نتيجة الاختبار
+     */
     public function result(CourseExamResult $result)
     {
         return view('course-exams.result', compact('result'));
     }
 
-    private function sendCertificate($result)
-    {
-        // تحميل العلاقات
-        $result->loadMissing(['user', 'exam']);
-
-        // توليد HTML الشهادة
-        $html = view('course-exams.certificate', [
-            'result' => $result,
-            'title' => 'شهادة إتمام الاختبار'
-        ])->render();
-
-        // توليد اسم عشوائي للصورة
-        $filename = 'certificate_' . uniqid() . '.png';
-        $path = storage_path('app/public/certificates/' . $filename);
-
-        // توليد الصورة من الـ HTML
-        Browsershot::html($html)
-            ->setNodeBinary('node') // أو المسار الكامل إذا لم يكن في PATH
-            ->windowSize(900, 720)
-            ->waitUntilNetworkIdle()
-            ->save($path);
-
-        // إرسال البريد مع الصورة كمرفق
-        Mail::to($result->user->email)->send(new ExamCertificate($result, $path));
-
-        // حذف الصورة بعد الإرسال إذا أردت
-        // unlink($path);
-
-        $result->update(['certificate_sent' => true]);
-    }
-
-    public function resendCertificate(CourseExamResult $result)
-    {
-        $this->sendCertificate($result);
-        return back()->with('success', 'تمت إعادة إرسال الشهادة بنجاح');
-    }
-
-    public function showCertificate(CourseExamResult $result)
+    /**
+     * إرسال الشهادة عبر البريد الإلكتروني
+     */
+    private function sendCertificate(CourseExamResult $result)
     {
         try {
-            // التأكد من تحميل العلاقات
-            if (!$result->relationLoaded('user')) {
-                $result->load('user');
-            }
-            if (!$result->relationLoaded('exam')) {
-                $result->load('exam');
-            }
-
-            $defaultConfig = config('gpdf');
-            $config = new GpdfConfig($defaultConfig);
-            $gpdf = new Gpdf($config);
-
+            $result->loadMissing('user', 'exam');
             $html = view('course-exams.certificate', [
                 'result' => $result,
                 'title' => 'شهادة إتمام الاختبار'
             ])->render();
 
-            $pdfContent = $gpdf->generate($html);
+            $filename = 'certificate_' . uniqid() . '.png';
+            $path = storage_path("app/public/certificates/{$filename}");
 
-            // تغيير طريقة عرض PDF
-            return response($pdfContent)
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', 'inline; filename="certificate.pdf"')
-                ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
-                ->header('Pragma', 'no-cache')
-                ->header('Expires', '0');
+            Browsershot::html($html)
+                ->windowSize(900, 720)
+                ->waitUntilNetworkIdle()
+                ->save($path);
+
+            Mail::to($result->user->email)->send(new ExamCertificate($result, $path));
+            $result->update(['certificate_sent' => true]);
+
+            unlink($path); // حذف الملف بعد الإرسال
         } catch (\Exception $e) {
-            \Log::error('PDF Generation Error: ' . $e->getMessage());
-            return back()->with('error', 'حدث خطأ أثناء إنشاء الشهادة: ' . $e->getMessage());
+            Log::error('خطأ أثناء إرسال الشهادة', ['message' => $e->getMessage()]);
+            throw $e;
+        }
+    }
+
+    /**
+     * إعادة إرسال الشهادة
+     */
+    public function resendCertificate(CourseExamResult $result)
+    {
+        try {
+            $this->sendCertificate($result);
+            return back()->with('success', 'تمت إعادة إرسال الشهادة بنجاح');
+        } catch (\Exception $e) {
+            Log::error('خطأ أثناء إعادة إرسال الشهادة', ['message' => $e->getMessage()]);
+            return back()->with('error', 'حدث خطأ أثناء إعادة إرسال الشهادة.');
+        }
+    }
+
+    /**
+     * تنزيل الشهادة كصورة PNG
+     */
+    public function downloadCertificate(CourseExamResult $result)
+    {
+        try {
+            $result->loadMissing('user', 'exam');
+            $html = view('course-exams.certificate', [
+                'result' => $result,
+                'title' => 'شهادة إتمام الاختبار'
+            ])->render();
+
+            $filename = 'certificate_' . uniqid() . '.png';
+            $path = storage_path("app/public/certificates/{$filename}");
+
+            Browsershot::html($html)
+                ->windowSize(900, 720)
+                ->waitUntilNetworkIdle()
+                ->save($path);
+
+            return response()->download($path, "شهادة-إتمام-{$result->exam->title}.png")->deleteFileAfterSend(true);
+        } catch (\Exception $e) {
+            Log::error('خطأ أثناء تنزيل الشهادة', ['message' => $e->getMessage()]);
+            return back()->with('error', 'حدث خطأ أثناء تنزيل الشهادة.');
         }
     }
 }

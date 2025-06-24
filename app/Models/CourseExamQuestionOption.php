@@ -15,6 +15,9 @@ class CourseExamQuestionOption extends Model
         'is_correct',
     ];
 
+    /**
+     * العلاقة مع السؤال
+     */
     public function question()
     {
         return $this->belongsTo(CourseExamQuestion::class);

@@ -13,6 +13,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700&display=swap');
+
         body,
         p,
         a,
@@ -31,7 +33,7 @@
         tr,
         td,
         th {
-            font-family: 'Samim', sans-serif;
+            font-family: 'Almarai', sans-serif;
         }
 
         body {

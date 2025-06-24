@@ -48,11 +48,9 @@
                         <span class="mr-2 text-sm text-purple-600">تذكرني</span>
                     </label>
 
-                    @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}" class="text-sm text-purple-600 hover:text-purple-800">
-                        نسيت كلمة المرور؟
+                        هل نسيت كلمة المرور؟
                     </a>
-                    @endif
                 </div>
 
                 <x-primary-button

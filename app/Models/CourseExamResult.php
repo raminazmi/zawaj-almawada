@@ -11,12 +11,14 @@ class CourseExamResult extends Model
         'user_id',
         'score',
         'answers',
-        'certificate_sent'
+        'certificate_sent',
+        'exam_started_at',
     ];
 
     protected $casts = [
         'answers' => 'array',
-        'certificate_sent' => 'boolean'
+        'certificate_sent' => 'boolean',
+        'exam_started_at' => 'datetime',
     ];
 
     public function user()

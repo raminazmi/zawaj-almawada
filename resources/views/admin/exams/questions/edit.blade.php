@@ -1,133 +1,190 @@
 @extends('layouts.app')
+
 @section('content')
-<div>
-    <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white shadow-xl rounded-2xl p-8 border border-[#3A8BCD]/20">
-            <h2 class="text-2xl font-extrabold text-[#2A5C82] mb-8 text-center"
+<div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-12 flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-white rounded-xl shadow-lg p-8 border border-purple-100">
+        <h2 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-8 text-center"
                 style="font-family: 'Almarai', sans-serif;">
                 تعديل السؤال للاختبار: {{ $exam->title }}
             </h2>
             <form action="{{ route('admin.exams.questions.update', [$exam, $question]) }}" method="POST">
                 @csrf
                 @method('PUT')
-                <div class="mb-6">
-                    <label class="block mb-2 font-bold text-[#2A5C82]">نص السؤال</label>
+            <div class="space-y-6">
+                <div>
+                    <label class="block mb-2 font-bold text-gray-700">نص السؤال</label>
                     <input type="text" name="text" value="{{ old('text', $question->question) }}"
-                        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#3A8BCD]">
+                        class="w-full px-4 py-2 border rounded-lg @error('text') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all">
+                    @error('text')
+                    <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                    @enderror
                 </div>
-                <div class="mb-6">
-                    <label class="block mb-2 font-bold text-[#2A5C82]">نوع السؤال</label>
-                    <select name="type_id" id="type_id" class="w-full border border-gray-300 rounded-lg px-4 py-2"
+                <div>
+                    <label class="block mb-2 font-bold text-gray-700">نوع السؤال</label>
+                    <select name="type_id" id="type_id"
+                        class="w-full px-4 py-2 border rounded-lg @error('type_id') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
                         onchange="toggleOptions()">
                         @foreach($types as $type)
-                        <option value="{{ $type->id }}" {{ (old('type_id', $question->type_id) == $type->id) ?
+                        <option value="{{ $type->id }}" {{ old('type_id', $question->question_type_id) == $type->id ?
                             'selected' : '' }}>
                             {{ $type->name }}
                         </option>
                         @endforeach
                     </select>
+                    @error('type_id')
+                    <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                    @enderror
                 </div>
-                <div id="options-section" class="mb-6" style="display: none;">
-                    <label class="block mb-2 font-bold text-[#2A5C82]">الخيارات (اختيار من متعدد)</label>
-                    <div id="options-list">
+                <div id="options-section" class="space-y-2" style="display: none;">
+                    <label class="block mb-2 font-bold text-gray-700">الخيارات (اختيار من متعدد)</label>
+                    <div id="options-list" class="space-y-2">
                         @foreach($question->options as $i => $opt)
-                        <div class="flex items-center mb-2">
+                        <div class="flex items-center gap-2 option-item">
                             <input type="text" name="options[{{ $i }}][text]"
                                 value="{{ old('options.'.$i.'.text', $opt->text) }}"
-                                class="flex-1 border border-gray-300 rounded-lg px-4 py-2 mr-2">
+                                class="flex-1 px-4 py-2 border rounded-lg @error('options.'.$i.'.text') border-red-500 @else border-gray-300 @endif focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all">
                             <label class="flex items-center text-sm">
-                                <input type="checkbox" name="options[{{ $i }}][is_correct]" value="1" {{
-                                    old('options.'.$i.'.is_correct', $opt->is_correct) ? 'checked' : '' }} class="ml-1">
-                                صحيح
+                                <input type="checkbox" name="options[{{ $i }}][is_correct]" value="1"
+                                    class="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500" {{
+                                    old('options.'.$i.'.is_correct', $opt->is_correct) ? 'checked' : '' }}>
+                                <span class="mr-1">صحيح</span>
                             </label>
+                            <button type="button" class="remove-option-btn text-red-600 hover:text-red-700">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12">
+                                    </path>
+                                </svg>
+                            </button>
+                            @error('options.'.$i.'.text')
+                            <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                            @enderror
                         </div>
                         @endforeach
-                        {{-- Fill remaining to 4 options --}}
-                        @for($j = count($question->options); $j < 4; $j++) <div class="flex items-center mb-2">
-                            <input type="text" name="options[{{ $j }}][text]" value="{{ old('options.'.$j.'.text') }}"
-                                placeholder="الخيار {{ $j+1 }}"
-                                class="flex-1 border border-gray-300 rounded-lg px-4 py-2 mr-2">
-                            <label class="flex items-center text-sm">
-                                <input type="checkbox" name="options[{{ $j }}][is_correct]" value="1" {{
-                                    old('options.'.$j.'.is_correct') ? 'checked' : '' }} class="ml-1">
-                                صحيح
+                    </div>
+                    <button type="button" id="add-option-btn"
+                        class="text-purple-600 hover:text-purple-700 text-sm font-medium mt-2 flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
+                            </path>
+                        </svg>
+                        إضافة خيار جديد
+                    </button>
+                    @error('options')
+                    <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div id="true-false-section" class="space-y-2" style="display: none;">
+                    <label class="block mb-2 font-bold text-gray-700">الإجابة الصحيحة</label>
+                    <div class="flex gap-x-4">
+                        <label class="flex items-center gap-x-2">
+                            <input type="radio" name="correct_answer" value="true"
+                                class="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500" {{
+                                old('correct_answer', $question->correct_answer) == 'true' ? 'checked' : '' }}>
+                            <span>صح</span>
+                        </label>
+                        <label class="flex items-center gap-x-2">
+                            <input type="radio" name="correct_answer" value="false"
+                                class="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500" {{
+                                old('correct_answer', $question->correct_answer) == 'false' ? 'checked' : '' }}>
+                            <span>خطأ</span>
                             </label>
                     </div>
-                    @endfor
+                    @error('correct_answer')
+                    <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                    @enderror
                 </div>
+                <div id="short-answer-section" class="space-y-2" style="display: none;">
+                    <label class="block mb-2 font-bold text-gray-700">الإجابة الصحيحة</label>
+                    <input type="text" name="correct_answer"
+                        value="{{ old('correct_answer', $question->correct_answer) }}"
+                        class="w-full px-4 py-2 border rounded-lg @error('correct_answer') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all">
+                    @error('correct_answer')
+                    <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                    @enderror
         </div>
-
-        {{-- True/False Answer --}}
-        <div id="true-false-section" class="mb-6" style="display: none;">
-            <label class="block mb-2 font-bold text-[#2A5C82]">الإجابة الصحيحة</label>
-            <div class="flex gap-x-4">
-                <label class="flex items-center gap-x-2">
-                    <input type="radio" name="correct_answer" value="true" {{ (old('correct_answer',
-                        $question->correct_answer) == 'true') ? 'checked' : '' }}>
-                    <span>صح</span>
-                </label>
-                <label class="flex items-center gap-x-2">
-                    <input type="radio" name="correct_answer" value="false" {{ (old('correct_answer',
-                        $question->correct_answer) == 'false') ? 'checked' : '' }}>
-                    <span>خطأ</span>
-                </label>
-            </div>
-        </div>
-
-        {{-- Short Answer --}}
-        <div id="short-answer-section" class="mb-6" style="display: none;">
-            <label class="block mb-2 font-bold text-[#2A5C82]">الإجابة الصحيحة</label>
-            <input type="text" name="correct_answer_sa"
-                value="{{ old('correct_answer_sa', $question->correct_answer) }}"
-                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#3A8BCD]">
-        </div>
-
         <div class="flex justify-center gap-4">
             <button type="submit"
-                class="bg-[#3A8BCD] hover:bg-[#2A5C82] text-white font-bold py-2 px-8 rounded-lg shadow transition">
+                        class="px-8 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-lg shadow hover:from-purple-700 hover:to-pink-700 transition-all flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
                 حفظ التعديلات
             </button>
             <a href="{{ route('admin.exams.questions', $exam) }}"
-                class="bg-gray-200 hover:bg-gray-300 text-[#2A5C82] font-bold py-2 px-8 rounded-lg shadow transition">
+                        class="px-8 py-2 bg-gray-100 text-gray-600 font-bold rounded-lg shadow hover:bg-gray-200 transition-all">
                 إلغاء
             </a>
+                </div>
         </div>
         </form>
     </div>
 </div>
-</div>
+
 <script>
     function toggleOptions() {
-        var typeSelect = document.getElementById('type_id');
-        var selectedText = typeSelect.options[typeSelect.selectedIndex].text.trim();
+        const typeSelect = document.getElementById('type_id');
+        const selectedText = typeSelect.options[typeSelect.selectedIndex].text.trim();
+        const optionsSection = document.getElementById('options-section');
+        const trueFalseSection = document.getElementById('true-false-section');
+        const shortAnswerSection = document.getElementById('short-answer-section');
 
-        var optionsSection = document.getElementById('options-section');
-        var trueFalseSection = document.getElementById('true-false-section');
-        var shortAnswerSection = document.getElementById('short-answer-section');
+        // Hide all sections and disable inputs
+        [optionsSection, trueFalseSection, shortAnswerSection].forEach(section => {
+            section.style.display = 'none';
+            section.querySelectorAll('input, select').forEach(el => el.disabled = true);
+        });
 
-        // Hide all sections first
-        optionsSection.style.display = 'none';
-        trueFalseSection.style.display = 'none';
-        shortAnswerSection.style.display = 'none';
-
-        // Disable inputs to prevent them from being submitted when hidden
-        document.querySelectorAll('#options-section input').forEach(el => el.disabled = true);
-        document.querySelectorAll('#true-false-section input').forEach(el => el.disabled = true);
-        document.querySelectorAll('#short-answer-section input').forEach(el => el.disabled = true);
-
-
+        // Show and enable relevant section
         if (selectedText === 'اختيار من متعدد') {
             optionsSection.style.display = 'block';
-            document.querySelectorAll('#options-section input').forEach(el => el.disabled = false);
+            optionsSection.querySelectorAll('input').forEach(el => el.disabled = false);
         } else if (selectedText === 'صح أو خطأ') {
             trueFalseSection.style.display = 'block';
-            document.querySelectorAll('#true-false-section input').forEach(el => el.disabled = false);
+            trueFalseSection.querySelectorAll('input').forEach(el => el.disabled = false);
         } else if (selectedText === 'نص قصير') {
             shortAnswerSection.style.display = 'block';
-            document.querySelectorAll('#short-answer-section input').forEach(el => el.disabled = false);
+            shortAnswerSection.querySelectorAll('input').forEach(el => el.disabled = false);
         }
     }
-    // Run on page load
-    document.addEventListener('DOMContentLoaded', toggleOptions);
+
+    function addOption() {
+        const optionsList = document.getElementById('options-list');
+        const optionIndex = optionsList.children.length;
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'flex items-center gap-2 option-item';
+        optionDiv.innerHTML = `
+            <input type="text" name="options[${optionIndex}][text]" placeholder="خيار ${optionIndex + 1}"
+                class="flex-1 px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all">
+            <label class="flex items-center text-sm">
+                <input type="checkbox" name="options[${optionIndex}][is_correct]" value="1"
+                    class="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                <span class="mr-1">صحيح</span>
+            </label>
+            <button type="button" class="remove-option-btn text-red-600 hover:text-red-700">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12"></path>
+            </svg>
+        </button>
+        `;
+        optionsList.appendChild(optionDiv);
+        optionDiv.querySelector('.remove-option-btn').addEventListener('click', removeOption);
+    }
+
+    function removeOption(e) {
+        const optionItem = e.target.closest('.option-item');
+        if (optionItem.parentElement.children.length > 2) {
+            optionItem.remove();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        toggleOptions();
+        document.getElementById('type_id').addEventListener('change', toggleOptions);
+        document.getElementById('add-option-btn').addEventListener('click', addOption);
+        document.querySelectorAll('.remove-option-btn').forEach(btn => {
+            btn.addEventListener('click', removeOption);
+        });
+    });
 </script>
 @endsection

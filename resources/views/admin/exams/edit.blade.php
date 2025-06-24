@@ -1,216 +1,342 @@
 @extends('layouts.app')
+
 @section('content')
-<div>
-    <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white shadow-xl rounded-2xl p-8 border border-[#3A8BCD]/20">
-            <h2 class="text-3xl font-extrabold text-[#2A5C82] mb-8 text-center"
-                style="font-family: 'Almarai', sans-serif;">
-                {{ isset($exam) ? 'تعديل اختبار' : 'إضافة اختبار جديد' }}
+<div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-12 flex items-center justify-center p-4">
+    <div class="w-full max-w-4xl bg-white rounded-xl shadow-lg p-6 border border-purple-100">
+        <div class="mb-6 text-center">
+            <h2 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                تعديل اختبار
             </h2>
-            <form method="POST"
-                action="{{ isset($exam) ? route('admin.exams.update', $exam) : route('admin.exams.store') }}">
+            <p class="text-gray-500 mt-2">قم بتعديل الحقول التالية حسب الحاجة</p>
+        </div>
+
+        <form action="{{ route('admin.exams.update', $exam) }}" method="POST">
                 @csrf
-                @if(isset($exam)) @method('PUT') @endif
+            @method('PUT')
                 <div class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-sm font-bold text-[#553566] mb-1">العنوان</label>
-                        <input type="text" name="title"
-                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-[#3A8BCD] focus:border-[#3A8BCD]"
-                            value="{{ $exam->title ?? '' }}" required>
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">العنوان</label>
+                        <input type="text" id="title" name="title" value="{{ old('title', $exam->title) }}"
+                            class="w-full px-4 py-2 border rounded-lg @error('title') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                            required>
+                        @error('title')
+                        <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-[#553566] mb-1">الوصف</label>
-                        <textarea name="description"
-                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-[#3A8BCD] focus:border-[#3A8BCD]"
-                            required>{{ $exam->description ?? '' }}</textarea>
+                        <label for="duration" class="block text-sm font-medium text-gray-700 mb-1">المدة (دقائق)</label>
+                        <input type="number" id="duration" name="duration"
+                            value="{{ old('duration', $exam->duration) }}"
+                            class="w-full px-4 py-2 border rounded-lg @error('duration') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                            required>
+                        @error('duration')
+                        <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-1">الوصف</label>
+                        <textarea id="description" name="description"
+                            class="w-full px-4 py-2 border rounded-lg @error('description') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                            rows="3">{{ old('description', $exam->description) }}</textarea>
+                        @error('description')
+                        <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-[#553566] mb-1">المدة (دقيقة)</label>
-                        <input type="number" name="duration"
-                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-[#3A8BCD] focus:border-[#3A8BCD]"
-                            value="{{ $exam->duration ?? '' }}" required>
+                        <label for="start_time" class="block text-sm font-medium text-gray-700 mb-1">وقت البدء</label>
+                        <input type="datetime-local" id="start_time" name="start_time"
+                            value="{{ old('start_time', $exam->start_time->format('Y-m-d\TH:i')) }}"
+                            class="w-full px-4 py-2 border rounded-lg @error('start_time') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                            required>
+                        @error('start_time')
+                        <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-[#553566] mb-1">وقت البدء</label>
-                        <input type="datetime-local" name="start_time"
-                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-[#3A8BCD] focus:border-[#3A8BCD]"
-                            value="{{ isset($exam) ? $exam->start_time->format('Y-m-d\TH:i') : '' }}" required>
+                        <label for="end_time" class="block text-sm font-medium text-gray-700 mb-1">وقت الانتهاء</label>
+                        <input type="datetime-local" id="end_time" name="end_time"
+                            class="w-full px4-4 py-2 border rounded-lg @error('end_time') border-red-500 @else border-gray-300 @endif focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                            value="{{ old('end_time', $exam->end_time->format('Y-m-d\TH:i')) }}" required>
+                        @error('end_time')
+                        <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                        @enderror
                     </div>
-                    <div>
-                        <label class="block text-sm font-bold text-[#553566] mb-1">وقت الانتهاء</label>
-                        <input type="datetime-local" name="end_time"
-                            class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-[#3A8BCD] focus:border-[#3A8BCD]"
-                            value="{{ isset($exam) ? $exam->end_time->format('Y-m-d\TH:i') : '' }}" required>
-                    </div>
-                    <div>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="is_active"
-                                class="rounded border-gray-300 text-purple-600 shadow-sm focus:ring-[#3A8BCD]" {{
-                                isset($exam) && $exam->is_active ? 'checked' : '' }}>
-                            <span class="mr-2 text-[#2A5C82] font-semibold">تفعيل الاختبار</span>
+                    <div class="flex items-center">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" id="is_active" name="is_active" value="1"
+                                class="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500" {{
+                                old('is_active', $exam->is_active) ? 'checked' : '' }}>
+                            <span class="mr-2 text-sm text-gray-700">تفعيل الاختبار؟</span>
                         </label>
+                        @error('is_active')
+                        <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                        @enderror
                     </div>
-                    <div id="questions">
-                        <h3 class="text-lg font-bold text-[#2A5C82] mb-4">الأسئلة</h3>
-                        <div class="flex justify-between items-center mb-4">
-                            <button type="button" id="add-question-btn"
-                                class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition transform hover:scale-105">
-                                + إضافة سؤال
-                            </button>
-                        </div>
-                        <div id="questionsList">
-                            @if(isset($exam) && $exam->questions)
-                            @foreach($exam->questions as $qIndex => $question)
-                            <div class="question-block bg-gray-50 p-4 rounded-lg border mb-4"
-                                data-index="{{ $qIndex }}">
-                                <div class="flex justify-between items-center mb-2">
-                                    <h4 class="font-bold">سؤال {{ $qIndex + 1 }}</h4>
-                                    <button type="button"
-                                        class="remove-question-btn text-red-500 hover:text-red-700 font-bold"
-                                        data-target="{{ $qIndex }}">X</button>
-                                </div>
-                                <div class="space-y-2">
-                                    <input type="text" name="questions[{{ $qIndex }}][question]"
-                                        value="{{ $question->question }}" placeholder="نص السؤال" class="input-style"
-                                        required>
-                                    <select name="questions[{{ $qIndex }}][question_type_id]"
-                                        class="input-style question-type-select" data-index="{{ $qIndex }}">
-                                        <option value="1" @if($question->question_type_id == 1) selected @endif>اختيار
-                                            من متعدد</option>
-                                        <option value="2" @if($question->question_type_id == 2) selected @endif>صح أو
-                                            خطأ</option>
-                                        <option value="3" @if($question->question_type_id == 3) selected @endif>نص قصير
-                                        </option>
-                                    </select>
-                                    <div id="options-for-{{ $qIndex }}" class="options-container space-y-2"
-                                        @if($question->question_type_id != 1) style="display:none" @endif>
-                                        @for($i = 0; $i < 4; $i++) <div class="flex items-center">
-                                            <input type="text" name="questions[{{ $qIndex }}][options][{{ $i }}][text]"
-                                                value="{{ $question->options[$i]->text ?? '' }}"
-                                                placeholder="خيار {{ $i + 1 }}" class="input-style flex-1 mr-2">
+                </div>
+
+                <hr class="my-8 border-t border-gray-200">
+
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3
+                            class="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                            الأسئلة
+                        </h3>
+                        <button type="button" id="add-question-btn"
+                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            إضافة سؤال
+                        </button>
+                    </div>
+                    <div id="questions-container" class="space-y-4">
+                        @if (isset($exam->questions))
+                        @foreach ($exam->questions as $index => $question)
+                        <div id="question-block-{{ $index }}"
+                            class="question-block bg-gray-50 p-4 rounded-lg border border-purple-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="font-bold text-gray-700">سؤال {{ $index + 1 }}</h4>
+                                <button type="button"
+                                    class="remove-question-btn text-red-600 hover:text-red-700 font-bold"
+                                    data-target="question-block-{{ $index }}">X</button>
+                            </div>
+                            <div class="space-y-2">
+                                <input type="text" name="questions[${index}][text]" placeholder="نص السؤال"
+                                    class="w-full px-4 py-2 border rounded-lg @error('questions.$index.text') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                                    value="{{ old('questions.$index.text', $question->question) }}" required>
+                                @error("questions.$index.text")
+                                <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                                @enderror
+                                <select name="questions[${index}][type_id]"
+                                    class="w-full px-4 py-2 border rounded-lg @error('questions.$index.type_id') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all question-type-select"
+                                    data-index="${index}">
+                                    <option value="">اختر نوع السؤال</option>
+                                    @foreach ($types as $type)
+                                    <option value="{{ $type->id }}" {{ old('questions.$index.type_id', $question->
+                                        question_type_id) == $type->id ? 'selected' : '' }}>
+                                        {{ $type->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                                @error("questions.$index.type_id")
+                                <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                                @enderror
+                                <div id="options-for-${index}" class="options-container space-y-2"
+                                    style="display: {{ $question->question_type_id == 1 ? 'block' : 'none' }}">
+                                    <div class="options-list">
+                                        @foreach ($question->options ?? [] as $optionIndex => $option)
+                                        <div class="flex items-center gap-2 option-item">
+                                            <input type="text" name="questions[${index}][options][${optionIndex}][text]"
+                                                placeholder="خيار ${optionIndex + 1}"
+                                                class="flex-1 px-4 py-2 border rounded-lg @error('questions.$index.options.$optionIndex.text') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                                                value="{{ old('questions.$index.options.$optionIndex.text', $option->text) }}">
+                                            @error("questions.$index.options.$optionIndex.text")
+                                            <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                                            @enderror
                                             <input type="hidden"
-                                                name="questions[{{ $qIndex }}][options][{{ $i }}][is_correct]"
+                                                name="questions[${index}][options][${optionIndex}][is_correct]"
                                                 value="0">
                                             <input type="checkbox"
-                                                name="questions[{{ $qIndex }}][options][{{ $i }}][is_correct]" value="1"
-                                                class="ml-1 w-4 h-4" @if(isset($question->options[$i]) &&
-                                            $question->options[$i]->is_correct) checked @endif>
-                                            <label class="text-sm">صحيح</label>
+                                                name="questions[${index}][options][${optionIndex}][is_correct]"
+                                                value="1"
+                                                class="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500 @error('questions.$index.options.$optionIndex.is_correct') border-red-500 @enderror"
+                                                {{ old('questions.$index.options.$optionIndex.is_correct',
+                                                $option->is_correct) ? 'checked' : '' }}>
+                                            <label class="text-sm text-gray-700">صحيح</label>
+                                            <button type="button"
+                                                class="remove-option-btn text-red-600 hover:text-red-700 ml-2">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                            </button>
+                                            @error("questions.$index.options.$optionIndex.is_correct")
+                                            <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        @endforeach
                                     </div>
-                                    @endfor
+                                    <button type="button"
+                                        class="add-option-btn text-purple-600 hover:text-purple-700 text-sm font-medium mt-2 flex items-center gap-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                        إضافة خيار جديد
+                                    </button>
                                 </div>
-                                <input type="text" name="questions[{{ $qIndex }}][correct_answer]"
-                                    value="{{ $question->correct_answer }}" placeholder="الإجابة الصحيحة"
-                                    class="input-style" required>
-                                <input type="number" name="questions[{{ $qIndex }}][points]"
-                                    value="{{ $question->points ?? '' }}" placeholder="الدرجة" class="input-style"
-                                    required>
-                                <input type="hidden" name="questions[{{ $qIndex }}][id]" value="{{ $question->id }}">
+                                <input type="hidden" name="questions[${index}][id]" value="{{ $question->id }}">
                             </div>
                         </div>
                         @endforeach
                         @endif
                     </div>
                 </div>
-                <div class="mt-8 flex justify-center">
+
+                <div class="pt-6 flex justify-end gap-3">
+                    <a href="{{ route('admin.exams.index') }}"
+                        class="px-6 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-all">
+                        إلغاء
+                    </a>
                     <button type="submit"
-                        class="bg-gradient-to-l from-[#3A8BCD] to-[#553566] text-white px-10 py-3 rounded-full text-lg font-bold shadow-lg hover:opacity-90 transition">
-                        حفظ
-                    </button>
+                        class="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                        حفظ التعديلات
+                        </button>
+                    </div>
                 </div>
-        </div>
-        </form>
+            </form>
     </div>
 </div>
-</div>
-
-<style>
-    .input-style {
-        width: 100%;
-        border-radius: 0.5rem;
-        border: 1px solid #d1d5db;
-        padding: 0.5rem 1rem;
-    }
-</style>
 
 <script>
     (function() {
-    const addQuestionBtn = document.getElementById('add-question-btn');
-    const questionsList = document.getElementById('questionsList');
-    let questionIndex = {{ isset($exam) ? $exam->questions->count() : 0 }};
+        const addQuestionBtn = document.getElementById('add-question-btn');
+        const questionsContainer = document.getElementById('questions-container');
+        if (!addQuestionBtn || !questionsContainer) return;
 
-    function createQuestionElement(idx = null) {
-        if(idx === null) idx = questionIndex;
-        const questionId = `question-block-${idx}`;
-        let optionsHtml = '';
-        for (let i = 0; i < 4; i++) {
-            optionsHtml += `
-                <div class="flex items-center">
-                    <input type="text" name="questions[${idx}][options][${i}][text]" placeholder="خيار ${i + 1}" class="input-style flex-1 mr-2">
-                    <input type="hidden" name="questions[${idx}][options][${i}][is_correct]" value="0">
-                    <input type="checkbox" name="questions[${idx}][options][${i}][is_correct]" value="1" class="ml-1 w-4 h-4">
-                    <label class="text-sm">صحيح</label>
+        const typesData = @json($types->map(fn($type) => ['id' => $type->id, 'name' => $type->name]));
+        let questionIndex = {{ count($exam->questions ?? []) }};
+
+        function createQuestionElement() {
+            const questionId = `question-block-${questionIndex}`;
+            const questionDiv = document.createElement('div');
+            questionDiv.id = questionId;
+            questionDiv.className = 'question-block bg-gray-50 p-4 rounded-lg border border-purple-100';
+            questionDiv.innerHTML = `
+                <div class="flex justify-between items-center mb-2">
+                    <h4 class="font-bold text-gray-700">سؤال ${questionIndex + 1}</h4>
+                    <button type="button" class="remove-question-btn text-red-600 hover:text-red-700 font-bold" data-target="${questionId}">X</button>
+                </div>
+                <div class="space-y-2">
+                    <input type="text" name="questions[${questionIndex}][text]" placeholder="نص السؤال"
+                        class="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all" required>
+                    <select name="questions[${questionIndex}][type_id]"
+                        class="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all question-type-select"
+                        data-index="${questionIndex}">
+                        <option value="">اختر نوع السؤال</option>
+                        ${typesData.map(item => `<option value="${item.id}" ${item.name === 'اختيار من متعدد' ? 'selected' : ''}>${item.name}</option>`).join('')}
+                    </select>
+                    <div id="options-for-${questionIndex}" class="options-container space-y-2" style="display: block;">
+                        <div class="options-list">
+                            ${Array.from({length: 2}, (_, i) => `
+                                <div class="flex items-center gap-2 option-item">
+                                    <input type="text" name="questions[${questionIndex}][options][${i}][text]" placeholder="خيار ${i+1}"
+                                        class="flex-1 px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all">
+                                    <input type="hidden" name="questions[${questionIndex}][options][${i}][is_correct]" value="0">
+                                    <input type="checkbox" name="questions[${questionIndex}][options][${i}][is_correct]" value="1"
+                                        class="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                                    <label class="text-sm text-gray-700">صحيح</label>
+                                    <button type="button" class="remove-option-btn text-red-600 hover:text-red-700 ml-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button type="button" class="add-option-btn text-blue-600 hover:text-blue-700 text-sm font-medium mt-2 flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            إضافة خيار جديدًا
+                        </button>
+                    </div>
                 </div>
             `;
+            questionsContainer.appendChild(questionDiv);
+
+            // Add event listeners
+            const newSelect = questionDiv.querySelector('.question-type-select');
+            newSelect.addEventListener('change', handleTypeChange);
+            handleTypeChange({ target: newSelect });
+
+            // Add option event listeners
+            questionDiv.querySelector('add-option-btn').addEventListener('click', () => addOption(questionIndex));
+            questionDiv.querySelectorAll('.remove-option-btn').forEach(btn => {
+                btn.addEventListener('click', removeOption);
+            });
+
+            questionIndex++;
         }
-        const questionDiv = document.createElement('div');
-        questionDiv.className = 'question-block bg-gray-50 p-4 rounded-lg border mb-4';
-        questionDiv.setAttribute('data-index', idx);
-        questionDiv.innerHTML = `
-            <div class="flex justify-between items-center mb-2">
-                <h4 class="font-bold">سؤال ${idx + 1}</h4>
-                <button type="button" class="remove-question-btn text-red-500 hover:text-red-700 font-bold" data-target="${idx}">X</button>
-            </div>
-            <div class="space-y-2">
-                <input type="text" name="questions[${idx}][question]" placeholder="نص السؤال" class="input-style" required>
-                <select name="questions[${idx}][question_type_id]" class="input-style question-type-select" data-index="${idx}">
-                    <option value="1">اختيار من متعدد</option>
-                    <option value="2">صح أو خطأ</option>
-                    <option value="3">نص قصير</option>
-                </select>
-                <div id="options-for-${idx}" class="options-container space-y-2" style="display:none;">
-                    ${optionsHtml}
-                </div>
-                <input type="text" name="questions[${idx}][correct_answer]" placeholder="الإجابة الصحيحة" class="input-style" required>
-                <input type="number" name="questions[${idx}][points]" placeholder="الدرجة" class="input-style" required>
-            </div>
-        `;
-        questionsList.appendChild(questionDiv);
 
-        // ربط الحدث لتغيير نوع السؤال
-        const select = questionDiv.querySelector('.question-type-select');
-        select.addEventListener('change', handleTypeChange);
-        handleTypeChange({ target: select });
-
-        questionIndex++;
-    }
-
-    function handleTypeChange(event) {
-        const selectElement = event.target;
-        const qIndex = selectElement.dataset.index;
-        const optionsDiv = document.getElementById(`options-for-${qIndex}`);
-        if (selectElement.value == "1") {
-            optionsDiv.style.display = 'block';
-        } else {
-            optionsDiv.style.display = 'none';
+        function addOption(questionIdx) {
+            const optionsList = document.querySelector(`#options-for-${questionIdx} .options-list`);
+            const optionIndex = optionsList.children.length;
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'flex items-center gap-2 option-item';
+            optionDiv.innerHTML = `
+                <input type="text" name="questions[${questionIdx}][options][${optionIndex}][text]" placeholder="خيار ${optionIndex + 1}"
+                    class="flex-1 px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all">
+                <input type="hidden" name="questions[${questionIdx}][options][${optionIndex}][is_correct]" value="0">
+                <input type="checkbox" name="questions[${questionIdx}][options][${optionIndex}][is_correct]" value="1"
+                    class="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                <label class="text-sm text-gray-700">صحيح</label>
+                <button type="button" class="remove-option-btn text-red-600 hover:text-red-700 ml-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            `;
+            optionsList.appendChild(optionDiv);
+            optionDiv.querySelector('.remove-option-btn').addEventListener('click', removeOption);
         }
-    }
 
-    addQuestionBtn.addEventListener('click', function() {
-        createQuestionElement();
-    });
-
-    questionsList.addEventListener('click', function (e) {
-        if (e.target && e.target.classList.contains('remove-question-btn')) {
-            const block = e.target.closest('.question-block');
-            if (block) block.remove();
+        function removeOption(e) {
+            const optionItem = e.target.closest('.option-item');
+            if (optionItem.parentElement.children.length > 1) {
+                optionItem.remove();
+            }
         }
-    });
 
-    // ربط الأحداث للأسئلة الموجودة مسبقاً
-    document.querySelectorAll('.question-type-select').forEach(function(select) {
-        select.addEventListener('change', handleTypeChange);
-    });
-})();
+        function handleTypeChange(event) {
+            const select = event.target;
+            const index = select.dataset.index;
+            const optionsDiv = document.getElementById(`options-for-${index}`);
+            const selectedType = typesData.find(t => t.id == select.value)?.data;
+
+            if (selectedType === 'اختيار من متعدد') {
+                optionsDiv.style.display = 'block';
+            } else {
+                optionsDiv.style.display = 'none';
+            }
+        }
+
+        // Event Listeners
+        addQuestionBtn.addEventListener('click', createQuestionElement);
+        questionsContainer.addEventListener('click', e => {
+            if (e.target.classList.contains('remove-question-btn')) {
+                document.getElementById(e.target.dataset.target)?.remove();
+            } else if (e.target.closest('add-option-btn')) {
+                const questionIdx = e.target.closest('.question-block').querySelector('.question-type-select').dataset.index;
+                addOption(questionIdx);
+            }
+        });
+
+        // Initialize existing selects
+        document.querySelectorAll('.question-type-select').forEach(select => {
+            select.addEventListener('change', handleTypeChange);
+            handleTypeChange({ target: select });
+        });
+
+        // Initialize add option buttons
+        document.querySelectorAll('.add-option-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const questionIdx = btn.closest('.question-block').querySelector('.question-type-select').dataset.index;
+                addOption(questionIdx);
+            });
+        });
+
+        document.querySelectorAll('.remove-option-btn').forEach(btn => {
+            btn.addEventListener('click', removeOption);
+        });
+    })();
 </script>
 @endsection

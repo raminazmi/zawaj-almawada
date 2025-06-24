@@ -128,7 +128,6 @@
         </div>
         <div class="certificate-footer">
             شهادة معتمدة من منصة زواج المودة<br>
-            تم إصدارها بتاريخ {{ now()->format('Y-m-d H:i') }}
         </div>
     </div>
 </body>
