@@ -2,21 +2,22 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class AlterUsersTableMakePhoneRequired extends Migration
 {
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('phone')->nullable(false)->change();
-        });
+        // تحديث القيم NULL إلى قيمة افتراضية
+        DB::table('users')->whereNull('phone')->update(['phone' => 'غير محدد']);
+
+        // تعديل العمود ليصبح NOT NULL
+        DB::statement('ALTER TABLE users MODIFY phone VARCHAR(255) NOT NULL');
     }
 
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('phone')->nullable()->change();
-        });
+        DB::statement('ALTER TABLE users MODIFY phone VARCHAR(255) NULL');
+        DB::table('users')->where('phone', 'غير محدد')->update(['phone' => null]);
     }
 }
