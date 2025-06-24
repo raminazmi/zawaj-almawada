@@ -5,7 +5,7 @@
 
 </section>
 <section class="relative">
-  <div class="bg-cover bg-center bg-white py-2 lg:-mt-[109px] flex items-center justify-center min-h-screen"
+  <div class="bg-cover bg-center bg-white py-10 lg:-mt-[109px] flex items-center justify-center min-h-screen"
     style="background-image: url('/assets/images/frame.png');">
     <form id="contact-form" action="{{ route('business-activities.store') }}" method="POST"
       class="w-full max-w-md p-6 rounded-lg shadow-md mx-4">

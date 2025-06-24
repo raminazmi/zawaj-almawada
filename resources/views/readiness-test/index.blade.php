@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+<div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-12">
+    <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white rounded-3xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
             <div class="md:flex">
                 <div

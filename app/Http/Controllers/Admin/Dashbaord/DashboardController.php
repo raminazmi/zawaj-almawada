@@ -29,7 +29,7 @@ class DashboardController extends Controller
             'examResultCount' => CourseExamResult::count(),
             'latestUsers' => User::latest()->take(5)->get(),
             'latestCourses' => Course::latest()->take(5)->get(),
-            'latestMarriageRequests' => MarriageRequest::with('user.profile')->latest()->take(5)->get(),
+            'latestMarriageRequests' => MarriageRequest::with('user')->latest()->take(5)->get(), // إزالة .profile
             'genderDistribution' => User::select('gender', DB::raw('count(*) as total'))
                 ->groupBy('gender')
                 ->pluck('total', 'gender'),

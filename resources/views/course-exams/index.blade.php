@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-12">
-    <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white shadow-xl rounded-2xl p-8 border border-[#3A8BCD]/20">
             <h2 class="text-3xl font-extrabold text-[#2A5C82] mb-8 text-center"
                 style="font-family: 'Almarai', sans-serif;">
