@@ -51,8 +51,21 @@ class AdminCourseExamController extends Controller
                 'questions.*.text' => 'required|string',
                 'questions.*.type_id' => 'required|exists:question_types,id',
                 'questions.*.options' => 'nullable|array',
-                'questions.*.options.*.text' => 'nullable|string',
+                'questions.*.options.*.text' => 'required_if:questions.*.type_id,1|string|nullable',
                 'questions.*.options.*.is_correct' => 'nullable|boolean',
+                'questions.*.correct_answer' => [
+                    'nullable',
+                    function ($attribute, $value, $fail) use ($request) {
+                        $index = explode('.', $attribute)[1];
+                        $type_id = $request->input("questions.$index.type_id");
+                        if ($type_id == 2 && !in_array($value, ['true', 'false'])) {
+                            $fail('الإجابة الصحيحة يجب أن تكون "صح" أو "خطأ" لأسئلة صح أو خطأ.');
+                        }
+                        if ($type_id == 3 && empty($value)) {
+                            $fail('الإجابة الصحيحة مطلوبة لأسئلة النص القصير.');
+                        }
+                    },
+                ],
             ], [
                 'title.required' => 'حقل العنوان مطلوب',
                 'title.string' => 'يجب أن يكون العنوان نصًا',
@@ -75,6 +88,7 @@ class AdminCourseExamController extends Controller
                 'questions.*.type_id.required' => 'نوع السؤال مطلوب',
                 'questions.*.type_id.exists' => 'نوع السؤال المحدد غير موجود',
                 'questions.*.options.array' => 'الخيارات يجب أن تكون في صيغة صحيحة',
+                'questions.*.options.*.text.required_if' => 'نص الخيار مطلوب لأسئلة الاختيار من متعدد',
                 'questions.*.options.*.text.string' => 'يجب أن يكون نص الخيار نصًا',
                 'questions.*.options.*.is_correct.boolean' => 'القيمة المحددة لصحة الخيار غير صحيحة',
             ]);
@@ -89,12 +103,22 @@ class AdminCourseExamController extends Controller
             ]);
 
             foreach ($validated['questions'] as $questionData) {
+                $questionType = QuestionType::find($questionData['type_id']);
+                $correctAnswer = null;
+
+                if ($questionType->name === 'صح أو خطأ') {
+                    $correctAnswer = $questionData['correct_answer'] === 'true' ? 'true' : 'false';
+                } elseif ($questionType->name === 'نص قصير') {
+                    $correctAnswer = $questionData['correct_answer'];
+                }
+
                 $question = $exam->questions()->create([
                     'question' => $questionData['text'],
                     'question_type_id' => $questionData['type_id'],
+                    'correct_answer' => $correctAnswer,
                 ]);
 
-                if ($question->type->name === 'اختيار من متعدد' && isset($questionData['options'])) {
+                if ($questionType->name === 'اختيار من متعدد' && isset($questionData['options'])) {
                     foreach ($questionData['options'] as $optionData) {
                         if (!empty($optionData['text'])) {
                             $question->options()->create([
@@ -147,32 +171,27 @@ class AdminCourseExamController extends Controller
                 'questions' => 'nullable|array',
                 'questions.*.text' => 'required_with:questions|string',
                 'questions.*.type_id' => 'required_with:questions|exists:question_types,id',
+                'questions.*.id' => 'nullable|exists:course_exam_questions,id',
                 'questions.*.options' => 'nullable|array',
-                'questions.*.options.*.text' => 'required_with:questions.*.options|string',
+                'questions.*.options.*.text' => 'required_if:questions.*.type_id,1|string|nullable',
                 'questions.*.options.*.is_correct' => 'nullable|boolean',
-            ], [
-                'title.required' => 'حقل العنوان مطلوب',
-                'title.string' => 'يجب أن يكون العنوان نصًا',
-                'title.max' => 'العنوان لا يمكن أن يتجاوز 255 حرفًا',
-                'description.string' => 'يجب أن يكون الوصف نصًا',
-                'duration.required' => 'حقل المدة مطلوب',
-                'duration.integer' => 'يجب أن تكون المدة عددًا صحيحًا',
-                'duration.min' => 'يجب أن تكون المدة دقيقة واحدة على الأقل',
-                'start_time.required' => 'حقل وقت البدء مطلوب',
-                'start_time.date' => 'وقت البدء غير صالح',
-                'end_time.required' => 'حقل وقت الانتهاء مطلوب',
-                'end_time.date' => 'وقت الانتهاء غير صالح',
-                'end_time.after' => 'يجب أن يكون وقت الانتهاء بعد وقت البدء',
-                'is_active.boolean' => 'القيمة المحددة لحقل التفعيل غير صحيحة',
-                'questions.array' => 'الأسئلة يجب أن تكون في صيغة صحيحة',
-                'questions.*.text.required_with' => 'نص السؤال مطلوب عند إضافة أسئلة',
-                'questions.*.text.string' => 'يجب أن يكون نص السؤال نصًا',
-                'questions.*.type_id.required_with' => 'نوع السؤال مطلوب عند إضافة أسئلة',
-                'questions.*.type_id.exists' => 'نوع السؤال المحدد غير موجود',
-                'questions.*.options.array' => 'الخيارات يجب أن تكون في صيغة صحيحة',
-                'questions.*.options.*.text.required_with' => 'نص الخيار مطلوب عند إضافة خيارات',
-                'questions.*.options.*.text.string' => 'يجب أن يكون نص الخيار نصًا',
-                'questions.*.options.*.is_correct.boolean' => 'القيمة المحددة لصحة الخيار غير صحيحة',
+                'questions.*.correct_answer' => [
+                    'nullable',
+                    'string',
+                    function ($attribute, $value, $fail) use ($request) {
+                        $index = explode('.', $attribute)[1];
+                        $type_id = $request->input("questions.$index.type_id");
+                        $questionType = QuestionType::find($type_id);
+                        if ($questionType && $questionType->name !== 'اختيار من متعدد' && $value !== null) {
+                            if ($questionType->name === 'صح أو خطأ' && !in_array(strtolower($value), ['true', 'false'])) {
+                                $fail('الإجابة الصحيحة يجب أن تكون "true" أو "false" لأسئلة صح أو خطأ.');
+                            }
+                            if ($questionType->name === 'نص قصير' && empty($value)) {
+                                $fail('الإجابة الصحيحة مطلوبة لأسئلة النص القصير.');
+                            }
+                        }
+                    },
+                ],
             ]);
 
             $exam->update([
@@ -184,19 +203,43 @@ class AdminCourseExamController extends Controller
                 'is_active' => $request->boolean('is_active', false),
             ]);
 
-            $exam->questions()->each(function ($question) {
-                $question->options()->delete();
-                $question->delete();
-            });
+            $existingQuestionIds = collect($validated['questions'] ?? [])->pluck('id')->filter()->all();
+            $exam->questions()->whereNotIn('id', $existingQuestionIds)->delete();
 
             if (isset($validated['questions'])) {
                 foreach ($validated['questions'] as $questionData) {
-                    $question = $exam->questions()->create([
-                        'question' => $questionData['text'],
-                        'question_type_id' => $questionData['type_id'],
-                    ]);
+                    $questionType = QuestionType::find($questionData['type_id']);
+                    $correctAnswer = null;
 
-                    if ($question->type->name === 'اختيار من متعدد' && isset($questionData['options'])) {
+                    // تعيين correct_answer فقط إذا كان النوع يتطلب ذلك
+                    if ($questionType && $questionType->name === 'صح أو خطأ') {
+                        $correctAnswer = strtolower($questionData['correct_answer']) === 'true' ? 'true' : 'false';
+                    } elseif ($questionType && $questionType->name === 'نص قصير') {
+                        $correctAnswer = $questionData['correct_answer'] ?? null;
+                    }
+
+                    Log::info("Processing question data: ", $questionData);
+
+                    if (isset($questionData['id'])) {
+                        $question = CourseExamQuestion::find($questionData['id']);
+                        if ($question) {
+                            Log::info("Updating question ID: {$questionData['id']} with correct_answer: " . ($correctAnswer ?? 'null'));
+                            $question->update([
+                                'question' => $questionData['text'],
+                                'question_type_id' => $questionData['type_id'],
+                                'correct_answer' => $correctAnswer, // سيتم تعيين null لـ "اختيار من متعدد"
+                            ]);
+                            $question->options()->delete();
+                        }
+                    } else {
+                        $question = $exam->questions()->create([
+                            'question' => $questionData['text'],
+                            'question_type_id' => $questionData['type_id'],
+                            'correct_answer' => $correctAnswer,
+                        ]);
+                    }
+
+                    if ($questionType && $questionType->name === 'اختيار من متعدد' && isset($questionData['options'])) {
                         foreach ($questionData['options'] as $optionData) {
                             if (!empty($optionData['text'])) {
                                 $question->options()->create([
@@ -270,8 +313,18 @@ class AdminCourseExamController extends Controller
                 'options' => 'nullable|array',
                 'options.*.text' => 'required_if:type_id,1|string|nullable',
                 'options.*.is_correct' => 'nullable|boolean',
-                'correct_answer' => 'required_if:type_id,2|in:true,false|nullable',
-                'correct_answer_sa' => 'required_if:type_id,3|string|nullable',
+                'correct_answer' => [
+                    'nullable',
+                    function ($attribute, $value, $fail) use ($request) {
+                        $type_id = $request->input('type_id');
+                        if ($type_id == 2 && !in_array($value, ['true', 'false'])) {
+                            $fail('الإجابة الصحيحة يجب أن تكون "صح" أو "خطأ" لأسئلة صح أو خطأ.');
+                        }
+                        if ($type_id == 3 && empty($value)) {
+                            $fail('الإجابة الصحيحة مطلوبة لأسئلة النص القصير.');
+                        }
+                    },
+                ],
             ], [
                 'text.required' => 'نص السؤال مطلوب',
                 'text.string' => 'يجب أن يكون نص السؤال نصًا',
@@ -281,13 +334,8 @@ class AdminCourseExamController extends Controller
                 'options.*.text.required_if' => 'نص الخيار مطلوب لأسئلة الاختيار من متعدد',
                 'options.*.text.string' => 'يجب أن يكون نص الخيار نصًا',
                 'options.*.is_correct.boolean' => 'القيمة المحددة لصحة الخيار غير صحيحة',
-                'correct_answer.required_if' => 'الإجابة الصحيحة مطلوبة لأسئلة صح أو خطأ',
-                'correct_answer.in' => 'الإجابة الصحيحة يجب أن تكون "صح" أو "خطأ"',
-                'correct_answer_sa.required_if' => 'الإجابة الصحيحة مطلوبة لأسئلة النص القصير',
-                'correct_answer_sa.string' => 'يجب أن تكون الإجابة الصحيحة نصًا',
             ]);
 
-            // التحقق من وجود خيار صحيح واحد على الأقل لأسئلة الاختيار من متعدد
             if ($validated['type_id'] == 1 && isset($validated['options'])) {
                 $hasCorrectOption = collect($validated['options'])->contains('is_correct', true);
                 if (!$hasCorrectOption) {
@@ -298,18 +346,19 @@ class AdminCourseExamController extends Controller
             }
 
             $questionType = QuestionType::find($validated['type_id']);
-            $questionData = [
-                'question' => $validated['text'],
-                'question_type_id' => $validated['type_id'],
-            ];
+            $correctAnswer = null;
 
             if ($questionType->name === 'صح أو خطأ') {
-                $questionData['correct_answer'] = $validated['correct_answer'];
+                $correctAnswer = $validated['correct_answer'] === 'true' ? 'true' : 'false';
             } elseif ($questionType->name === 'نص قصير') {
-                $questionData['correct_answer'] = $validated['correct_answer_sa'];
+                $correctAnswer = $validated['correct_answer'];
             }
 
-            $question = $exam->questions()->create($questionData);
+            $question = $exam->questions()->create([
+                'question' => $validated['text'],
+                'question_type_id' => $validated['type_id'],
+                'correct_answer' => $correctAnswer,
+            ]);
 
             if ($questionType->name === 'اختيار من متعدد' && isset($validated['options'])) {
                 foreach ($validated['options'] as $optionData) {
@@ -359,8 +408,18 @@ class AdminCourseExamController extends Controller
                 'options' => 'nullable|array',
                 'options.*.text' => 'required_if:type_id,1|string|nullable',
                 'options.*.is_correct' => 'nullable|boolean',
-                'correct_answer' => 'required_if:type_id,2|in:true,false|nullable',
-                'correct_answer_sa' => 'required_if:type_id,3|string|nullable',
+                'correct_answer' => [
+                    'nullable',
+                    function ($attribute, $value, $fail) use ($request) {
+                        $type_id = $request->input('type_id');
+                        if ($type_id == 2 && !in_array(strtolower($value), ['true', 'false'])) {
+                            $fail('الإجابة الصحيحة يجب أن تكون "صح" أو "خطأ" لأسئلة صح أو خطأ.');
+                        }
+                        if ($type_id == 3 && empty($value)) {
+                            $fail('الإجابة الصحيحة مطلوبة لأسئلة النص القصير.');
+                        }
+                    },
+                ],
             ], [
                 'text.required' => 'نص السؤال مطلوب',
                 'text.string' => 'يجب أن يكون نص السؤال نصًا',
@@ -370,13 +429,8 @@ class AdminCourseExamController extends Controller
                 'options.*.text.required_if' => 'نص الخيار مطلوب لأسئلة الاختيار من متعدد',
                 'options.*.text.string' => 'يجب أن يكون نص الخيار نصًا',
                 'options.*.is_correct.boolean' => 'القيمة المحددة لصحة الخيار غير صحيحة',
-                'correct_answer.required_if' => 'الإجابة الصحيحة مطلوبة لأسئلة صح أو خطأ',
-                'correct_answer.in' => 'الإجابة الصحيحة يجب أن تكون "صح" أو "خطأ"',
-                'correct_answer_sa.required_if' => 'الإجابة الصحيحة مطلوبة لأسئلة النص القصير',
-                'correct_answer_sa.string' => 'يجب أن تكون الإجابة الصحيحة نصًا',
             ]);
 
-            // التحقق من وجود خيار صحيح واحد على الأقل لأسئلة الاختيار من متعدد
             if ($validated['type_id'] == 1 && isset($validated['options'])) {
                 $hasCorrectOption = collect($validated['options'])->contains('is_correct', true);
                 if (!$hasCorrectOption) {
@@ -387,19 +441,20 @@ class AdminCourseExamController extends Controller
             }
 
             $questionType = QuestionType::find($validated['type_id']);
-            $updateData = [
-                'question' => $validated['text'],
-                'question_type_id' => $validated['type_id'],
-                'correct_answer' => null,
-            ];
+            $correctAnswer = null;
 
             if ($questionType->name === 'صح أو خطأ') {
-                $updateData['correct_answer'] = $validated['correct_answer'];
+                $correctAnswer = strtolower($validated['correct_answer']) === 'true' ? 'true' : 'false';
             } elseif ($questionType->name === 'نص قصير') {
-                $updateData['correct_answer'] = $validated['correct_answer_sa'];
+                $correctAnswer = $validated['correct_answer'];
             }
 
-            $question->update($updateData);
+            $question->update([
+                'question' => $validated['text'],
+                'question_type_id' => $validated['type_id'],
+                'correct_answer' => $correctAnswer, // تأكد من التحديث دائمًا
+            ]);
+
             $question->options()->delete();
 
             if ($questionType->name === 'اختيار من متعدد' && isset($validated['options'])) {

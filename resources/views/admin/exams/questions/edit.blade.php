@@ -4,12 +4,12 @@
 <div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-12 flex items-center justify-center p-4">
     <div class="w-full max-w-2xl bg-white rounded-xl shadow-lg p-8 border border-purple-100">
         <h2 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-8 text-center"
-                style="font-family: 'Almarai', sans-serif;">
-                تعديل السؤال للاختبار: {{ $exam->title }}
-            </h2>
-            <form action="{{ route('admin.exams.questions.update', [$exam, $question]) }}" method="POST">
-                @csrf
-                @method('PUT')
+            style="font-family: 'Almarai', sans-serif;">
+            تعديل السؤال للاختبار: {{ $exam->title }}
+        </h2>
+        <form action="{{ route('admin.exams.questions.update', [$exam, $question]) }}" method="POST">
+            @csrf
+            @method('PUT')
             <div class="space-y-6">
                 <div>
                     <label class="block mb-2 font-bold text-gray-700">نص السؤال</label>
@@ -88,7 +88,7 @@
                                 class="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500" {{
                                 old('correct_answer', $question->correct_answer) == 'false' ? 'checked' : '' }}>
                             <span>خطأ</span>
-                            </label>
+                        </label>
                     </div>
                     @error('correct_answer')
                     <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
@@ -102,22 +102,22 @@
                     @error('correct_answer')
                     <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
                     @enderror
-        </div>
-        <div class="flex justify-center gap-4">
-            <button type="submit"
+                </div>
+                <div class="flex justify-center gap-4">
+                    <button type="submit"
                         class="px-8 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-lg shadow hover:from-purple-700 hover:to-pink-700 transition-all flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
                             </path>
                         </svg>
-                حفظ التعديلات
-            </button>
-            <a href="{{ route('admin.exams.questions', $exam) }}"
+                        حفظ التعديلات
+                    </button>
+                    <a href="{{ route('admin.exams.questions', $exam) }}"
                         class="px-8 py-2 bg-gray-100 text-gray-600 font-bold rounded-lg shadow hover:bg-gray-200 transition-all">
-                إلغاء
-            </a>
+                        إلغاء
+                    </a>
                 </div>
-        </div>
+            </div>
         </form>
     </div>
 </div>

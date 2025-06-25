@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-12 flex items-center justify-center p-4">
-    <div class="w-full max-w-4xl bg-white rounded-xl shadow-lg p-8 border border-purple-100">
+    <div class="w-full max-w-4xl bg-white rounded-xl shadow-lg p-6 border border-purple-100">
         <div class="mb-6 text-center">
             <h2 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 إنشاء اختبار جديد
@@ -13,7 +13,6 @@
         <form action="{{ route('admin.exams.store') }}" method="POST">
             @csrf
             <div class="space-y-6">
-                {{-- Exam Details --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="title" class="block text-sm font-medium text-gray-700 mb-1">العنوان</label>
@@ -75,7 +74,6 @@
 
                 <hr class="my-8 border-t border-gray-200">
 
-                {{-- Questions Section --}}
                 <div>
                     <div class="flex justify-between items-center mb-4">
                         <h3
@@ -123,7 +121,6 @@
                                 @error('questions.' . $index . '.type_id')
                                 <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
                                 @enderror
-
                                 <!-- خيارات الاختيار من متعدد -->
                                 <div id="options-for-{{ $index }}" class="options-container space-y-2"
                                     style="display: {{ old('questions.' . $index . '.type_id') && $types->firstWhere('id', old('questions.' . $index . '.type_id'))?->name === 'اختيار من متعدد' ? 'block' : 'none' }}">
@@ -172,7 +169,6 @@
                                         إضافة خيار جديد
                                     </button>
                                 </div>
-
                                 <!-- خيارات صح أو خطأ -->
                                 <div id="true-false-for-{{ $index }}" class="true-false-container space-y-2"
                                     style="display: {{ old('questions.' . $index . '.type_id') && $types->firstWhere('id', old('questions.' . $index . '.type_id'))?->name === 'صح أو خطأ' ? 'block' : 'none' }}">
@@ -182,29 +178,34 @@
                                             <input type="radio" name="questions[{{ $index }}][correct_answer]"
                                                 value="true"
                                                 class="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500" {{
-                                                old('questions.' . $index . '.correct_answer' )=='true' ? 'checked' : ''
-                                                }}>
+                                                old('questions.' . $index . '.correct_answer' )==='true' ? 'checked'
+                                                : '' }}>
                                             <span class="mr-2 text-sm">صح</span>
                                         </label>
                                         <label class="flex items-center">
                                             <input type="radio" name="questions[{{ $index }}][correct_answer]"
                                                 value="false"
                                                 class="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500" {{
-                                                old('questions.' . $index . '.correct_answer' )=='false' ? 'checked'
+                                                old('questions.' . $index . '.correct_answer' )==='false' ? 'checked'
                                                 : '' }}>
                                             <span class="mr-2 text-sm">خطأ</span>
                                         </label>
                                     </div>
+                                    @error('questions.' . $index . '.correct_answer')
+                                    <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                                    @enderror
                                 </div>
-
                                 <!-- خيارات النص القصير -->
                                 <div id="short-answer-for-{{ $index }}" class="short-answer-container space-y-2"
                                     style="display: {{ old('questions.' . $index . '.type_id') && $types->firstWhere('id', old('questions.' . $index . '.type_id'))?->name === 'نص قصير' ? 'block' : 'none' }}">
                                     <label class="block text-sm font-medium text-gray-700">الإجابة الصحيحة:</label>
-                                    <input type="text" name="questions[{{ $index }}][correct_answer_sa]"
+                                    <input type="text" name="questions[{{ $index }}][correct_answer]"
                                         placeholder="اكتب الإجابة الصحيحة"
-                                        class="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
-                                        value="{{ old('questions.' . $index . '.correct_answer_sa') }}">
+                                        class="w-full px-4 py-2 border rounded-lg @error('questions.' . $index . '.correct_answer') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                                        value="{{ old('questions.' . $index . '.correct_answer') }}">
+                                    @error('questions.' . $index . '.correct_answer')
+                                    <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -215,7 +216,7 @@
 
                 <div class="pt-6 flex justify-end gap-3">
                     <a href="{{ route('admin.exams.index') }}"
-                        class="px-6 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-all">
+                        class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all">
                         إلغاء
                     </a>
                     <button type="submit"
@@ -260,7 +261,6 @@
                         <option value="">اختر نوع السؤال</option>
                         ${typesData.map(item => `<option value="${item.id}">${item.name}</option>`).join('')}
                     </select>
-                    
                     <!-- خيارات الاختيار من متعدد -->
                     <div id="options-for-${questionIndex}" class="options-container space-y-2" style="display: none;">
                         <div class="options-list">
@@ -287,7 +287,6 @@
                             إضافة خيار جديد
                         </button>
                     </div>
-
                     <!-- خيارات صح أو خطأ -->
                     <div id="true-false-for-${questionIndex}" class="true-false-container space-y-2" style="display: none;">
                         <label class="block text-sm font-medium text-gray-700">الإجابة الصحيحة:</label>
@@ -304,11 +303,10 @@
                             </label>
                         </div>
                     </div>
-
                     <!-- خيارات النص القصير -->
                     <div id="short-answer-for-${questionIndex}" class="short-answer-container space-y-2" style="display: none;">
                         <label class="block text-sm font-medium text-gray-700">الإجابة الصحيحة:</label>
-                        <input type="text" name="questions[${questionIndex}][correct_answer_sa]"
+                        <input type="text" name="questions[${questionIndex}][correct_answer]"
                             placeholder="اكتب الإجابة الصحيحة"
                             class="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all">
                     </div>
@@ -316,12 +314,10 @@
             `;
             questionsContainer.appendChild(questionDiv);
 
-            // Add event listeners
             const newSelect = questionDiv.querySelector('.question-type-select');
             newSelect.addEventListener('change', handleTypeChange);
             handleTypeChange({ target: newSelect });
 
-            // Add option event listeners
             questionDiv.querySelector('.add-option-btn').addEventListener('click', () => addOption(questionIndex));
             questionDiv.querySelectorAll('.remove-option-btn').forEach(btn => {
                 btn.addEventListener('click', removeOption);
@@ -363,27 +359,39 @@
             const select = event.target;
             const index = select.dataset.index;
             const selectedType = typesData.find(t => t.id == select.value)?.name;
-            
-            // إخفاء جميع الأقسام أولاً
+
             const optionsDiv = document.getElementById(`options-for-${index}`);
             const trueFalseDiv = document.getElementById(`true-false-for-${index}`);
             const shortAnswerDiv = document.getElementById(`short-answer-for-${index}`);
-            
-            if (optionsDiv) optionsDiv.style.display = 'none';
-            if (trueFalseDiv) trueFalseDiv.style.display = 'none';
-            if (shortAnswerDiv) shortAnswerDiv.style.display = 'none';
 
-            // إظهار القسم المناسب
+            [optionsDiv, trueFalseDiv, shortAnswerDiv].forEach(section => {
+                if (section) section.style.display = 'none';
+                if (section) section.querySelectorAll('input, select').forEach(el => el.disabled = true);
+            });
+
             if (selectedType === 'اختيار من متعدد' && optionsDiv) {
                 optionsDiv.style.display = 'block';
+                optionsDiv.querySelectorAll('input').forEach(el => el.disabled = false);
             } else if (selectedType === 'صح أو خطأ' && trueFalseDiv) {
                 trueFalseDiv.style.display = 'block';
+                trueFalseDiv.querySelectorAll('input').forEach(el => el.disabled = false);
             } else if (selectedType === 'نص قصير' && shortAnswerDiv) {
                 shortAnswerDiv.style.display = 'block';
+                shortAnswerDiv.querySelectorAll('input').forEach(el => el.disabled = false);
+            }
+
+            // إزالة القيم غير الضرورية من النموذج
+            const form = select.closest('form');
+            if (selectedType !== 'صح أو خطأ' && trueFalseDiv) {
+                const trueFalseInput = trueFalseDiv.querySelector('input[name="questions[' + index + '][correct_answer]"]');
+                if (trueFalseInput) trueFalseInput.removeAttribute('checked');
+            }
+            if (selectedType !== 'نص قصير' && shortAnswerDiv) {
+                const shortAnswerInput = shortAnswerDiv.querySelector('input[name="questions[' + index + '][correct_answer]"]');
+                if (shortAnswerInput) shortAnswerInput.value = '';
             }
         }
 
-        // Event Listeners
         addQuestionBtn.addEventListener('click', createQuestionElement);
         questionsContainer.addEventListener('click', (e) => {
             if (e.target.classList.contains('remove-question-btn')) {
@@ -394,13 +402,11 @@
             }
         });
 
-        // Initialize existing selects
         document.querySelectorAll('.question-type-select').forEach(select => {
             select.addEventListener('change', handleTypeChange);
             handleTypeChange({ target: select });
         });
 
-        // Initialize add option buttons
         document.querySelectorAll('.add-option-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const questionIdx = btn.closest('.question-block').querySelector('.question-type-select').dataset.index;
@@ -412,7 +418,6 @@
             btn.addEventListener('click', removeOption);
         });
 
-        // Add first question if empty
         @if(!old('questions')) createQuestionElement(); @endif
     })();
 </script>

@@ -71,26 +71,47 @@ class CourseExamController extends Controller
             ]);
 
             $answers = $request->input('answers');
-            $score = 0;
+            $earnedPoints = 0; // النقاط المكتسبة
+            $totalPoints = 0;  // إجمالي النقاط الممكنة
 
+            // حساب النقاط المكتسبة وإجمالي النقاط
             foreach ($exam->questions as $question) {
+                $points = $question->points ?? 1; // النقاط الافتراضية 1 إذا لم يتم تحديدها
+                $totalPoints += $points; // إضافة نقاط السؤال إلى الإجمالي
+
                 if (isset($answers[$question->id])) {
-                    $userAnswer = $answers[$question->id];
+                    $userAnswer = trim(strtolower($answers[$question->id])); // تنظيف الإجابة وتحويلها إلى حالة سفلية
+
+                    Log::info("Question ID: {$question->id}, Type: {$question->question_type_id}, User Answer: {$userAnswer}, Correct Answer: {$question->correct_answer}");
 
                     if ($question->question_type_id == 1) { // اختيار من متعدد
                         $correctOption = $question->options->firstWhere('is_correct', true);
-                        if ($correctOption && $userAnswer == $correctOption->text) {
-                            $score += $question->points ?? 1;
+                        if ($correctOption && $userAnswer == trim(strtolower($correctOption->text))) {
+                            $earnedPoints += $points;
                         }
-                    } elseif ($question->question_type_id == 2 || $question->question_type_id == 3) { // صح أو خطأ ونص قصير
-                        if ($question->correct_answer !== null && $userAnswer == $question->correct_answer) {
-                            $score += $question->points ?? 1;
+                    } elseif ($question->question_type_id == 2) { // صح/خطأ
+                        $correctAnswer = trim(strtolower($question->correct_answer));
+                        // التأكد من أن correct_answer يحتوي على true أو false
+                        if ($correctAnswer === 'true' || $correctAnswer === 'false') {
+                            if ($userAnswer === $correctAnswer) {
+                                $earnedPoints += $points;
+                            }
+                        } else {
+                            // إذا كان correct_answer لا يحتوي على true/false، قد نحتاج إلى تعديل المنطق
+                            Log::warning("Unexpected correct_answer format for question {$question->id}: {$correctAnswer}");
+                        }
+                    } elseif ($question->question_type_id == 3) { // نص قصير
+                        if ($question->correct_answer !== null && $userAnswer == trim(strtolower($question->correct_answer))) {
+                            $earnedPoints += $points;
                         }
                     }
                 }
             }
 
-            // حفظ البيانات أولاً
+            // حساب النسبة المئوية
+            $score = $totalPoints > 0 ? ($earnedPoints / $totalPoints) * 100 : 0;
+
+            // حفظ النتيجة
             $result->update([
                 'score' => $score,
                 'answers' => json_encode($answers),
@@ -107,7 +128,6 @@ class CourseExamController extends Controller
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
                 ]);
-                // لا تعيد إلقاء الاستثناء لضمان استمرار التنفيذ
             }
 
             return redirect()->route('course-exams.result', $result)
@@ -169,7 +189,6 @@ class CourseExamController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            // Consider queueing for retry instead of failing silently
         }
     }
 
@@ -190,7 +209,6 @@ class CourseExamController extends Controller
     /**
      * تنزيل الشهادة كصورة PNG
      */
-
     protected function generateBrowsershotCertificate(CourseExamResult $result)
     {
         $result->loadMissing(['user', 'exam']);

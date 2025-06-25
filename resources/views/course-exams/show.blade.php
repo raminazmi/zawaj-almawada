@@ -78,13 +78,13 @@
                         <label
                             class="flex items-center bg-white border border-gray-200 rounded-lg px-4 py-2 cursor-pointer hover:bg-blue-50 transition">
                             <input class="form-radio text-[#3A8BCD] focus:ring-[#3A8BCD] ml-3" type="radio"
-                                name="answers[{{ $question->id }}]" value="صح" required>
+                                name="answers[{{ $question->id }}]" value="true" required>
                             <span class="text-gray-700">صح</span>
                         </label>
                         <label
                             class="flex items-center bg-white border border-gray-200 rounded-lg px-4 py-2 cursor-pointer hover:bg-blue-50 transition">
                             <input class="form-radio text-[#3A8BCD] focus:ring-[#3A8BCD] ml-3" type="radio"
-                                name="answers[{{ $question->id }}]" value="خطأ" required>
+                                name="answers[{{ $question->id }}]" value="false" required>
                             <span class="text-gray-700">خطأ</span>
                         </label>
                         @else
