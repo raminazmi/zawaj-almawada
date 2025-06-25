@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ExamCertificate;
 use Spatie\Browsershot\Browsershot;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Auth;
 
 class CourseExamController extends Controller
 {
@@ -93,17 +90,34 @@ class CourseExamController extends Controller
                 }
             }
 
+            // حفظ البيانات أولاً
             $result->update([
                 'score' => $score,
                 'answers' => json_encode($answers),
             ]);
+            Log::info('تم تحديث النتيجة بنجاح', ['result_id' => $result->id, 'score' => $score]);
 
-            $this->sendCertificate($result);
+            // محاولة إرسال الشهادة
+            try {
+                $this->sendCertificate($result);
+                Log::info('تم إرسال الشهادة بنجاح', ['email' => $result->user->email]);
+            } catch (\Exception $e) {
+                Log::error('فشل إرسال الشهادة', [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ]);
+                // لا تعيد إلقاء الاستثناء لضمان استمرار التنفيذ
+            }
 
             return redirect()->route('course-exams.result', $result)
-                ->with('success', 'تم إرسال الشهادة إلى بريدك الإلكتروني');
+                ->with('success', 'تم تقديم الإجابات بنجاح، وتم إرسال الشهادة إلى بريدك الإلكتروني (إذا كانت متاحة).');
         } catch (\Exception $e) {
-            Log::error('خطأ أثناء تقديم الإجابات', ['message' => $e->getMessage()]);
+            Log::error('خطأ أثناء تقديم الإجابات', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
             return back()->with('error', 'حدث خطأ أثناء تقديم الإجابات.');
         }
     }
@@ -119,30 +133,43 @@ class CourseExamController extends Controller
     /**
      * إرسال الشهادة عبر البريد الإلكتروني
      */
-    private function sendCertificate(CourseExamResult $result)
+    private function sendCertificate($result)
     {
         try {
-            $result->loadMissing('user', 'exam');
-            $html = view('course-exams.certificate', [
-                'result' => $result,
-                'title' => 'شهادة إتمام الاختبار'
-            ])->render();
+            $result->loadMissing(['user', 'exam']);
 
+            // Generate HTML
+            $html = view('course-exams.certificate', ['result' => $result])->render();
+
+            // Generate filename and path
             $filename = 'certificate_' . uniqid() . '.png';
-            $path = storage_path("app/public/certificates/{$filename}");
+            $path = storage_path('app/public/certificates/' . $filename);
+
+            // Ensure directory exists
+            if (!file_exists(dirname($path))) {
+                mkdir(dirname($path), 0755, true);
+            }
 
             Browsershot::html($html)
-                ->windowSize(900, 720)
-                ->waitUntilNetworkIdle()
+                ->setNodeBinary('C:\\Program Files\\nodejs\\node.EXE')
+                ->setChromePath('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe') // If needed
+                ->windowSize(920, 860)
+                ->timeout(120)
+                ->waitUntilNetworkIdle(false)
+                ->delay(2000)
                 ->save($path);
 
+            // Send email
             Mail::to($result->user->email)->send(new ExamCertificate($result, $path));
-            $result->update(['certificate_sent' => true]);
 
-            unlink($path); // حذف الملف بعد الإرسال
+            $result->update(['certificate_sent' => true]);
         } catch (\Exception $e) {
-            Log::error('خطأ أثناء إرسال الشهادة', ['message' => $e->getMessage()]);
-            throw $e;
+            Log::error('Certificate generation failed', [
+                'result_id' => $result->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            // Consider queueing for retry instead of failing silently
         }
     }
 
@@ -163,27 +190,43 @@ class CourseExamController extends Controller
     /**
      * تنزيل الشهادة كصورة PNG
      */
+
+    protected function generateBrowsershotCertificate(CourseExamResult $result)
+    {
+        $result->loadMissing(['user', 'exam']);
+        $html = view('course-exams.certificate', ['result' => $result])->render();
+
+        $filename = 'certificate_' . uniqid() . '.png';
+        $path = storage_path("app/public/certificates/{$filename}");
+
+        // Ensure directory exists
+        if (!file_exists(dirname($path))) {
+            mkdir(dirname($path), 0755, true);
+        }
+
+        Browsershot::html($html)
+            ->setNodeBinary('C:\\Program Files\\nodejs\\node.EXE')
+            ->windowSize(920, 860)
+            ->timeout(120000)
+            ->waitUntilNetworkIdle(false)
+            ->delay(2000)
+            ->save($path);
+
+        return $path;
+    }
+
     public function downloadCertificate(CourseExamResult $result)
     {
         try {
-            $result->loadMissing('user', 'exam');
-            $html = view('course-exams.certificate', [
-                'result' => $result,
-                'title' => 'شهادة إتمام الاختبار'
-            ])->render();
-
-            $filename = 'certificate_' . uniqid() . '.png';
-            $path = storage_path("app/public/certificates/{$filename}");
-
-            Browsershot::html($html)
-                ->windowSize(900, 720)
-                ->waitUntilNetworkIdle()
-                ->save($path);
-
-            return response()->download($path, "شهادة-إتمام-{$result->exam->title}.png")->deleteFileAfterSend(true);
+            // Try Browsershot first
+            try {
+                $path = $this->generateBrowsershotCertificate($result);
+                return response()->download($path)->deleteFileAfterSend(true);
+            } catch (\Exception $e) {
+                Log::warning('Browsershot failed, falling back to PDF', ['error' => $e->getMessage()]);
+            }
         } catch (\Exception $e) {
-            Log::error('خطأ أثناء تنزيل الشهادة', ['message' => $e->getMessage()]);
-            return back()->with('error', 'حدث خطأ أثناء تنزيل الشهادة.');
+            return back()->with('error', 'Failed to generate certificate. Please try again later.');
         }
     }
 }

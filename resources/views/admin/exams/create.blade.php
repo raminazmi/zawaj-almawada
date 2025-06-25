@@ -123,6 +123,8 @@
                                 @error('questions.' . $index . '.type_id')
                                 <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
                                 @enderror
+
+                                <!-- خيارات الاختيار من متعدد -->
                                 <div id="options-for-{{ $index }}" class="options-container space-y-2"
                                     style="display: {{ old('questions.' . $index . '.type_id') && $types->firstWhere('id', old('questions.' . $index . '.type_id'))?->name === 'اختيار من متعدد' ? 'block' : 'none' }}">
                                     <div class="options-list">
@@ -169,6 +171,40 @@
                                         </svg>
                                         إضافة خيار جديد
                                     </button>
+                                </div>
+
+                                <!-- خيارات صح أو خطأ -->
+                                <div id="true-false-for-{{ $index }}" class="true-false-container space-y-2"
+                                    style="display: {{ old('questions.' . $index . '.type_id') && $types->firstWhere('id', old('questions.' . $index . '.type_id'))?->name === 'صح أو خطأ' ? 'block' : 'none' }}">
+                                    <label class="block text-sm font-medium text-gray-700">الإجابة الصحيحة:</label>
+                                    <div class="flex gap-4">
+                                        <label class="flex items-center">
+                                            <input type="radio" name="questions[{{ $index }}][correct_answer]"
+                                                value="true"
+                                                class="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500" {{
+                                                old('questions.' . $index . '.correct_answer' )=='true' ? 'checked' : ''
+                                                }}>
+                                            <span class="mr-2 text-sm">صح</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="radio" name="questions[{{ $index }}][correct_answer]"
+                                                value="false"
+                                                class="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500" {{
+                                                old('questions.' . $index . '.correct_answer' )=='false' ? 'checked'
+                                                : '' }}>
+                                            <span class="mr-2 text-sm">خطأ</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- خيارات النص القصير -->
+                                <div id="short-answer-for-{{ $index }}" class="short-answer-container space-y-2"
+                                    style="display: {{ old('questions.' . $index . '.type_id') && $types->firstWhere('id', old('questions.' . $index . '.type_id'))?->name === 'نص قصير' ? 'block' : 'none' }}">
+                                    <label class="block text-sm font-medium text-gray-700">الإجابة الصحيحة:</label>
+                                    <input type="text" name="questions[{{ $index }}][correct_answer_sa]"
+                                        placeholder="اكتب الإجابة الصحيحة"
+                                        class="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                                        value="{{ old('questions.' . $index . '.correct_answer_sa') }}">
                                 </div>
                             </div>
                         </div>
@@ -222,9 +258,11 @@
                         class="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all question-type-select"
                         data-index="${questionIndex}">
                         <option value="">اختر نوع السؤال</option>
-                        ${typesData.map(item => `<option value="${item.id}" ${item.name === 'اختيار من متعدد' ? 'selected' : ''}>${item.name}</option>`).join('')}
+                        ${typesData.map(item => `<option value="${item.id}">${item.name}</option>`).join('')}
                     </select>
-                    <div id="options-for-${questionIndex}" class="options-container space-y-2" style="display: block;">
+                    
+                    <!-- خيارات الاختيار من متعدد -->
+                    <div id="options-for-${questionIndex}" class="options-container space-y-2" style="display: none;">
                         <div class="options-list">
                             ${Array.from({length: 2}, (_, i) => `
                                 <div class="flex items-center gap-2 option-item">
@@ -248,6 +286,31 @@
                             </svg>
                             إضافة خيار جديد
                         </button>
+                    </div>
+
+                    <!-- خيارات صح أو خطأ -->
+                    <div id="true-false-for-${questionIndex}" class="true-false-container space-y-2" style="display: none;">
+                        <label class="block text-sm font-medium text-gray-700">الإجابة الصحيحة:</label>
+                        <div class="flex gap-4">
+                            <label class="flex items-center">
+                                <input type="radio" name="questions[${questionIndex}][correct_answer]" value="true"
+                                    class="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500">
+                                <span class="mr-2 text-sm">صح</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="questions[${questionIndex}][correct_answer]" value="false"
+                                    class="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500">
+                                <span class="mr-2 text-sm">خطأ</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- خيارات النص القصير -->
+                    <div id="short-answer-for-${questionIndex}" class="short-answer-container space-y-2" style="display: none;">
+                        <label class="block text-sm font-medium text-gray-700">الإجابة الصحيحة:</label>
+                        <input type="text" name="questions[${questionIndex}][correct_answer_sa]"
+                            placeholder="اكتب الإجابة الصحيحة"
+                            class="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all">
                     </div>
                 </div>
             `;
@@ -299,13 +362,24 @@
         function handleTypeChange(event) {
             const select = event.target;
             const index = select.dataset.index;
-            const optionsDiv = document.getElementById(`options-for-${index}`);
             const selectedType = typesData.find(t => t.id == select.value)?.name;
+            
+            // إخفاء جميع الأقسام أولاً
+            const optionsDiv = document.getElementById(`options-for-${index}`);
+            const trueFalseDiv = document.getElementById(`true-false-for-${index}`);
+            const shortAnswerDiv = document.getElementById(`short-answer-for-${index}`);
+            
+            if (optionsDiv) optionsDiv.style.display = 'none';
+            if (trueFalseDiv) trueFalseDiv.style.display = 'none';
+            if (shortAnswerDiv) shortAnswerDiv.style.display = 'none';
 
-            if (selectedType === 'اختيار من متعدد') {
+            // إظهار القسم المناسب
+            if (selectedType === 'اختيار من متعدد' && optionsDiv) {
                 optionsDiv.style.display = 'block';
-            } else {
-                optionsDiv.style.display = 'none';
+            } else if (selectedType === 'صح أو خطأ' && trueFalseDiv) {
+                trueFalseDiv.style.display = 'block';
+            } else if (selectedType === 'نص قصير' && shortAnswerDiv) {
+                shortAnswerDiv.style.display = 'block';
             }
         }
 

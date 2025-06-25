@@ -1,99 +1,47 @@
-<!DOCTYPE html>
-<html dir="rtl">
+@extends('layouts.email')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شهادة إتمام الاختبار</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
+@section('content')
+<div class="email-container" dir="rtl">
+    <div class="header">
+        <img src="https://zawaj-almawada.com/assets/images/logo.png" alt="شعار الموقع"
+            style="max-width: 100px; margin-bottom: 10px;">
+        <h1>منصة زواج المودة</h1>
+        <p>شهادة إتمام الاختبار</p>
+    </div>
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            color: #2A5C82;
-            margin: 0;
-            padding: 10px 0;
-        }
-
-        .content {
-            margin-bottom: 30px;
-        }
-
-        .footer {
-            text-align: center;
-            font-size: 12px;
-            color: #666;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #3A8BCD;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-
-        .score {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            margin: 20px 0;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>شهادة إتمام الاختبار</h1>
+    <div class="content">
+        <div class="greeting">
+            السلام عليكم ورحمة الله وبركاته<br>
+            الأخ الفاضل / الأخت الفاضلة: <strong>{{ $result->user->name }}</strong>
         </div>
 
-        <div class="content">
-            <p>مرحباً {{ $result->user->name }},</p>
+        <div class="message">
+            <p>تهانينا الحارة! لقد أكملت اختبار <strong>{{ $result->exam->title }}</strong> بنجاح.</p>
 
-            <p>نود إعلامك بأنك قد أكملت اختبار {{ $result->exam->title }} بنجاح.</p>
-
-            <div class="score">
-                <strong>الدرجة النهائية:</strong> {{ $result->score }}
+            <div class="exam-info">
+                <h3>تفاصيل الاختبار:</h3>
+                <p><strong>اسم الاختبار:</strong> {{ $result->exam->title }}</p>
+                <p><strong>تاريخ الإكمال:</strong> {{ $result->created_at->format('Y/m/d') }}</p>
+                <p><strong>الوقت:</strong> {{ $result->created_at->format('h:i A') }}</p>
             </div>
 
-            <p>تم إرفاق شهادة إتمام الاختبار مع هذا البريد الإلكتروني.</p>
+            <div class="score">
+                النتيجة النهائية: {{ round($result->score) }}/100
+            </div>
 
-            <p>يمكنك الوصول إلى الشهادة من خلال المرفقات أدناه.</p>
+            <p>تم إرفاق شهادة إتمام الاختبار مع هذا البريد الإلكتروني. يمكنك طباعتها أو حفظها للمراجع المستقبلية.
+            </p>
+
+            <p>نشكرك على مشاركتك في دورة التأهيل للحياة الزوجية، ونسأل الله أن يمن عليك بحياة أسرية سعيدة.</p>
         </div>
-
-        <div class="footer">
-            <p>هذا البريد الإلكتروني تم إرساله تلقائياً من نظام زواج المودة</p>
-            <p>© {{ date('Y') }} زواج المودة. جميع الحقوق محفوظة.</p>
+        <div>
+            <p><strong>مع تحيات مدير منصة زواج المودة</strong></p><br>
+            <small class="text-gray-500">التوقيع</small>
+            <div class="mt-5 text-center">
+                <img src="https://zawaj-almawada.com/assets/images/signature.jpg" alt="توقيع المدير"
+                    class="max-w-[200px] h-auto mx-auto block">
+            </div>
         </div>
     </div>
-</body>
-
-</html>
+</div>
+@endsection

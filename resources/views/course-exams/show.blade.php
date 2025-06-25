@@ -48,7 +48,7 @@
                 </div>
             </div>
 
-            <form method="POST" action="{{ route('course-exams.submit', $exam) }}">
+            <form id="examForm" method="POST" action="{{ route('course-exams.submit', $exam) }}">
                 @csrf
                 @foreach($exam->questions as $question)
                 <div class="mb-8 p-4 bg-gray-50 rounded-lg">
@@ -97,8 +97,8 @@
                 </div>
                 @endforeach
                 <div class="flex justify-center mt-8">
-                    <button type="submit"
-                        class="bg-gradient-to-l from-[#3A8BCD] to-[#553566] text-white px-8 py-3 rounded-full text-lg font-bold shadow-lg hover:opacity-90 transition">
+                    <button type="submit" id="submitButton"
+                        class="bg-gradient-to-l from-[#3A8BCD] to-[#553566] text-white px-6 py-2 rounded-full text-md font-bold shadow-lg hover:opacity-90 transition">
                         إرسال الإجابات
                     </button>
                 </div>
@@ -106,4 +106,13 @@
         </div>
     </div>
 </div>
+<script>
+    document.getElementById('examForm').addEventListener('submit', function() {
+        var button = document.getElementById('submitButton');
+        button.innerText = 'جاري إصدار الشهادة...';
+        button.disabled = true;
+        button.style.backgroundColor = '#F0F0F0';
+        button.style.opacity = '0.5';
+    });
+</script>
 @endsection
