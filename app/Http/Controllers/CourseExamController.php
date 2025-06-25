@@ -172,11 +172,17 @@ class CourseExamController extends Controller
 
             Browsershot::html($html)
                 ->setNodeBinary(env('BROWSERSHOT_NODE_PATH', '/usr/bin/node'))
+                ->setNpmBinary(env('BROWSERSHOT_NPM_PATH', '/usr/bin/npm')) // إضافة إذا لزم الأمر
                 ->setChromePath(env('BROWSERSHOT_CHROME_PATH', '/usr/bin/chromium-browser'))
+                ->setOption('args', [ // تمرير الخيارات بشكل صحيح
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage'
+                ])
                 ->windowSize(920, 860)
                 ->timeout(120)
                 ->waitUntilNetworkIdle(false)
-                ->delay(2000)
+                ->delay(2000) // زيادة وقت التأخير
                 ->save($path);
 
             // Send email
@@ -224,11 +230,18 @@ class CourseExamController extends Controller
 
         Browsershot::html($html)
             ->setNodeBinary(env('BROWSERSHOT_NODE_PATH', '/usr/bin/node'))
+            ->setNpmBinary(env('BROWSERSHOT_NPM_PATH', '/usr/bin/npm'))
             ->setChromePath(env('BROWSERSHOT_CHROME_PATH', '/usr/bin/chromium-browser'))
+            ->setOption('args', [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--single-process'
+            ])
             ->windowSize(920, 860)
-            ->timeout(120000)
-            ->waitUntilNetworkIdle(false)
-            ->delay(2000)
+            ->timeout(300) // زيادة المهلة
+            ->waitUntilNetworkIdle()
+            ->delay(10000) // تأخير أطول للتصيير
             ->save($path);
 
         return $path;
@@ -237,15 +250,21 @@ class CourseExamController extends Controller
     public function downloadCertificate(CourseExamResult $result)
     {
         try {
-            // Try Browsershot first
-            try {
-                $path = $this->generateBrowsershotCertificate($result);
-                return response()->download($path)->deleteFileAfterSend(true);
-            } catch (\Exception $e) {
-                Log::warning('Browsershot failed, falling back to PDF', ['error' => $e->getMessage()]);
+            $path = $this->generateBrowsershotCertificate($result);
+
+            if (!file_exists($path)) {
+                throw new \Exception('Failed to generate certificate file');
             }
+
+            return response()->download($path)
+                ->deleteFileAfterSend(true);
         } catch (\Exception $e) {
-            return back()->with('error', 'Failed to generate certificate. Please try again later.');
+            Log::error('Certificate download failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return back()->with('error', 'فشل توليد الشهادة: ' . $e->getMessage());
         }
     }
 }
