@@ -171,8 +171,8 @@ class CourseExamController extends Controller
             }
 
             Browsershot::html($html)
-                ->setNodeBinary('C:\\Program Files\\nodejs\\node.EXE')
-                ->setChromePath('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe') // If needed
+                ->setNodeBinary(env('BROWSERSHOT_NODE_PATH', '/usr/bin/node'))
+                ->setChromePath(env('BROWSERSHOT_CHROME_PATH', '/usr/bin/chromium-browser'))
                 ->windowSize(920, 860)
                 ->timeout(120)
                 ->waitUntilNetworkIdle(false)
@@ -223,7 +223,8 @@ class CourseExamController extends Controller
         }
 
         Browsershot::html($html)
-            ->setNodeBinary('C:\\Program Files\\nodejs\\node.EXE')
+            ->setNodeBinary(env('BROWSERSHOT_NODE_PATH', '/usr/bin/node'))
+            ->setChromePath(env('BROWSERSHOT_CHROME_PATH', '/usr/bin/chromium-browser'))
             ->windowSize(920, 860)
             ->timeout(120000)
             ->waitUntilNetworkIdle(false)
