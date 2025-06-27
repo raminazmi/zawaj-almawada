@@ -165,27 +165,19 @@ class CourseExamController extends Controller
                 mkdir(dirname($path), 0755, true);
             }
 
-            $browsershot = Browsershot::html($html)
+            Browsershot::html($html)
+                ->setNodeBinary('/usr/bin/node')
+                ->setChromePath('/usr/bin/chromium-browser')
+                ->setOption('args', [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage'
+                ])
                 ->windowSize(920, 860)
                 ->timeout(120)
                 ->waitUntilNetworkIdle(false)
-                ->delay(2000);
-
-            // إعدادات خاصة لكل نظام
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                $browsershot->setNodeBinary('C:\\Program Files\\nodejs\\node.exe')
-                    ->setChromePath('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe');
-            } else {
-                $browsershot->setNodeBinary('/usr/bin/node')
-                    ->setChromePath('/usr/bin/chromium-browser')
-                    ->setOption('args', [
-                        '--no-sandbox',
-                        '--disable-setuid-sandbox',
-                        '--disable-dev-shm-usage'
-                    ]);
-            }
-
-            $browsershot->save($path);
+                ->delay(2000)
+                ->save($path);
 
             Mail::to($result->user->email)->send(new ExamCertificate($result, $path));
             $result->update(['certificate_sent' => true]);
