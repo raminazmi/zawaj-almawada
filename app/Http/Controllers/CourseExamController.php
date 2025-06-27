@@ -157,37 +157,37 @@ class CourseExamController extends Controller
     {
         try {
             $result->loadMissing(['user', 'exam']);
-
-            // Generate HTML
             $html = view('course-exams.certificate', ['result' => $result])->render();
-
-            // Generate filename and path
             $filename = 'certificate_' . uniqid() . '.png';
             $path = storage_path('app/public/certificates/' . $filename);
 
-            // Ensure directory exists
             if (!file_exists(dirname($path))) {
                 mkdir(dirname($path), 0755, true);
             }
 
-            Browsershot::html($html)
-                ->setNodeBinary(env('BROWSERSHOT_NODE_PATH', '/usr/bin/node'))
-                ->setNpmBinary(env('BROWSERSHOT_NPM_PATH', '/usr/bin/npm')) // إضافة إذا لزم الأمر
-                ->setChromePath(env('BROWSERSHOT_CHROME_PATH', '/usr/bin/chromium-browser'))
-                ->setOption('args', [ // تمرير الخيارات بشكل صحيح
-                    '--no-sandbox',
-                    '--disable-setuid-sandbox',
-                    '--disable-dev-shm-usage'
-                ])
+            $browsershot = Browsershot::html($html)
                 ->windowSize(920, 860)
                 ->timeout(120)
                 ->waitUntilNetworkIdle(false)
-                ->delay(2000) // زيادة وقت التأخير
-                ->save($path);
+                ->delay(2000);
 
-            // Send email
+            // إعدادات خاصة لكل نظام
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                $browsershot->setNodeBinary('C:\\Program Files\\nodejs\\node.exe')
+                    ->setChromePath('C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe');
+            } else {
+                $browsershot->setNodeBinary('/usr/bin/node')
+                    ->setChromePath('/usr/bin/chromium-browser')
+                    ->setOption('args', [
+                        '--no-sandbox',
+                        '--disable-setuid-sandbox',
+                        '--disable-dev-shm-usage'
+                    ]);
+            }
+
+            $browsershot->save($path);
+
             Mail::to($result->user->email)->send(new ExamCertificate($result, $path));
-
             $result->update(['certificate_sent' => true]);
         } catch (\Exception $e) {
             Log::error('Certificate generation failed', [
@@ -219,52 +219,45 @@ class CourseExamController extends Controller
     {
         $result->loadMissing(['user', 'exam']);
         $html = view('course-exams.certificate', ['result' => $result])->render();
-
         $filename = 'certificate_' . uniqid() . '.png';
         $path = storage_path("app/public/certificates/{$filename}");
 
-        // Ensure directory exists
         if (!file_exists(dirname($path))) {
             mkdir(dirname($path), 0755, true);
         }
 
-        Browsershot::html($html)
-            ->setNodeBinary(env('BROWSERSHOT_NODE_PATH', '/usr/bin/node'))
-            ->setNpmBinary(env('BROWSERSHOT_NPM_PATH', '/usr/bin/npm'))
-            ->setChromePath(env('BROWSERSHOT_CHROME_PATH', '/usr/bin/chromium-browser'))
-            ->setOption('args', [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--single-process'
-            ])
+        $browsershot = Browsershot::html($html)
             ->windowSize(920, 860)
-            ->timeout(300) // زيادة المهلة
-            ->waitUntilNetworkIdle()
-            ->delay(10000) // تأخير أطول للتصيير
-            ->save($path);
+            ->timeout(120000)
+            ->waitUntilNetworkIdle(false)
+            ->delay(2000);
 
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $browsershot->setNodeBinary('C:\\Program Files\\nodejs\\node.exe');
+        } else {
+            $browsershot->setNodeBinary('/usr/bin/node')
+                ->setOption('args', [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox'
+                ]);
+        }
+
+        $browsershot->save($path);
         return $path;
     }
 
     public function downloadCertificate(CourseExamResult $result)
     {
         try {
-            $path = $this->generateBrowsershotCertificate($result);
-
-            if (!file_exists($path)) {
-                throw new \Exception('Failed to generate certificate file');
+            // Try Browsershot first
+            try {
+                $path = $this->generateBrowsershotCertificate($result);
+                return response()->download($path)->deleteFileAfterSend(true);
+            } catch (\Exception $e) {
+                Log::warning('Browsershot failed, falling back to PDF', ['error' => $e->getMessage()]);
             }
-
-            return response()->download($path)
-                ->deleteFileAfterSend(true);
         } catch (\Exception $e) {
-            Log::error('Certificate download failed', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            return back()->with('error', 'فشل توليد الشهادة: ' . $e->getMessage());
+            return back()->with('error', 'Failed to generate certificate. Please try again later.');
         }
     }
 }
