@@ -7,7 +7,8 @@ use App\Models\CourseExamResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ExamCertificate;
-use Spatie\Browsershot\Browsershot;
+use Omaralalwi\Gpdf\Gpdf;
+use Omaralalwi\Gpdf\GpdfConfig;
 use Illuminate\Support\Facades\Log;
 
 class CourseExamController extends Controller
@@ -55,12 +56,18 @@ class CourseExamController extends Controller
     {
         try {
             $user = auth()->user();
+            Log::info('User authenticated', ['user_id' => $user->id, 'exam_id' => $exam->id]);
+
             $result = $exam->results()->where('user_id', $user->id)->first();
+            Log::info('Result fetched', ['result_id' => $result ? $result->id : null, 'exam_started_at' => $result ? $result->exam_started_at : null]);
+
             if (!$result || ($result->exam_started_at && now()->diffInMinutes($result->exam_started_at) > 60)) {
+                Log::warning('Exam time exceeded or no result found', ['user_id' => $user->id, 'exam_id' => $exam->id]);
                 return redirect()->route('course-exams.index')->with('error', 'انتهى وقت الاختبار المخصص لك.');
             }
 
             if (!$request->isMethod('post')) {
+                Log::warning('Invalid request method', ['method' => $request->method(), 'exam_id' => $exam->id]);
                 return redirect()->route('course-exams.show', $exam)
                     ->with('error', 'يرجى إرسال الإجابات من خلال النموذج');
             }
@@ -69,74 +76,73 @@ class CourseExamController extends Controller
                 'answers' => 'required|array',
                 'answers.*' => 'string',
             ]);
+            Log::info('Validation passed', ['answers_count' => count($request->input('answers'))]);
 
             $answers = $request->input('answers');
-            $earnedPoints = 0; // النقاط المكتسبة
-            $totalPoints = 0;  // إجمالي النقاط الممكنة
+            $earnedPoints = 0;
+            $totalPoints = 0;
 
-            // حساب النقاط المكتسبة وإجمالي النقاط
             foreach ($exam->questions as $question) {
-                $points = $question->points ?? 1; // النقاط الافتراضية 1 إذا لم يتم تحديدها
-                $totalPoints += $points; // إضافة نقاط السؤال إلى الإجمالي
+                $points = $question->points ?? 1;
+                $totalPoints += $points;
 
                 if (isset($answers[$question->id])) {
-                    $userAnswer = trim(strtolower($answers[$question->id])); // تنظيف الإجابة وتحويلها إلى حالة سفلية
+                    $userAnswer = trim(strtolower($answers[$question->id]));
+                    Log::debug('Processing question', ['question_id' => $question->id, 'user_answer' => $userAnswer]);
 
-                    Log::info("Question ID: {$question->id}, Type: {$question->question_type_id}, User Answer: {$userAnswer}, Correct Answer: {$question->correct_answer}");
-
-                    if ($question->question_type_id == 1) { // اختيار من متعدد
+                    if ($question->question_type_id == 1) {
                         $correctOption = $question->options->firstWhere('is_correct', true);
                         if ($correctOption && $userAnswer == trim(strtolower($correctOption->text))) {
                             $earnedPoints += $points;
+                            Log::debug('Correct answer for multiple choice', ['question_id' => $question->id, 'points' => $points]);
                         }
-                    } elseif ($question->question_type_id == 2) { // صح/خطأ
+                    } elseif ($question->question_type_id == 2) {
                         $correctAnswer = trim(strtolower($question->correct_answer));
-                        // التأكد من أن correct_answer يحتوي على true أو false
                         if ($correctAnswer === 'true' || $correctAnswer === 'false') {
                             if ($userAnswer === $correctAnswer) {
                                 $earnedPoints += $points;
+                                Log::debug('Correct answer for true/false', ['question_id' => $question->id, 'points' => $points]);
                             }
-                        } else {
-                            // إذا كان correct_answer لا يحتوي على true/false، قد نحتاج إلى تعديل المنطق
-                            Log::warning("Unexpected correct_answer format for question {$question->id}: {$correctAnswer}");
                         }
-                    } elseif ($question->question_type_id == 3) { // نص قصير
+                    } elseif ($question->question_type_id == 3) {
                         if ($question->correct_answer !== null && $userAnswer == trim(strtolower($question->correct_answer))) {
                             $earnedPoints += $points;
+                            Log::debug('Correct answer for open-ended', ['question_id' => $question->id, 'points' => $points]);
                         }
                     }
                 }
             }
 
-            // حساب النسبة المئوية
             $score = $totalPoints > 0 ? ($earnedPoints / $totalPoints) * 100 : 0;
+            Log::info('Score calculated', ['earned_points' => $earnedPoints, 'total_points' => $totalPoints, 'score' => $score]);
 
-            // حفظ النتيجة
             $result->update([
                 'score' => $score,
                 'answers' => json_encode($answers),
             ]);
-            Log::info('تم تحديث النتيجة بنجاح', ['result_id' => $result->id, 'score' => $score]);
+            Log::info('Result updated', ['result_id' => $result->id, 'score' => $score]);
 
-            // محاولة إرسال الشهادة
             try {
-                $this->sendCertificate($result);
-                Log::info('تم إرسال الشهادة بنجاح', ['email' => $result->user->email]);
+                Log::info('Attempting to send certificate', ['result_id' => $result->id]);
+                $certificateSent = $this->sendCertificate($result); // Store the result
+                Log::info('Certificate process completed', ['result_id' => $result->id, 'success' => $certificateSent]);
             } catch (\Exception $e) {
-                Log::error('فشل إرسال الشهادة', [
-                    'message' => $e->getMessage(),
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine(),
+                Log::error('Failed to send certificate', [
+                    'result_id' => $result->id,
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
                 ]);
             }
 
+            Log::info('Redirecting to result page', ['result_id' => $result->id, 'route' => 'course-exams.result']);
             return redirect()->route('course-exams.result', $result)
-                ->with('success', 'تم تقديم الإجابات بنجاح، وتم إرسال الشهادة إلى بريدك الإلكتروني (إذا كانت متاحة).');
+                ->with('success', 'تم تقديم الإجابات بنجاح');
         } catch (\Exception $e) {
-            Log::error('خطأ أثناء تقديم الإجابات', [
-                'message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
+            Log::error('Exception in submit method', [
+                'exam_id' => $exam->id,
+                'user_id' => $user->id ?? null,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
             return back()->with('error', 'حدث خطأ أثناء تقديم الإجابات.');
         }
@@ -157,37 +163,40 @@ class CourseExamController extends Controller
     {
         try {
             $result->loadMissing(['user', 'exam']);
-            $html = view('course-exams.certificate', ['result' => $result])->render();
-            $filename = 'certificate_' . uniqid() . '.png';
+            $filename = 'certificate_' . uniqid() . '.pdf';
             $path = storage_path('app/public/certificates/' . $filename);
 
             if (!file_exists(dirname($path))) {
                 mkdir(dirname($path), 0755, true);
             }
 
-            Browsershot::html($html)
-                ->setNodeBinary('/usr/bin/node')
-                ->setChromePath('/usr/bin/google-chrome')
-                ->setOption('args', [
-                    '--no-sandbox',
-                    '--disable-setuid-sandbox',
-                    '--disable-dev-shm-usage',
-                    '--single-process'
-                ])
-                ->windowSize(920, 860)
-                ->timeout(120)
-                ->waitUntilNetworkIdle()
-                ->delay(5000)
-                ->save($path);
+            $defaultConfig = config('gpdf');
+            $config = new GpdfConfig($defaultConfig);
+            $gpdf = new Gpdf($config);
+            $html = view('course-exams.certificate', [
+                'result' => $result,
+                'title' => 'شهادة إجتياز - منصة زواج المودة'
+            ])->render();
 
-            Mail::to($result->user->email)->send(new ExamCertificate($result, $path));
+            $pdfContent = $gpdf->generate($html);
+            file_put_contents($path, $pdfContent);
+
+            // Verify file exists and is not empty
+            if (!file_exists($path) || filesize($path) == 0) {
+                throw new \Exception('Failed to generate valid PDF file');
+            }
+
+            $mailSent = Mail::to($result->user->email)->send(new ExamCertificate($result, $path));
             $result->update(['certificate_sent' => true]);
+            unlink($path); // Delete file after sending
+            return $mailSent !== null; // Return true if mail was sent successfully
         } catch (\Exception $e) {
-            Log::error('Certificate generation failed', [
+            Log::error('فشل إنشاء الشهادة', [
                 'result_id' => $result->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
+            return false; // Return false on failure
         }
     }
 
@@ -200,57 +209,45 @@ class CourseExamController extends Controller
             $this->sendCertificate($result);
             return back()->with('success', 'تمت إعادة إرسال الشهادة بنجاح');
         } catch (\Exception $e) {
-            Log::error('خطأ أثناء إعادة إرسال الشهادة', ['message' => $e->getMessage()]);
             return back()->with('error', 'حدث خطأ أثناء إعادة إرسال الشهادة.');
         }
     }
 
     /**
-     * تنزيل الشهادة كصورة PNG
+     * تنزيل الشهادة
      */
-    protected function generateBrowsershotCertificate(CourseExamResult $result)
-    {
-        $result->loadMissing(['user', 'exam']);
-        $html = view('course-exams.certificate', ['result' => $result])->render();
-        $filename = 'certificate_' . uniqid() . '.png';
-        $path = storage_path("app/public/certificates/{$filename}");
-
-        if (!file_exists(dirname($path))) {
-            mkdir(dirname($path), 0755, true);
-        }
-
-        $browsershot = Browsershot::html($html)
-            ->windowSize(920, 860)
-            ->timeout(120000)
-            ->waitUntilNetworkIdle(false)
-            ->delay(2000);
-
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $browsershot->setNodeBinary('C:\\Program Files\\nodejs\\node.exe');
-        } else {
-            $browsershot->setNodeBinary('/usr/bin/node')
-                ->setOption('args', [
-                    '--no-sandbox',
-                    '--disable-setuid-sandbox'
-                ]);
-        }
-
-        $browsershot->save($path);
-        return $path;
-    }
 
     public function downloadCertificate(CourseExamResult $result)
     {
         try {
-            // Try Browsershot first
-            try {
-                $path = $this->generateBrowsershotCertificate($result);
-                return response()->download($path)->deleteFileAfterSend(true);
-            } catch (\Exception $e) {
-                Log::warning('Browsershot failed, falling back to PDF', ['error' => $e->getMessage()]);
+            $result->loadMissing(['user', 'exam']);
+            $filename = 'certificate_' . $result->id . '.pdf';
+            $path = storage_path('app/public/certificates/' . $filename);
+
+            if (!file_exists($path)) {
+                if (!file_exists(dirname($path))) {
+                    mkdir(dirname($path), 0755, true);
+                }
+
+                $defaultConfig = config('gpdf');
+                $config = new GpdfConfig($defaultConfig);
+                $gpdf = new Gpdf($config);
+                $html = view('course-exams.certificate', [
+                    'result' => $result,
+                    'title' => 'شهادة إجتياز - منصة زواج المودة'
+                ])->render();
+
+                $pdfContent = $gpdf->generate($html);
+                file_put_contents($path, $pdfContent);
+
+                if (!file_exists($path) || filesize($path) == 0) {
+                    throw new \Exception('Failed to generate valid PDF file');
+                }
             }
+
+            return response()->download($path, $filename)->deleteFileAfterSend(true);
         } catch (\Exception $e) {
-            return back()->with('error', 'Failed to generate certificate. Please try again later.');
+            return back()->with('error', 'فشل تنزيل الشهادة: ' . $e->getMessage());
         }
     }
 }
