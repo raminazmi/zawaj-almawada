@@ -32,6 +32,7 @@
                             <th class="py-4 px-4 text-right text-sm font-semibold">#</th>
                             <th class="py-4 px-4 text-right text-sm font-semibold">السؤال</th>
                             <th class="py-4 px-4 text-right text-sm font-semibold">نوع السؤال</th>
+                            <th class="py-4 px-4 text-right text-sm font-semibold">العلامة</th>
                             <th class="py-4 px-4 text-right text-sm font-semibold">الإجابة الصحيحة</th>
                             <th class="py-4 px-4 text-center text-sm font-semibold w-48">الإجراءات</th>
                         </tr>
@@ -53,6 +54,7 @@
                                     @endif
                                 </span>
                             </td>
+                            <td class="py-3 px-4 text-right text-sm text-gray-700">{{ $q->points }}</td>
                             <td class="py-3 px-4 text-right text-sm text-gray-700">
                                 @if($q->question_type_id == 1)
                                 <ul class="list-disc pr-4 text-right text-gray-700">
@@ -92,7 +94,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                        class="px-3 py-1 bg-red-100 text-red-600 rounded-md hover:bg-red-200 transition-all">
+                                        class="px-3 py-1 bg-red-100 text-red-600 rounded-md hover:bg-red-200 transition-all delete-btn">
                                         حذف
                                     </button>
                                 </form>
@@ -100,7 +102,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="py-8 text-gray-500 text-center">لا توجد أسئلة بعد.</td>
+                            <td colspan="6" class="py-8 text-gray-500 text-center">لا توجد أسئلة بعد.</td>
                         </tr>
                         @endforelse
                     </tbody>

@@ -107,10 +107,15 @@
                                 @error('questions.' . $index . '.text')
                                 <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
                                 @enderror
+                                <input type="number" name="questions[{{ $index }}][points]" placeholder="العلامة"
+                                    class="w-full px-4 py-2 border rounded-lg @error('questions.' . $index . '.points') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                                    value="{{ old('questions.' . $index . '.points') }}" required min="1">
+                                @error('questions.' . $index . '.points')
+                                <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                                @enderror
                                 <select name="questions[{{ $index }}][type_id]"
                                     class="w-full px-4 py-2 border rounded-lg @error('questions.' . $index . '.type_id') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all question-type-select"
                                     data-index="{{ $index }}">
-                                    <option value="">اختر نوع السؤال</option>
                                     @foreach ($types as $type)
                                     <option value="{{ $type->id }}" {{ old('questions.' . $index . '.type_id' )==$type->
                                         id ? 'selected' : '' }}>
@@ -127,11 +132,11 @@
                                     <div class="options-list">
                                         @foreach (old('questions.' . $index . '.options', []) as $optionIndex =>
                                         $option)
-                                        <div class="flex items-center gap-2 option-item">
+                                        <div class="flex items-center gap-2 option-item mt-1.5">
                                             <input type="text"
                                                 name="questions[{{ $index }}][options][{{ $optionIndex }}][text]"
                                                 placeholder="خيار {{ $optionIndex + 1 }}"
-                                                class="flex-1 px-4 py-2 border rounded-lg @error('questions.' . $index . '.options.' . $optionIndex . '.text') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                                                class="flex-1 px-4 py-1.5 border rounded-lg @error('questions.' . $index . '.options.' . $optionIndex . '.text') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
                                                 value="{{ old('questions.' . $index . '.options.' . $optionIndex . '.text') }}">
                                             @error('questions.' . $index . '.options.' . $optionIndex . '.text')
                                             <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
@@ -255,19 +260,20 @@
                 <div class="space-y-2">
                     <input type="text" name="questions[${questionIndex}][text]" placeholder="نص السؤال"
                         class="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all" required>
+                    <input type="number" name="questions[${questionIndex}][points]" placeholder="العلامة"
+                        class="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all" required min="1">
                     <select name="questions[${questionIndex}][type_id]"
                         class="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all question-type-select"
                         data-index="${questionIndex}">
-                        <option value="">اختر نوع السؤال</option>
                         ${typesData.map(item => `<option value="${item.id}">${item.name}</option>`).join('')}
                     </select>
                     <!-- خيارات الاختيار من متعدد -->
                     <div id="options-for-${questionIndex}" class="options-container space-y-2" style="display: none;">
                         <div class="options-list">
                             ${Array.from({length: 2}, (_, i) => `
-                                <div class="flex items-center gap-2 option-item">
+                                <div class="flex items-center gap-2 option-item mt-1.5">
                                     <input type="text" name="questions[${questionIndex}][options][${i}][text]" placeholder="خيار ${i+1}"
-                                        class="flex-1 px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all">
+                                        class="flex-1 px-4 py-1.5 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all">
                                     <input type="hidden" name="questions[${questionIndex}][options][${i}][is_correct]" value="0">
                                     <input type="checkbox" name="questions[${questionIndex}][options][${i}][is_correct]" value="1"
                                         class="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
@@ -333,7 +339,7 @@
             optionDiv.className = 'flex items-center gap-2 option-item';
             optionDiv.innerHTML = `
                 <input type="text" name="questions[${questionIdx}][options][${optionIndex}][text]" placeholder="خيار ${optionIndex + 1}"
-                    class="flex-1 px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all">
+                    class="flex-1 px-4 mt-1.5 py-1.5 border rounded-lg border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all">
                 <input type="hidden" name="questions[${questionIdx}][options][${optionIndex}][is_correct]" value="0">
                 <input type="checkbox" name="questions[${questionIdx}][options][${optionIndex}][is_correct]" value="1"
                     class="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">

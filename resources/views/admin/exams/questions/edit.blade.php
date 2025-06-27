@@ -20,6 +20,15 @@
                     @enderror
                 </div>
                 <div>
+                    <label class="block mb-2 font-bold text-gray-700">العلامة</label>
+                    <input type="number" name="points" value="{{ old('points', $question->points) }}"
+                        class="w-full px-4 py-2 border rounded-lg @error('points') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                        required min="1">
+                    @error('points')
+                    <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div>
                     <label class="block mb-2 font-bold text-gray-700">نوع السؤال</label>
                     <select name="type_id" id="type_id"
                         class="w-full px-4 py-2 border rounded-lg @error('type_id') border-red-500 @else border-gray-300 @enderror focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
@@ -52,8 +61,7 @@
                             <button type="button" class="remove-option-btn text-red-600 hover:text-red-700">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12">
-                                    </path>
+                                        d="M6 18L18 6M6 6l12 12"></path>
                                 </svg>
                             </button>
                             @error('options.'.$i.'.text')
@@ -130,13 +138,11 @@
         const trueFalseSection = document.getElementById('true-false-section');
         const shortAnswerSection = document.getElementById('short-answer-section');
 
-        // Hide all sections and disable inputs
         [optionsSection, trueFalseSection, shortAnswerSection].forEach(section => {
             section.style.display = 'none';
             section.querySelectorAll('input, select').forEach(el => el.disabled = true);
         });
 
-        // Show and enable relevant section
         if (selectedText === 'اختيار من متعدد') {
             optionsSection.style.display = 'block';
             optionsSection.querySelectorAll('input').forEach(el => el.disabled = false);
@@ -163,9 +169,10 @@
                 <span class="mr-1">صحيح</span>
             </label>
             <button type="button" class="remove-option-btn text-red-600 hover:text-red-700">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12"></path>
-            </svg>
-        </button>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
         `;
         optionsList.appendChild(optionDiv);
         optionDiv.querySelector('.remove-option-btn').addEventListener('click', removeOption);

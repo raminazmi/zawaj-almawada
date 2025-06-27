@@ -31,6 +31,7 @@
                             <th class="py-4 px-4 text-right text-sm font-semibold">العنوان</th>
                             <th class="py-4 px-4 text-right text-sm font-semibold">الوصف</th>
                             <th class="py-4 px-4 text-right text-sm font-semibold">المدة</th>
+                            <th class="py-4 px-4 text-right text-sm font-semibold">عدد الأسئلة</th>
                             <th class="py-4 px-4 text-center text-sm font-semibold w-48">الإجراءات</th>
                         </tr>
                     </thead>
@@ -40,6 +41,7 @@
                             <td class="py-3 px-4 text-right text-sm text-gray-700">{{ $exam->title }}</td>
                             <td class="py-3 px-4 text-right text-sm text-gray-700">{{ $exam->description }}</td>
                             <td class="py-3 px-4 text-right text-sm text-gray-700">{{ $exam->duration }} دقيقة</td>
+                            <td class="py-3 px-4 text-right text-sm text-gray-700">{{ $exam->questions->count() }}</td>
                             <td class="py-3 px-4 flex flex-wrap gap-2 justify-center">
                                 <a href="{{ route('admin.exams.edit', $exam) }}"
                                     class="px-3 py-1 bg-blue-100 text-blue-600 rounded-md hover:bg-blue-200 transition-all">
@@ -63,7 +65,7 @@
                         @endforeach
                         @if($exams->isEmpty())
                         <tr>
-                            <td colspan="4" class="py-8 text-center text-gray-500">لا توجد اختبارات حالياً.</td>
+                            <td colspan="5" class="py-8 text-center text-gray-500">لا توجد اختبارات حالياً.</td>
                         </tr>
                         @endif
                     </tbody>

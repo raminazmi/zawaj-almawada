@@ -13,6 +13,7 @@ class CourseExamQuestion extends Model
         'course_exam_id',
         'question',
         'question_type_id',
+        'points',
         'correct_answer'
     ];
 

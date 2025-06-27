@@ -20,6 +20,15 @@
                     @endif
                 </div>
                 <div>
+                    <label class="block mb-2 font-bold text-gray-700">العلامة</label>
+                    <input type="number" name="points" value="{{ old('points') }}"
+                        class="w-full px-4 py-2 border rounded-lg @error('points') border-red-500 @else border-gray-300 @endif focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                        required min="1">
+                    @error('points')
+                    <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                    @endif
+                </div>
+                <div>
                     <label class="block mb-2 font-bold text-gray-700">نوع السؤال</label>
                     <select name="type_id" id="type_id"
                         class="w-full px-4 py-2 border rounded-lg @error('type_id') border-red-500 @else border-gray-300 @endif focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
@@ -125,13 +134,11 @@
         const trueFalseSection = document.getElementById('true-false-section');
         const shortAnswerSection = document.getElementById('short-answer-section');
 
-        // Hide all sections and disable inputs
         [optionsSection, trueFalseSection, shortAnswerSection].forEach(section => {
             section.style.display = 'none';
             section.querySelectorAll('input, select').forEach(el => el.disabled = true);
         });
 
-        // Show and enable relevant section
         if (selectedText === 'اختيار من متعدد') {
             optionsSection.style.display = 'block';
             optionsSection.querySelectorAll('input').forEach(el => el.disabled = false);

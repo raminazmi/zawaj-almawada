@@ -53,6 +53,7 @@ class AdminCourseExamController extends Controller
                 'questions.*.options' => 'nullable|array',
                 'questions.*.options.*.text' => 'required_if:questions.*.type_id,1|string|nullable',
                 'questions.*.options.*.is_correct' => 'nullable|boolean',
+                'questions.*.points' => 'required|integer|min:1',
                 'questions.*.correct_answer' => [
                     'nullable',
                     function ($attribute, $value, $fail) use ($request) {
@@ -91,6 +92,9 @@ class AdminCourseExamController extends Controller
                 'questions.*.options.*.text.required_if' => 'نص الخيار مطلوب لأسئلة الاختيار من متعدد',
                 'questions.*.options.*.text.string' => 'يجب أن يكون نص الخيار نصًا',
                 'questions.*.options.*.is_correct.boolean' => 'القيمة المحددة لصحة الخيار غير صحيحة',
+                'questions.*.points.required' => 'حقل النقاط مطلوب',
+                'questions.*.points.integer' => 'يجب أن تكون النقاط عددًا صحيحًا',
+                'questions.*.points.min' => 'يجب أن تكون النقاط واحدة على الأقل',
             ]);
 
             $exam = CourseExam::create([
@@ -115,6 +119,7 @@ class AdminCourseExamController extends Controller
                 $question = $exam->questions()->create([
                     'question' => $questionData['text'],
                     'question_type_id' => $questionData['type_id'],
+                    'points' => $questionData['points'],
                     'correct_answer' => $correctAnswer,
                 ]);
 
@@ -175,6 +180,7 @@ class AdminCourseExamController extends Controller
                 'questions.*.options' => 'nullable|array',
                 'questions.*.options.*.text' => 'required_if:questions.*.type_id,1|string|nullable',
                 'questions.*.options.*.is_correct' => 'nullable|boolean',
+                'questions.*.points' => 'required|integer|min:1',
                 'questions.*.correct_answer' => [
                     'nullable',
                     'string',
@@ -192,6 +198,34 @@ class AdminCourseExamController extends Controller
                         }
                     },
                 ],
+            ], [
+                'title.required' => 'حقل العنوان مطلوب',
+                'title.string' => 'يجب أن يكون العنوان نصًا',
+                'title.max' => 'العنوان لا يمكن أن يتجاوز 255 حرفًا',
+                'description.string' => 'يجب أن يكون الوصف نصًا',
+                'duration.required' => 'حقل المدة مطلوب',
+                'duration.integer' => 'يجب أن تكون المدة عددًا صحيحًا',
+                'duration.min' => 'يجب أن تكون المدة دقيقة واحدة على الأقل',
+                'start_time.required' => 'حقل وقت البدء مطلوب',
+                'start_time.date' => 'وقت البدء غير صالح',
+                'end_time.required' => 'حقل وقت الانتهاء مطلوب',
+                'end_time.date' => 'وقت الانتهاء غير صالح',
+                'end_time.after' => 'يجب أن يكون وقت الانتهاء بعد وقت البدء',
+                'is_active.boolean' => 'القيمة المحددة لحقل التفعيل غير صحيحة',
+                'questions.required' => 'يجب إضافة سؤال واحد على الأقل',
+                'questions.array' => 'الأسئلة يجب أن تكون في صيغة صحيحة',
+                'questions.min' => 'يجب إضافة سؤال واحد على الأقل',
+                'questions.*.text.required' => 'نص السؤال مطلوب',
+                'questions.*.text.string' => 'يجب أن يكون نص السؤال نصًا',
+                'questions.*.type_id.required' => 'نوع السؤال مطلوب',
+                'questions.*.type_id.exists' => 'نوع السؤال المحدد غير موجود',
+                'questions.*.options.array' => 'الخيارات يجب أن تكون في صيغة صحيحة',
+                'questions.*.options.*.text.required_if' => 'نص الخيار مطلوب لأسئلة الاختيار من متعدد',
+                'questions.*.options.*.text.string' => 'يجب أن يكون نص الخيار نصًا',
+                'questions.*.options.*.is_correct.boolean' => 'القيمة المحددة لصحة الخيار غير صحيحة',
+                'questions.*.points.required' => 'حقل النقاط مطلوب',
+                'questions.*.points.integer' => 'يجب أن تكون النقاط عددًا صحيحًا',
+                'questions.*.points.min' => 'يجب أن تكون النقاط واحدة على الأقل',
             ]);
 
             $exam->update([
@@ -227,6 +261,7 @@ class AdminCourseExamController extends Controller
                             $question->update([
                                 'question' => $questionData['text'],
                                 'question_type_id' => $questionData['type_id'],
+                                'points' => $questionData['points'],
                                 'correct_answer' => $correctAnswer, // سيتم تعيين null لـ "اختيار من متعدد"
                             ]);
                             $question->options()->delete();
@@ -313,6 +348,7 @@ class AdminCourseExamController extends Controller
                 'options' => 'nullable|array',
                 'options.*.text' => 'required_if:type_id,1|string|nullable',
                 'options.*.is_correct' => 'nullable|boolean',
+                'points' => 'required|integer|min:1',
                 'correct_answer' => [
                     'nullable',
                     function ($attribute, $value, $fail) use ($request) {
@@ -334,6 +370,9 @@ class AdminCourseExamController extends Controller
                 'options.*.text.required_if' => 'نص الخيار مطلوب لأسئلة الاختيار من متعدد',
                 'options.*.text.string' => 'يجب أن يكون نص الخيار نصًا',
                 'options.*.is_correct.boolean' => 'القيمة المحددة لصحة الخيار غير صحيحة',
+                'points.required' => 'حقل النقاط مطلوب',
+                'points.integer' => 'يجب أن تكون النقاط عددًا صحيحًا',
+                'points.min' => 'يجب أن تكون النقاط واحدة على الأقل',
             ]);
 
             if ($validated['type_id'] == 1 && isset($validated['options'])) {
@@ -357,6 +396,7 @@ class AdminCourseExamController extends Controller
             $question = $exam->questions()->create([
                 'question' => $validated['text'],
                 'question_type_id' => $validated['type_id'],
+                'points' => $validated['points'],
                 'correct_answer' => $correctAnswer,
             ]);
 
@@ -408,6 +448,7 @@ class AdminCourseExamController extends Controller
                 'options' => 'nullable|array',
                 'options.*.text' => 'required_if:type_id,1|string|nullable',
                 'options.*.is_correct' => 'nullable|boolean',
+                'points' => 'required|integer|min:1',
                 'correct_answer' => [
                     'nullable',
                     function ($attribute, $value, $fail) use ($request) {
@@ -429,6 +470,9 @@ class AdminCourseExamController extends Controller
                 'options.*.text.required_if' => 'نص الخيار مطلوب لأسئلة الاختيار من متعدد',
                 'options.*.text.string' => 'يجب أن يكون نص الخيار نصًا',
                 'options.*.is_correct.boolean' => 'القيمة المحددة لصحة الخيار غير صحيحة',
+                'points.required' => 'حقل النقاط مطلوب',
+                'points.integer' => 'يجب أن تكون النقاط عددًا صحيحًا',
+                'points.min' => 'يجب أن تكون النقاط واحدة على الأقل',
             ]);
 
             if ($validated['type_id'] == 1 && isset($validated['options'])) {
@@ -452,6 +496,7 @@ class AdminCourseExamController extends Controller
             $question->update([
                 'question' => $validated['text'],
                 'question_type_id' => $validated['type_id'],
+                'points' => $validated['points'],
                 'correct_answer' => $correctAnswer, // تأكد من التحديث دائمًا
             ]);
 

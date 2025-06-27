@@ -52,15 +52,32 @@
                 @csrf
                 @foreach($exam->questions as $question)
                 <div class="mb-8 p-4 bg-gray-50 rounded-lg">
-                    <div class="mb-3 flex justify-start items-center">
+                    <div class="mb-3 flex justify-between items-center">
+                        <div class="flex justify-start items-center">
+                            <span
+                                class="inline-block bg-[#3A8BCD] text-white rounded-full px-2 py-0.5 text-xs font-bold mr-2">
+                                سؤال {{ $loop->iteration }}
+                            </span>
+                            <h4 class="inline text-lg font-semibold text-[#2A5C82] mr-2"
+                                style="font-family: 'Almarai', sans-serif;">
+                                {{ $question->question }}
+                            </h4>
+                        </div>
+                        @if($question->points && $question->points > 0)
                         <span
-                            class="inline-block bg-[#3A8BCD] text-white rounded-full px-2 py-0.5 text-xs font-bold mr-2">
-                            سؤال {{ $loop->iteration }}
-                        </span>
-                        <h4 class="inline text-lg font-semibold text-[#2A5C82] mr-2"
-                            style="font-family: 'Almarai', sans-serif;">
-                            {{ $question->question }}
-                        </h4>
+                            class="inline-block bg-green-500 text-white rounded-full px-2 py-0.5 text-[11px] font-bold mr-2">
+                            @if($question->points == 1)
+                            @elseif($question->points == 2)
+                            @elseif($question->points >= 3 && $question->points <= 10) {{ $question->points }}
+                                @else
+                                {{ $question->points }} @endif
+                                @if($question->points == 1)
+                                علامة
+                                @elseif($question->points == 2)
+                                علامتان
+                                @elseif($question->points >= 3 && $question->points <= 10) علامات @else علامة @endif
+                                    </span>
+                                    @endif
                     </div>
                     <div class="grid grid-cols-1 gap-3">
                         @if($question->question_type_id == 1)
