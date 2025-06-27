@@ -167,16 +167,17 @@ class CourseExamController extends Controller
 
             Browsershot::html($html)
                 ->setNodeBinary('/usr/bin/node')
-                ->setChromePath('/usr/bin/chromium-browser')
+                ->setChromePath('/usr/bin/google-chrome')
                 ->setOption('args', [
                     '--no-sandbox',
                     '--disable-setuid-sandbox',
-                    '--disable-dev-shm-usage'
+                    '--disable-dev-shm-usage',
+                    '--single-process'
                 ])
                 ->windowSize(920, 860)
                 ->timeout(120)
-                ->waitUntilNetworkIdle(false)
-                ->delay(2000)
+                ->waitUntilNetworkIdle()
+                ->delay(5000)
                 ->save($path);
 
             Mail::to($result->user->email)->send(new ExamCertificate($result, $path));
