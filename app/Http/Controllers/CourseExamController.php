@@ -107,15 +107,25 @@ class CourseExamController extends Controller
                     } elseif ($question->question_type_id == 3) {
                         if ($question->correct_answer !== null) {
                             $correctAnswer = trim(strtolower($question->correct_answer));
-                            $similarity = 0;
-                            similar_text($userAnswer, $correctAnswer, $similarity);
-                            if ($similarity >= 90) {
+                            if (str_contains($userAnswer, $correctAnswer)) {
                                 $earnedPoints += $points;
-                                Log::debug('Correct answer for open-ended (similarity)', [
+                                Log::debug('Correct answer for open-ended (contains correct text)', [
                                     'question_id' => $question->id,
                                     'points' => $points,
-                                    'similarity' => $similarity
+                                    'correct_answer' => $correctAnswer,
+                                    'user_answer' => $userAnswer
                                 ]);
+                            } else {
+                                $similarity = 0;
+                                similar_text($userAnswer, $correctAnswer, $similarity);
+                                if ($similarity >= 90) {
+                                    $earnedPoints += $points;
+                                    Log::debug('Correct answer for open-ended (similarity)', [
+                                        'question_id' => $question->id,
+                                        'points' => $points,
+                                        'similarity' => $similarity
+                                    ]);
+                                }
                             }
                         }
                     }
@@ -133,7 +143,7 @@ class CourseExamController extends Controller
 
             try {
                 Log::info('Attempting to send certificate', ['result_id' => $result->id]);
-                $certificateSent = $this->sendCertificate($result); // Store the result
+                $certificateSent = $this->sendCertificate($result);
                 Log::info('Certificate process completed', ['result_id' => $result->id, 'success' => $certificateSent]);
             } catch (\Exception $e) {
                 Log::error('Failed to send certificate', [
