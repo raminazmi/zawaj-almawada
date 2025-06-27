@@ -105,9 +105,18 @@ class CourseExamController extends Controller
                             }
                         }
                     } elseif ($question->question_type_id == 3) {
-                        if ($question->correct_answer !== null && $userAnswer == trim(strtolower($question->correct_answer))) {
-                            $earnedPoints += $points;
-                            Log::debug('Correct answer for open-ended', ['question_id' => $question->id, 'points' => $points]);
+                        if ($question->correct_answer !== null) {
+                            $correctAnswer = trim(strtolower($question->correct_answer));
+                            $similarity = 0;
+                            similar_text($userAnswer, $correctAnswer, $similarity);
+                            if ($similarity >= 90) {
+                                $earnedPoints += $points;
+                                Log::debug('Correct answer for open-ended (similarity)', [
+                                    'question_id' => $question->id,
+                                    'points' => $points,
+                                    'similarity' => $similarity
+                                ]);
+                            }
                         }
                     }
                 }
