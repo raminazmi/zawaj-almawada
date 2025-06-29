@@ -48,8 +48,22 @@
                 </div>
             </div>
 
+
+
             <form id="examForm" method="POST" action="{{ route('course-exams.submit', $exam) }}">
                 @csrf
+                <div class="mb-8 p-4 bg-gray-50 rounded-lg">
+                    <label for="full_name" class="block text-lg font-semibold text-[#2A5C82] mb-2"
+                        style="font-family: 'Almarai', sans-serif;">
+                        أدخل اسمك الحقيقي
+                    </label>
+                    <input type="text" id="full_name" name="full_name"
+                        class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-[#3A8BCD] focus:border-[#3A8BCD] p-2"
+                        placeholder="اكتب اسمك الحقيقي هنا" value="{{ auth()->user()->full_name ?? '' }}" required>
+                    <p class="text-sm text-gray-600 mt-1">
+                        * هذا الاسم سيظهر في شهادة الإجتياز الخاصة بك. يرجى التأكد من إدخاله بشكل صحيح.
+                    </p>
+                </div>
                 @foreach($exam->questions as $question)
                 <div class="mb-8 p-4 bg-gray-50 rounded-lg">
                     <div class="mb-3 flex justify-between items-center">

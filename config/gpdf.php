@@ -27,42 +27,38 @@ return [
      * Directory for storing font files.
      * @var string
      */
-    GpdfSet::FONT_DIR => realpath(__DIR__ . GpdfDefault::FONT_DIR),
+    GpdfSet::FONT_DIR => realpath(__DIR__ . GpdfDefault::FONT_DIR) . '/',
 
     /**
      * Directory for storing font cache files.
      * @var string
      */
-    GpdfSet::FONT_CACHE =>  realpath(__DIR__ . GpdfDefault::FONT_DIR), // same to font dir to avoid cache problems
+    GpdfSet::FONT_CACHE => realpath(__DIR__ . GpdfDefault::FONT_DIR) . '/', // same to font dir to avoid cache problems
 
     /**
      * Default font for generating PDFs.
      * @var string
      */
-    GpdfSet::DEFAULT_FONT => GpdfDefaultSupportedFonts::TAJAWAL,
+    GpdfSet::DEFAULT_FONT => GpdfDefaultSupportedFonts::ALMARAI, // تطابق مع خط القالب
 
     /**
-     *
      * Set this to `true` if you want numbers to appear in Hindi format (e.g., ١,٢,٣,٤,٥).
      * Set to `false` to display numbers in standard format (e.g., 1, 2, 3, 4, 5).
-     *
      * @var bool
      */
     GpdfSet::SHOW_NUMBERS_AS_HINDI => false,
 
     /**
-     *
      * Set Max number of chars you can fit in one line, default is 50
-     *
      * @var integer
      */
-    GpdfSet::MAX_CHARS_PER_LINE => 100,
+    GpdfSet::MAX_CHARS_PER_LINE => 150, // زيادة لتجنب التقسيم
 
     /**
      * Font height ratio setting.
      * @var float
      */
-    GpdfSet::FONT_HEIGHT_RATIO => GpdfDefault::FONT_HEIGHT_RATIO,
+    GpdfSet::FONT_HEIGHT_RATIO => 1.0, // تقليل لضبط الارتفاع
 
     /**
      * Enable or disable font subsetting.
@@ -79,12 +75,10 @@ return [
     GpdfSet::STORAGE_PATH => GpdfDefault::STORAGE_PATH,
 
     GpdfSet::AWS_BUCKET => '',
-
     GpdfSet::AWS_REGION => '',
-
     GpdfSet::AWS_KEY => '',
-
     GpdfSet::AWS_SECRET => '',
+
     /**
      * Enable or disable entity conversion.
      * @var bool
@@ -119,13 +113,13 @@ return [
      * Default paper size for the generated PDFs.
      * @var string
      */
-    GpdfSet::DEFAULT_PAPER_SIZE => GpdfDefault::DEFAULT_PAPER_SIZE,
+    GpdfSet::DEFAULT_PAPER_SIZE => 'A4',
 
     /**
      * Default paper orientation for the generated PDFs.
      * @var string
      */
-    GpdfSet::DEFAULT_PAPER_ORIENTATION => GpdfDefault::DEFAULT_PAPER_ORIENTATION,
+    GpdfSet::DEFAULT_PAPER_ORIENTATION => 'landscape',
 
     /**
      * DPI setting for the generated PDFs.
@@ -150,6 +144,7 @@ return [
      * @var bool
      */
     GpdfSet::IS_REMOTE_ENABLED => true,
+
     /**
      * List of allowed remote hosts.
      * @var array
@@ -159,6 +154,7 @@ return [
         'fonts.gstatic.com',
         'https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700&display=swap'
     ],
+
     /**
      * Enable or disable JavaScript execution in the PDFs.
      * @var bool
@@ -169,55 +165,55 @@ return [
      * Enable or disable HTML5 parser in the PDFs.
      * @var bool
      */
-    GpdfSet::IS_HTML5_PARSER_ENABLED => GpdfDefault::IS_HTML5_PARSER_ENABLED,
+    GpdfSet::IS_HTML5_PARSER_ENABLED => true,
 
     /**
      * Enable or disable PNG debugging.
      * @var bool
      */
-    GpdfSet::DEBUG_PNG => GpdfDefault::DEBUG_PNG,
+    GpdfSet::DEBUG_PNG => false,
 
     /**
      * Enable or disable keeping temporary files.
      * @var bool
      */
-    GpdfSet::DEBUG_KEEP_TEMP => GpdfDefault::DEBUG_KEEP_TEMP,
+    GpdfSet::DEBUG_KEEP_TEMP => false,
 
     /**
      * Enable or disable CSS debugging.
      * @var bool
      */
-    GpdfSet::DEBUG_CSS => GpdfDefault::DEBUG_CSS,
+    GpdfSet::DEBUG_CSS => false,
 
     /**
      * Enable or disable layout debugging.
      * @var bool
      */
-    GpdfSet::DEBUG_LAYOUT => GpdfDefault::DEBUG_LAYOUT,
+    GpdfSet::DEBUG_LAYOUT => false,
 
     /**
      * Enable or disable layout lines debugging.
      * @var bool
      */
-    GpdfSet::DEBUG_LAYOUT_LINES => GpdfDefault::DEBUG_LAYOUT_LINES,
+    GpdfSet::DEBUG_LAYOUT_LINES => false, // تعطيل لمنع الحدود حول الكلمات
 
     /**
      * Enable or disable layout blocks debugging.
      * @var bool
      */
-    GpdfSet::DEBUG_LAYOUT_BLOCKS => GpdfDefault::DEBUG_LAYOUT_BLOCKS,
+    GpdfSet::DEBUG_LAYOUT_BLOCKS => false,
 
     /**
      * Enable or disable layout inline debugging.
      * @var bool
      */
-    GpdfSet::DEBUG_LAYOUT_INLINE => GpdfDefault::DEBUG_LAYOUT_INLINE,
+    GpdfSet::DEBUG_LAYOUT_INLINE => false,
 
     /**
      * Enable or disable layout padding box debugging.
      * @var bool
      */
-    GpdfSet::DEBUG_LAYOUT_PADDING_BOX => GpdfDefault::DEBUG_LAYOUT_PADDING_BOX,
+    GpdfSet::DEBUG_LAYOUT_PADDING_BOX => false,
 
     /**
      * Backend used for generating PDFs.

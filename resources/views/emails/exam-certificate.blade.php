@@ -12,7 +12,7 @@
     <div class="content">
         <div class="greeting">
             السلام عليكم ورحمة الله وبركاته<br>
-            الأخ الفاضل / الأخت الفاضلة: <strong>{{ $result->user->name }}</strong>
+            الأخ الفاضل / الأخت الفاضلة: <strong>{{ $result->user->full_name }}</strong>
         </div>
 
         <div class="message">
