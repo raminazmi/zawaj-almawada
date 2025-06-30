@@ -25,11 +25,11 @@
                         <div x-data="{ enabled: {{ old('show_profile', $user->show_profile) ? 'true' : 'false' }} }">
                             <input type="hidden" name="show_profile" :value="enabled ? '1' : '0'">
                             <button @click="enabled = !enabled" type="button"
-                                class="relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                                class="relative inline-flex flex-shrink-0 h-[26px] w-[48px] border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
                                 :class="enabled ? 'bg-purple-600' : 'bg-gray-200'">
                                 <span aria-hidden="true"
-                                    class="pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-lg transform ring-0 transition ease-in-out duration-200"
-                                    :class="{ 'translate-x-5': enabled, 'translate-x-0': !enabled }"></span>
+                                    class="pointer-events-none inline-block h-[20px] w-[20px] mt-[1.5px] rounded-full bg-white shadow-lg transform ring-0 transition ease-in-out duration-200"
+                                    :class="{ '-translate-x-6': enabled, 'translate-x-0': !enabled }"></span>
                             </button>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                 <!-- Update Password Section -->
                 <div class="p-6 border border-purple-100 rounded-lg">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">تغيير كلمة المرور</h3>
-                    @include('profile.partials.update-password-form')
+                    @include('profile.partials.update-password-fields')
                 </div>
 
                 <div class="flex items-center justify-start mt-6">
