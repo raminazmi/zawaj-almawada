@@ -61,6 +61,169 @@ class MarriageRequestController extends Controller
         return true;
     }
 
+    public function boys(Request $request)
+    {
+        $query = User::where('gender', 'male')
+            ->where('status', 'available')
+            ->where('show_profile', true)
+            ->whereNotNull([
+                'state',
+                'tribe',
+                'marital_status',
+                'education_level',
+                'job_title',
+                'monthly_income',
+                'religion',
+                'housing_type',
+                'health_status',
+                'religiosity_level',
+                'prayer_commitment',
+                'personal_description',
+                'partner_expectations'
+            ]);
+
+        // تطبيق البحث النصي
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('membership_number', 'like', "%{$search}%")
+                    ->orWhere('personal_description', 'like', "%{$search}%")
+                    ->orWhere('partner_expectations', 'like', "%{$search}%");
+            });
+        }
+
+        // تطبيق الفلاتر
+        if ($request->has('age_min') && !empty($request->age_min)) {
+            $query->where('age', '>=', $request->age_min);
+        }
+        if ($request->has('age_max') && !empty($request->age_max)) {
+            $query->where('age', '<=', $request->age_max);
+        }
+        if ($request->has('marital_status') && !empty($request->marital_status)) {
+            $query->where('marital_status', $request->marital_status);
+        }
+        if ($request->has('education_level') && !empty($request->education_level)) {
+            $query->where('education_level', $request->education_level);
+        }
+        if ($request->has('monthly_income_min') && !empty($request->monthly_income_min)) {
+            $query->where('monthly_income', '>=', $request->monthly_income_min);
+        }
+        if ($request->has('monthly_income_max') && !empty($request->monthly_income_max)) {
+            $query->where('monthly_income', '<=', $request->monthly_income_max);
+        }
+        if ($request->has('religion') && !empty($request->religion)) {
+            $query->where('religion', $request->religion);
+        }
+        if ($request->has('housing_type') && !empty($request->housing_type)) {
+            $query->where('housing_type', $request->housing_type);
+        }
+        if ($request->has('health_status') && !empty($request->health_status)) {
+            $query->where('health_status', $request->health_status);
+        }
+        if ($request->has('religiosity_level') && !empty($request->religiosity_level)) {
+            $query->where('religiosity_level', $request->religiosity_level);
+        }
+        if ($request->has('prayer_commitment') && !empty($request->prayer_commitment)) {
+            $query->where('prayer_commitment', $request->prayer_commitment);
+        }
+        if ($request->has('has_children') && !empty($request->has_children)) {
+            $query->where('has_children', $request->has_children === 'yes' ? 1 : 0);
+        }
+        if ($request->has('is_smoker') && !empty($request->is_smoker)) {
+            $query->where('is_smoker', $request->is_smoker === 'yes' ? 1 : 0);
+        }
+
+        $boys = $query->get();
+
+        if (Auth::user()->status !== 'available') {
+            return redirect()->route('marriage-requests.status')->with('info', 'لديك طلب خطوبة نشط بالفعل');
+        }
+        $isProfileComplete = $this->isProfileComplete(Auth::user());
+
+        return view('marriage-requests.boys', compact('boys', 'isProfileComplete'));
+    }
+
+    public function girls(Request $request)
+    {
+        $query = User::where('gender', 'female')
+            ->where('status', 'available')
+            ->where('show_profile', true)
+            ->whereNotNull([
+                'state',
+                'tribe',
+                'marital_status',
+                'education_level',
+                'job_title',
+                'monthly_income',
+                'religion',
+                'housing_type',
+                'health_status',
+                'religiosity_level',
+                'prayer_commitment',
+                'personal_description',
+                'partner_expectations'
+            ]);
+
+        // تطبيق البحث النصي
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('membership_number', 'like', "%{$search}%")
+                    ->orWhere('personal_description', 'like', "%{$search}%")
+                    ->orWhere('partner_expectations', 'like', "%{$search}%");
+            });
+        }
+
+        // تطبيق الفلاتر
+        if ($request->has('age_min') && !empty($request->age_min)) {
+            $query->where('age', '>=', $request->age_min);
+        }
+        if ($request->has('age_max') && !empty($request->age_max)) {
+            $query->where('age', '<=', $request->age_max);
+        }
+        if ($request->has('marital_status') && !empty($request->marital_status)) {
+            $query->where('marital_status', $request->marital_status);
+        }
+        if ($request->has('education_level') && !empty($request->education_level)) {
+            $query->where('education_level', $request->education_level);
+        }
+        if ($request->has('monthly_income_min') && !empty($request->monthly_income_min)) {
+            $query->where('monthly_income', '>=', $request->monthly_income_min);
+        }
+        if ($request->has('monthly_income_max') && !empty($request->monthly_income_max)) {
+            $query->where('monthly_income', '<=', $request->monthly_income_max);
+        }
+        if ($request->has('religion') && !empty($request->religion)) {
+            $query->where('religion', $request->religion);
+        }
+        if ($request->has('housing_type') && !empty($request->housing_type)) {
+            $query->where('housing_type', $request->housing_type);
+        }
+        if ($request->has('health_status') && !empty($request->health_status)) {
+            $query->where('health_status', $request->health_status);
+        }
+        if ($request->has('religiosity_level') && !empty($request->religiosity_level)) {
+            $query->where('religiosity_level', $request->religiosity_level);
+        }
+        if ($request->has('prayer_commitment') && !empty($request->prayer_commitment)) {
+            $query->where('prayer_commitment', $request->prayer_commitment);
+        }
+        if ($request->has('has_children') && !empty($request->has_children)) {
+            $query->where('has_children', $request->has_children === 'yes' ? 1 : 0);
+        }
+
+        $girls = $query->get();
+
+        if (Auth::user()->status !== 'available') {
+            return redirect()->route('marriage-requests.status')->with('info', 'لديك طلب خطوبة نشط بالفعل');
+        }
+        $isProfileComplete = $this->isProfileComplete(Auth::user());
+
+        return view('marriage-requests.girls', compact('girls', 'isProfileComplete'));
+    }
+
     public function index()
     {
         if (!auth()->user()->age || !auth()->user()->gender) {
@@ -119,74 +282,6 @@ class MarriageRequestController extends Controller
         return view('marriage-requests.create');
     }
 
-    public function boys()
-    {
-        $requiredFields = [
-            'state',
-            'tribe',
-            'marital_status',
-            'education_level',
-            'job_title',
-            'monthly_income',
-            'religion',
-            'housing_type',
-            'health_status',
-            'religiosity_level',
-            'prayer_commitment',
-            'personal_description',
-            'partner_expectations'
-        ];
-        $boys = User::where('gender', 'male')
-            ->where('status', 'available')
-            ->where(function ($query) use ($requiredFields) {
-                foreach ($requiredFields as $field) {
-                    $query->whereNotNull($field);
-                }
-            })
-            ->get();
-        if (Auth::user()->status !== 'available') {
-            return redirect()->route('marriage-requests.status')->with('info', 'لديك طلب خطوبة نشط بالفعل');
-        }
-        $isProfileComplete = $this->isProfileComplete(Auth::user());
-
-        return view('marriage-requests.boys', compact('boys', 'isProfileComplete'));
-    }
-
-    public function girls()
-    {
-        $requiredFields = [
-            'state',
-            'tribe',
-            'marital_status',
-            'education_level',
-            'job_title',
-            'monthly_income',
-            'religion',
-            'housing_type',
-            'health_status',
-            'religiosity_level',
-            'prayer_commitment',
-            'personal_description',
-            'partner_expectations'
-        ];
-
-        $girls = User::where('gender', 'female')
-            ->where('status', 'available')
-            ->where(function ($query) use ($requiredFields) {
-                foreach ($requiredFields as $field) {
-                    $query->whereNotNull($field);
-                }
-            })
-            ->get();
-
-        if (Auth::user()->status !== 'available') {
-            return redirect()->route('marriage-requests.status')->with('info', 'لديك طلب خطوبة نشط بالفعل');
-        }
-
-        $isProfileComplete = $this->isProfileComplete(Auth::user());
-
-        return view('marriage-requests.girls', compact('girls', 'isProfileComplete'));
-    }
 
     public function createProposal($targetId)
     {

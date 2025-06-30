@@ -108,6 +108,9 @@ Route::middleware('auth', 'verified')->group(function () {
             Route::get('/edit-profile', [RegisteredUserController::class, 'editProfile'])->name('profile.edit');
             Route::post('/update-profile', [RegisteredUserController::class, 'updateProfile'])->name('profile.update');
             Route::post('/destroy-profile', [RegisteredUserController::class, 'destroyProfile'])->name('profile.destroy');
+
+            Route::get('/profile-settings', [RegisteredUserController::class, 'profileSettings'])->name('profile.settings');
+            Route::post('/profile-settings', [RegisteredUserController::class, 'updateProfileSettings'])->name('profile.settings.update');
         });
     });
 });

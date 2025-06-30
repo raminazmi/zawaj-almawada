@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-12">
-    <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
                 <i class="fas fa-female ml-2"></i>قائمة الفتيات المتاحات
@@ -16,13 +16,182 @@
                 حالة طلباتي
             </a>
 
-            @if(!$isProfileComplete || Auth::user()->profile_status !== 'approved') <a
-                href="{{ route('profile.edit') }}"
+            @if(!$isProfileComplete || Auth::user()->profile_status !== 'approved')
+            <a href="{{ route('profile.edit') }}"
                 class="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all shadow-md hover:shadow-lg transform hover:scale-105">
                 <i class="fas fa-user-edit ml-2"></i>
                 إكمال الملف الشخصي
             </a>
             @endif
+        </div>
+
+        <div class="mb-4 transition-all" x-data="{ isOpen: false }">
+            <button type="button" class="w-full focus:outline-none" @click="isOpen = !isOpen">
+                <div class="bg-gradient-to-r from-pink-600 to-rose-600 p-3 ps-3 pe-5 flex justify-between items-center"
+                    :class="isOpen ? 'rounded-t-xl' : 'rounded-xl'">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-search text-pink-600 text-lg"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-white text-start">البحث والفلترة</h3>
+                    </div>
+                    <i class="fas text-white transition-transform duration-300"
+                        :class="{ 'fa-chevron-down': !isOpen, 'fa-chevron-up': isOpen }"></i>
+                </div>
+            </button>
+
+            <div class="rounded-b-xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
+                x-show="isOpen" x-collapse>
+                <form method="GET" action="{{ route('marriage-requests.girls') }}" class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="search" class="block text-sm font-medium text-gray-700">بحث</label>
+                            <input type="text" name="search" id="search" value="{{ request('search') }}"
+                                placeholder="ابحث بالاسم أو رقم العضوية"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="age_min" class="block text-sm font-medium text-gray-700">العمر من</label>
+                            <input type="number" name="age_min" id="age_min" value="{{ request('age_min') }}"
+                                placeholder="الحد الأدنى"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="age_max" class="block text-sm font-medium text-gray-700">العمر إلى</label>
+                            <input type="number" name="age_max" id="age_max" value="{{ request('age_max') }}"
+                                placeholder="الحد الأقصى"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="marital_status" class="block text-sm font-medium text-gray-700">الحالة
+                                الاجتماعية</label>
+                            <select name="marital_status" id="marital_status"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                                <option value="">اختر</option>
+                                <option value="single" {{ request('marital_status')=='single' ? 'selected' : '' }}>عزباء
+                                </option>
+                                <option value="married" {{ request('marital_status')=='married' ? 'selected' : '' }}>
+                                    متزوجة</option>
+                                <option value="widowed" {{ request('marital_status')=='widowed' ? 'selected' : '' }}>
+                                    أرملة</option>
+                                <option value="divorced" {{ request('marital_status')=='divorced' ? 'selected' : '' }}>
+                                    مطلقة</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="education_level" class="block text-sm font-medium text-gray-700">المستوى
+                                التعليمي</label>
+                            <select name="education_level" id="education_level"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                                <option value="">اختر</option>
+                                <option value="illiterate" {{ request('education_level')=='illiterate' ? 'selected' : ''
+                                    }}>أمية</option>
+                                <option value="general" {{ request('education_level')=='general' ? 'selected' : '' }}>
+                                    تعليم عام</option>
+                                <option value="diploma" {{ request('education_level')=='diploma' ? 'selected' : '' }}>
+                                    دبلوم</option>
+                                <option value="bachelor" {{ request('education_level')=='bachelor' ? 'selected' : '' }}>
+                                    بكالوريوس</option>
+                                <option value="master" {{ request('education_level')=='master' ? 'selected' : '' }}>
+                                    ماجستير</option>
+                                <option value="phd" {{ request('education_level')=='phd' ? 'selected' : '' }}>دكتوراه
+                                </option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="monthly_income_min" class="block text-sm font-medium text-gray-700">الدخل
+                                من</label>
+                            <input type="number" name="monthly_income_min" id="monthly_income_min"
+                                value="{{ request('monthly_income_min') }}" placeholder="الحد الأدنى"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="monthly_income_max" class="block text-sm font-medium text-gray-700">الدخل
+                                إلى</label>
+                            <input type="number" name="monthly_income_max" id="monthly_income_max"
+                                value="{{ request('monthly_income_max') }}" placeholder="الحد الأقصى"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="religion" class="block text-sm font-medium text-gray-700">الدين</label>
+                            <select name="religion" id="religion"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                                <option value="">اختر</option>
+                                <option value="Islam" {{ request('religion')=='Islam' ? 'selected' : '' }}>مسلمة
+                                </option>
+                                <option value="Christianity" {{ request('religion')=='Christianity' ? 'selected' : ''
+                                    }}>غير مسلمة</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="housing_type" class="block text-sm font-medium text-gray-700">نوع السكن</label>
+                            <select name="housing_type" id="housing_type"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                                <option value="">اختر</option>
+                                <option value="independent" {{ request('housing_type')=='independent' ? 'selected' : ''
+                                    }}>مستقل</option>
+                                <option value="family_annex" {{ request('housing_type')=='family_annex' ? 'selected'
+                                    : '' }}>ملحق عائلي</option>
+                                <option value="family_room" {{ request('housing_type')=='family_room' ? 'selected' : ''
+                                    }}>غرفة مع العائلة</option>
+                                <option value="no_preference" {{ request('housing_type')=='no_preference' ? 'selected'
+                                    : '' }}>لا تفضيل</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="health_status" class="block text-sm font-medium text-gray-700">الحالة
+                                الصحية</label>
+                            <input type="text" name="health_status" id="health_status"
+                                value="{{ request('health_status') }}" placeholder="أدخل الحالة الصحية"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                        </div>
+                        <div>
+                            <label for="religiosity_level" class="block text-sm font-medium text-gray-700">مستوى
+                                التدين</label>
+                            <select name="religiosity_level" id="religiosity_level"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                                <option value="">اختر</option>
+                                <option value="high" {{ request('religiosity_level')=='high' ? 'selected' : '' }}>مرتفع
+                                </option>
+                                <option value="medium" {{ request('religiosity_level')=='medium' ? 'selected' : '' }}>
+                                    متوسط</option>
+                                <option value="low" {{ request('religiosity_level')=='low' ? 'selected' : '' }}>منخفض
+                                </option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="prayer_commitment" class="block text-sm font-medium text-gray-700">الالتزام
+                                بالصلاة</label>
+                            <select name="prayer_commitment" id="prayer_commitment"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                                <option value="">اختر</option>
+                                <option value="yes" {{ request('prayer_commitment')=='yes' ? 'selected' : '' }}>ملتزمة
+                                </option>
+                                <option value="sometimes" {{ request('prayer_commitment')=='sometimes' ? 'selected' : ''
+                                    }}>أحيانًا</option>
+                                <option value="no" {{ request('prayer_commitment')=='no' ? 'selected' : '' }}>غير ملتزمة
+                                </option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="has_children" class="block text-sm font-medium text-gray-700">لديها
+                                أطفال</label>
+                            <select name="has_children" id="has_children"
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                                <option value="">اختر</option>
+                                <option value="yes" {{ request('has_children')=='yes' ? 'selected' : '' }}>نعم</option>
+                                <option value="no" {{ request('has_children')=='no' ? 'selected' : '' }}>لا</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <button type="submit"
+                            class="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-all shadow-md hover:shadow-lg transform hover:scale-105">
+                            <i class="fas fa-search ml-2"></i>بحث وفلترة
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -44,9 +213,9 @@
             @else
             <div class="transition-all" x-data="{ isOpen: {{ $index < 3 ? 'true' : 'false' }} }">
                 <button type="button" class="w-full focus:outline-none" @click="isOpen = !isOpen">
-                    <div class="bg-gradient-to-r from-pink-600 to-rose-600 p-4 flex justify-between items-center"
+                    <div class="bg-gradient-to-r from-pink-600 to-rose-600 p-2 ps-2 pe-3 flex justify-between items-center"
                         :class="isOpen ? 'rounded-t-xl' : 'rounded-xl'">
-                        <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2">
                             <div class="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center shadow-sm">
                                 <i class="fas fa-female text-pink-600 text-2xl"></i>
                             </div>
@@ -55,12 +224,6 @@
                                 <p class="text-sm text-rose-200 mb-2">
                                     <i class="fas fa-id-card ml-1"></i>
                                     رقم العضوية: {{ $girl->membership_number }}
-                                </p>
-                                <p class="text-sm text-rose-100">
-                                    <i class="fas fa-birthday-cake ml-1"></i>
-                                    {{ $girl->age }} سنة -
-                                    <i class="fas fa-palette mr-1 ml-2"></i>
-                                    {{ $girl->skin_color }}
                                 </p>
                             </div>
                         </div>
@@ -84,6 +247,15 @@
                                         <p class="text-sm text-gray-900">{{ $girl->height ?? 'غير محدد' }} سم</p>
                                     </div>
                                 </div>
+
+                                <div class="flex items-start">
+                                    <i class="fas fa-birthday-cake text-pink-600 mt-1 ml-2"></i>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-500">العمر</p>
+                                        <p class="text-sm text-gray-900">{{ $girl->age ?? 'غير محدد' }} سم</p>
+                                    </div>
+                                </div>
+
                                 <div class="flex items-start">
                                     <i class="fas fa-weight text-pink-600 mt-1 ml-2"></i>
                                     <div>
@@ -110,6 +282,15 @@
                                         </p>
                                     </div>
                                 </div>
+
+                                <div class="flex items-start">
+                                    <i class="fas fa-palette text-pink-600 mt-1 ml-2"></i>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-500">لون البشرة</p>
+                                        <p class="text-sm text-gray-900">{{ $girl->skin_color ?? 'غير محدد' }} سم</p>
+                                    </div>
+                                </div>
+
                                 <div class="flex items-start">
                                     <i class="fas fa-pray text-pink-600 mt-1 ml-2"></i>
                                     <div>
@@ -134,7 +315,7 @@
                                 onclick="document.getElementById('profileModal_{{ $girl->id }}').showModal()"
                                 class="w-full px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-all shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center gap-2">
                                 <i class="fas fa-user-circle"></i>
-                                اضغط لإظهار المزيد في الملف الشخصي
+                                إظهار المزيد من البيانات
                             </button>
                             <dialog id="profileModal_{{ $girl->id }}"
                                 onclick="if(event.target === this) document.getElementById('profileModal_{{ $girl->id }}').close()"
@@ -159,8 +340,8 @@
                                             </h4>
                                             <div class="col-span-full mt-4">
                                                 <div
-                                                    class="bg-purple-50 border border-purple-200 rounded-lg p-3 flex items-start text-sm text-purple-700">
-                                                    <i class="fas fa-info-circle text-purple-500 mt-1 ml-2"></i>
+                                                    class="bg-pink-50 border border-pink-200 rounded-lg p-3 flex items-start text-sm text-pink-700">
+                                                    <i class="fas fa-info-circle text-pink-500 mt-1 ml-2"></i>
                                                     <div class="mr-2">
                                                         <p class="font-medium mb-1">إقرار وموافقة:</p>
                                                         <p class="text-justify">
@@ -326,8 +507,8 @@
                                                         <p class="text-gray-800">
                                                             @php
                                                             $religion = [
-                                                            'Islam' => 'مسلم',
-                                                            'Christianity' => 'غير مسلم'
+                                                            'Islam' => 'مسلمة',
+                                                            'Christianity' => 'غير مسلمة'
                                                             ];
                                                             echo $religion[$girl->religion] ?? 'غير محدد';
                                                             @endphp
@@ -438,11 +619,6 @@
                                                         <p class="text-gray-800">{{ $girl->infertility ? 'نعم' : 'لا' }}
                                                         </p>
                                                     </div>
-                                                    <div>
-                                                        <p class="text-sm font-medium text-gray-500">مدخنة</p>
-                                                        <p class="text-gray-800">{{ $girl->is_smoker ? 'نعم' : 'لا' }}
-                                                        </p>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -484,10 +660,10 @@
                             @php
                             $status = [
                             'available' => 'متاحة',
-                            'pending' => 'قيد المراجعة',
+                            'pending' => 'معلقة',
                             'engaged' => 'مخطوبة'
                             ];
-                            echo $status[$girl->status] ?? 'غير معروف';
+                            echo $status[$girl->status] ?? 'غير متاحة';
                             @endphp
                         </span>
 
@@ -495,7 +671,7 @@
                         @if(!$isProfileComplete || Auth::user()->profile_status !== 'approved')
                         <span class="text-sm text-red-600">
                             <i class="fas fa-exclamation-circle mr-1"></i>
-                            يرجى إكمال الملف الشخصي أولاً
+                            يجب إكمال الملف الشخصي أولاً
                         </span>
                         @else
                         <a href="{{ route('marriage-requests.create-proposal', $girl->id) }}"

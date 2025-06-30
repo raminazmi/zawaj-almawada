@@ -212,6 +212,18 @@
                         </button>
                     </x-slot>
                     <x-slot name="content">
+                        <x-dropdown-link :href="route('profile.edit')"
+                            class="text-gray-900 hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-user-edit ml-2"></i> تعديل الملف الشخصي
+                        </x-dropdown-link>
+
+                        <x-dropdown-link :href="route('profile.settings')"
+                            class="text-gray-900 hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-cog ml-2"></i> إعدادات الحساب
+                        </x-dropdown-link>
+
+                        <div class="border-t border-gray-200"></div>
+
                         <form method="POST" action="{{ route('logout') }}" id="logout-form">
                             @csrf
                         </form>
@@ -383,9 +395,14 @@
             </div>
             <div class="mt-3 space-y-1">
                 @if((auth()->check() && !auth()->user()->is_admin))
-                <x-dropdown-link :href="route('profile.edit')" class="text-gray-900 hover:bg-pink-50 transition-colors">
-                    <i class="fas fa-user ml-2"></i> الملف الشخصي
-                </x-dropdown-link>
+                <x-responsive-nav-link :href="route('profile.edit')"
+                    class="text-gray-900 hover:bg-pink-50 transition-colors">
+                    <i class="fas fa-user-edit ml-2"></i> تعديل الملف الشخصي
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('profile.settings')"
+                    class="text-gray-900 hover:bg-pink-50 transition-colors">
+                    <i class="fas fa-cog ml-2"></i> إعدادات الحساب
+                </x-responsive-nav-link>
                 @endif
                 <form method="POST" action="{{ route('logout') }}" id="logout-mobile-form">
                     @csrf

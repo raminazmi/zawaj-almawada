@@ -316,4 +316,42 @@ class RegisteredUserController extends Controller
             return redirect()->route('marriage-requests.boys')->with('success', 'تم تحديث الملف الشخصي بنجاح');
         }
     }
+
+    public function destroyProfile(Request $request)
+    {
+        $user = Auth::user();
+        Auth::logout();
+        if ($user->delete()) {
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect('/')->with('success', 'تم حذف حسابك بنجاح.');
+        } else {
+            return back()->with('error', 'حدث خطأ أثناء محاولة حذف حسابك.');
+        }
+    }
+
+    public function profileSettings()
+    {
+        return view('profile.settings', ['user' => Auth::user()]);
+    }
+
+    public function updateProfileSettings(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'show_profile' => 'required|boolean',
+            'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user->show_profile = $request->show_profile;
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return back()->with('status', 'تم تحديث الإعدادات بنجاح.');
+    }
 }
