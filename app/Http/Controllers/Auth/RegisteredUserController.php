@@ -61,6 +61,7 @@ class RegisteredUserController extends Controller
             'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone'    => ['required', 'string', 'max:20'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'show_profile' => ['nullable'],
         ], [
             'name.required'    => 'الاسم مطلوب',
             'name.string'      => 'يجب أن يكون الاسم نصاً',
@@ -93,6 +94,7 @@ class RegisteredUserController extends Controller
             $membershipNumber = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT); // يولد رقمًا بين 000000 و999999
         } while (User::where('membership_number', $membershipNumber)->exists());
 
+        $showProfile = $request->gender === 'female' ? ($request->show_profile == 1 ? 1 : 0) : 1;
         $user = User::create([
             'name'     => $request->name,
             'gender'   => $request->gender,
@@ -101,6 +103,7 @@ class RegisteredUserController extends Controller
             'phone'    => $request->phone,
             'password' => Hash::make($request->password),
             'membership_number' => $membershipNumber,
+            'show_profile' => $showProfile,
         ]);
 
         $code = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
@@ -297,7 +300,9 @@ class RegisteredUserController extends Controller
                 $updateData['legal_agreement'] = $updateData['legalAgreement'] === 'on';
                 unset($updateData['legalAgreement']);
             }
-            $user->update(array_merge($updateData, ['profile_status' => 'pending']));
+            $user->update(array_merge($updateData, [
+                'profile_status' => 'pending',
+            ]));
             Mail::to($user->email)->send(new ProfilePendingNotification($user));
             $admins = User::where('is_admin', true)->get();
             foreach ($admins as $admin) {
@@ -353,5 +358,34 @@ class RegisteredUserController extends Controller
         $user->save();
 
         return back()->with('status', 'تم تحديث الإعدادات بنجاح.');
+    }
+
+    public function deleteConfirm()
+    {
+        return view('profile.delete-confirm', ['user' => Auth::user()]);
+    }
+
+    public function deleteAccount(Request $request)
+    {
+        $user = Auth::user();
+        Auth::logout();
+        if ($user->delete()) {
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect('/')->with('success', 'تم حذف حسابك بنجاح.');
+        } else {
+            return back()->with('error', 'حدث خطأ أثناء محاولة حذف حسابك.');
+        }
+    }
+
+    public function updateShowProfile(Request $request)
+    {
+        $request->validate([
+            'show_profile' => 'required|boolean',
+        ]);
+        $user = Auth::user();
+        $user->show_profile = $request->show_profile;
+        $user->save();
+        return back()->with('status', 'تم تحديث إعدادات الظهور بنجاح.');
     }
 }

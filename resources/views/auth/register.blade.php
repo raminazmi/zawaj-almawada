@@ -5,7 +5,8 @@
                 تسجيل طلب عضوية
             </h2>
 
-            <form id="registerForm" method="POST" action="{{ route('register') }}" class="space-y-6">
+            <form id="registerForm" method="POST" action="{{ route('register') }}" class="space-y-6"
+                x-data="{ gender: '{{ old('gender') }}', enabled: {{ old('show_profile', true) ? 'true' : 'false' }} }">
                 @csrf
                 <input type="hidden" name="recaptcha_token" id="recaptchaToken">
                 <div>
@@ -27,17 +28,42 @@
                     <div class="mt-1 flex gap-4">
                         <label class="flex items-center">
                             <input type="radio" name="gender" value="male" id="gender-male"
-                                class="gender-radio text-purple-600 focus:ring-purple-500">
+                                class="gender-radio text-purple-600 focus:ring-purple-500" x-model="gender">
                             <span class="mr-2 text-purple-600">أنا شاب</span>
                         </label>
                         <label class="flex items-center">
                             <input type="radio" name="gender" value="female" id="gender-female"
-                                class="gender-radio text-purple-600 focus:ring-purple-500">
+                                class="gender-radio text-purple-600 focus:ring-purple-500" x-model="gender">
                             <span class="mr-2 text-purple-600">أنا فتاة</span>
                         </label>
                     </div>
                     <x-input-error :messages="$errors->get('gender')" class="mt-2" />
                 </div>
+
+                <div class="p-4 border border-purple-100 rounded-lg mb-2" x-show="gender === 'female'">
+                    <h3 class="text-base font-semibold text-gray-800 mb-2 flex items-center">
+                        <i class="fas fa-eye ml-2"></i>
+                        إعدادات الظهور
+                    </h3>
+                    <div class="flex items-center justify-between mb-2">
+                        <label for="show_profile" class="font-medium text-gray-700">إظهار ملفي الشخصي للآخرين</label>
+                        <div>
+                            <input type="hidden" name="show_profile" :value="enabled ? '1' : '0'">
+                            <button @click="enabled = !enabled" type="button"
+                                class="relative inline-flex flex-shrink-0 h-[26px] w-[48px] border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                                :class="enabled ? 'bg-purple-600' : 'bg-gray-200'">
+                                <span aria-hidden="true"
+                                    class="pointer-events-none inline-block h-[20px] w-[20px] mt-[1.5px] rounded-full bg-white shadow-lg transform ring-0 transition ease-in-out duration-200"
+                                    :class="{ '-translate-x-6': enabled, 'translate-x-0': !enabled }"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">
+                        يمكنك إظهار أو إخفاء ملفك الشخصي عن باقي المستخدمين في المنصة. إذا قمت بالإخفاء، لن يظهر ملفك في
+                        نتائج البحث أو الاقتراحات.
+                    </p>
+                </div>
+                <input type="hidden" name="show_profile" x-show="gender !== 'female'" value="0">
 
                 <div>
                     <div class="flex items-center gap-1">

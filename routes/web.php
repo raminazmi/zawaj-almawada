@@ -111,6 +111,9 @@ Route::middleware('auth', 'verified')->group(function () {
 
             Route::get('/profile-settings', [RegisteredUserController::class, 'profileSettings'])->name('profile.settings');
             Route::post('/profile-settings', [RegisteredUserController::class, 'updateProfileSettings'])->name('profile.settings.update');
+            Route::post('/profile-settings/show-profile', [RegisteredUserController::class, 'updateShowProfile'])->name('profile.settings.show_profile');
+            Route::get('/profile/delete-confirm', [RegisteredUserController::class, 'deleteConfirm'])->name('profile.delete.confirm');
+            Route::post('/profile/delete', [RegisteredUserController::class, 'deleteAccount'])->name('profile.delete');
         });
     });
 });

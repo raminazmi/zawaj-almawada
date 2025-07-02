@@ -8,6 +8,53 @@
         @if (session('success'))
         <x-alert.success :message="session('success')" />
         @endif
+        @if($user->gender === 'female')
+        <div class="bg-white shadow-lg rounded-xl my-6">
+            <div class="p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-2 flex items-center">
+                    <i class="fas fa-eye ml-2"></i>
+                    إعدادات الظهور
+                </h3>
+                <div class="flex items-center justify-between mb-2">
+                    <label for="show_profile" class="font-medium text-gray-700">إظهار ملفي الشخصي للآخرين</label>
+                    <div x-data="{ enabled: {{ $user->show_profile ? 'true' : 'false' }}, success: false }">
+                        <input type="hidden" name="show_profile" :value="enabled ? '1' : '0'">
+                        <template x-if="success">
+                            <span class="ml-3 text-green-600 text-sm">تم الحفظ بنجاح</span>
+                        </template>
+                        <button type="button" @click="
+                                    enabled = !enabled;
+                                    fetch('{{ route('profile.settings.show_profile') }}', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                            'Accept': 'application/json',
+                                        },
+                                        body: JSON.stringify({ show_profile: enabled ? 1 : 0 })
+                                    }).then(response => {
+                                        if (response.ok) {
+                                            success = true;
+                                            setTimeout(() => success = false, 2000);
+                                        }
+                                    });
+                                "
+                            class="relative inline-flex flex-shrink-0 h-[26px] w-[48px] border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                            :class="enabled ? 'bg-purple-600' : 'bg-gray-200'">
+                            <span aria-hidden="true"
+                                class="pointer-events-none inline-block h-[20px] w-[20px] mt-[1.5px] rounded-full bg-white shadow-lg transform ring-0 transition ease-in-out duration-200"
+                                :class="{ '-translate-x-6': enabled, 'translate-x-0': !enabled }"></span>
+                        </button>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600 mt-2">
+                    يمكنك إظهار أو إخفاء ملفك الشخصي عن باقي المستخدمين في المنصة. إذا قمت بالإخفاء، لن يظهر ملفك في
+                    نتائج
+                    البحث أو الاقتراحات.
+                </p>
+            </div>
+        </div>
+        @endif
 
         @if($user->profile_status === 'approved')
         <div
