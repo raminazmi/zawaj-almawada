@@ -63,7 +63,9 @@
                         نتائج البحث أو الاقتراحات.
                     </p>
                 </div>
-                <input type="hidden" name="show_profile" x-show="gender !== 'female'" value="0">
+                <template x-if="gender !== 'female'">
+                    <input type="hidden" name="show_profile" value="1">
+                </template>
 
                 <div>
                     <div class="flex items-center gap-1">
