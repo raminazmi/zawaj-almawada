@@ -54,14 +54,38 @@
                                 $exam->end_time->format('h:i A')) }}</span>
                         </div>
                     </div>
-                    @if($exam->is_active && now() >= $exam->start_time && now() <= $exam->end_time)
-                        <a href="{{ route('course-exams.show', $exam) }}"
-                            class="block w-full text-center bg-gradient-to-l from-[#3A8BCD] to-[#553566] text-white px-6 py-2 rounded-full font-bold hover:opacity-90 transition">
-                            ابدأ الاختبار
-                        </a>
-                        @else
-                        <p class="text-red-500 font-bold text-center">الاختبار غير متاح حالياً</p>
-                        @endif
+                    @php
+                    $now = now();
+                    $isAvailable = $exam->is_active && $now->between($exam->start_time, $exam->end_time);
+                    $isFuture = $exam->is_active && $now->lt($exam->start_time);
+                    $isEnded = $now->gt($exam->end_time);
+                    @endphp
+                    @if(isset($exam->is_certified) && $exam->is_certified)
+                    <span class="inline-block bg-green-100 text-green-700 px-2 py-1 rounded text-xs mb-2">معتمد من
+                        الشهادة</span>
+                    @endif
+                    @if($isAvailable)
+                    <a href="{{ route('course-exams.show', $exam) }}"
+                        class="block w-full text-center bg-gradient-to-l from-[#3A8BCD] to-[#553566] text-white px-6 py-2 rounded-full font-bold hover:opacity-90 transition">
+                        ابدأ الاختبار
+                    </a>
+                    @elseif($isFuture)
+                    <button type="button"
+                        onclick="showExamModal('{{ $exam->title }}', '{{ $exam->start_time->format('Y-m-d h:i A') }}')"
+                        class="block w-full text-center bg-gradient-to-l from-gray-200 to-gray-300 text-gray-600 px-6 py-2 rounded-full font-bold cursor-pointer hover:opacity-80 transition border border-gray-300">
+                        <span class="flex justify-center items-center gap-2">
+                            <svg class="w-5 h-5 text-[#3A8BCD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            غير متاح حالياً
+                        </span>
+                    </button>
+                    @elseif($isEnded)
+                    <span
+                        class="block w-full text-center bg-gray-100 text-gray-500 px-6 py-2 rounded-full font-bold">انتهى
+                        الاختبار</span>
+                    @endif
                 </div>
                 @endforeach
             </div>
@@ -69,4 +93,26 @@
         </div>
     </div>
 </div>
+{{-- نافذة منبثقة لعرض رسالة متى سيتاح الاختبار --}}
+<div id="examModal" onclick="closeExamModal()"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+    <div onclick="event.stopPropagation()"
+        class="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full text-center border-2 border-[#3A8BCD]">
+        <h3 class="text-xl font-bold text-[#2A5C82] mb-4" id="modalExamTitle"></h3>
+        <p class="text-gray-700 mb-2">هذا الاختبار غير متاح حالياً.</p>
+        <p class="text-purple-700 font-semibold mb-4">سيبدأ في <span id="modalExamTime">{{ str_replace(['AM', 'PM'],
+                ['ص', 'م'],
+                $exam->start_time->format('h:i A')) }}</span></p>
+    </div>
+</div>
+<script>
+    function showExamModal(title, time) {
+        document.getElementById('modalExamTitle').innerText = title;
+        document.getElementById('modalExamTime').innerText = time.replace(/AM/g, 'ص').replace(/PM/g, 'م');
+        document.getElementById('examModal').classList.remove('hidden');
+    }
+    function closeExamModal() {
+        document.getElementById('examModal').classList.add('hidden');
+    }
+</script>
 @endsection

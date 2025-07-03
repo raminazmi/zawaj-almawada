@@ -237,6 +237,13 @@ class AdminCourseExamController extends Controller
                 'is_active' => $request->boolean('is_active', false),
             ]);
 
+            // تحديث الدورات المرتبطة بهذا الامتحان
+            \App\Models\Course::where('course_exam_id', $exam->id)
+                ->update([
+                    'exam_date' => $exam->start_time->toDateString(),
+                    'exam_time' => $exam->start_time->format('H:i'),
+                ]);
+
             $existingQuestionIds = collect($validated['questions'] ?? [])->pluck('id')->filter()->all();
             $exam->questions()->whereNotIn('id', $existingQuestionIds)->delete();
 
@@ -307,6 +314,15 @@ class AdminCourseExamController extends Controller
     {
         try {
             $exam->delete();
+
+            // عند حذف الامتحان، اجعل قيم الدورة المرتبطة به null
+            \App\Models\Course::where('course_exam_id', $exam->id)
+                ->update([
+                    'course_exam_id' => null,
+                    'exam_date' => null,
+                    'exam_time' => null,
+                ]);
+
             Cache::forget('exams_list');
             Cache::forget('active_exams');
             return redirect()->route('admin.exams.index')->with('success', 'تم حذف الاختبار بنجاح.');

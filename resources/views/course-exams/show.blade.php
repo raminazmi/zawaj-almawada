@@ -48,8 +48,37 @@
                 </div>
             </div>
 
+            @php
+            $now = \Carbon\Carbon::now();
+            $notStarted = $now->lt($exam->start_time);
+            $ended = $now->gt($exam->end_time);
+            @endphp
 
-
+            @if($notStarted)
+            <div class="flex flex-col items-center justify-center min-h-[300px]">
+                <div class="bg-yellow-50 border border-yellow-200 rounded-2xl p-8 shadow text-center max-w-md mx-auto">
+                    <h3 class="text-2xl font-bold text-yellow-700 mb-4">الاختبار غير متاح بعد</h3>
+                    <p class="text-gray-700 mb-2">سيبدأ الاختبار في:</p>
+                    <div class="text-lg font-semibold text-yellow-800 mb-2">
+                        {{ $exam->start_time->translatedFormat('Y-m-d') }}<br>
+                        {{ str_replace(['AM', 'PM'], ['ص', 'م'], $exam->start_time->format('h:i A')) }}
+                    </div>
+                    <p class="text-gray-500">يرجى العودة في الوقت المحدد لبدء الاختبار.</p>
+                </div>
+            </div>
+            @elseif($ended)
+            <div class="flex flex-col items-center justify-center min-h-[300px]">
+                <div class="bg-red-50 border border-red-200 rounded-2xl p-8 shadow text-center max-w-md mx-auto">
+                    <h3 class="text-2xl font-bold text-red-700 mb-4">انتهى وقت الاختبار</h3>
+                    <p class="text-gray-700 mb-2">عذراً، لقد انتهت فترة الاختبار.</p>
+                    <div class="text-lg font-semibold text-red-800 mb-2">
+                        انتهى في:
+                        {{ $exam->end_time->translatedFormat('Y-m-d') }}<br>
+                        {{ str_replace(['AM', 'PM'], ['ص', 'م'], $exam->end_time->format('h:i A')) }}
+                    </div>
+                </div>
+            </div>
+            @else
             <form id="examForm" method="POST" action="{{ route('course-exams.submit', $exam) }}">
                 @csrf
                 <div class="mb-8 p-4 bg-gray-50 rounded-lg">
@@ -134,6 +163,7 @@
                     </button>
                 </div>
             </form>
+            @endif
         </div>
     </div>
 </div>

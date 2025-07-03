@@ -18,7 +18,7 @@ class AdminCourseController extends Controller
 
     public function create()
     {
-        $exams = CourseExam::all();
+        $exams = \App\Models\CourseExam::all();
         return view('admin.courses.create', compact('exams'));
     }
 
@@ -90,6 +90,17 @@ class AdminCourseController extends Controller
             $validated['intro_video'] = $this->convertToEmbedUrl($validated['intro_video']);
         }
 
+        if (!empty($validated['course_exam_id'])) {
+            $exam = CourseExam::find($validated['course_exam_id']);
+            if ($exam) {
+                $validated['exam_date'] = $exam->start_time->toDateString();
+                $validated['exam_time'] = $exam->start_time->format('H:i');
+                $validated['exam_link'] = route('course-exams.show', $exam);
+            }
+        } else {
+            $validated['exam_link'] = null;
+        }
+
         $validated['supporting_companies'] = explode('،', $validated['supporting_companies']);
         $validated['honor_students'] = !empty($validated['honor_students']) ? explode('،', $validated['honor_students']) : [];
 
@@ -112,7 +123,7 @@ class AdminCourseController extends Controller
 
     public function edit(Course $course)
     {
-        $exams = CourseExam::all();
+        $exams = \App\Models\CourseExam::all();
         return view('admin.courses.edit', compact('course', 'exams'));
     }
 
@@ -163,6 +174,17 @@ class AdminCourseController extends Controller
 
         if (!empty($validated['intro_video'])) {
             $validated['intro_video'] = $this->convertToEmbedUrl($validated['intro_video']);
+        }
+
+        if (!empty($validated['course_exam_id'])) {
+            $exam = CourseExam::find($validated['course_exam_id']);
+            if ($exam) {
+                $validated['exam_date'] = $exam->start_time->toDateString();
+                $validated['exam_time'] = $exam->start_time->format('H:i');
+                $validated['exam_link'] = route('course-exams.show', $exam);
+            }
+        } else {
+            $validated['exam_link'] = null;
         }
 
         $validated['supporting_companies'] = array_filter(

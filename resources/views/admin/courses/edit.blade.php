@@ -72,49 +72,19 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                <i class="fas fa-calendar-day text-blue-600 ml-2"></i>
-                                تاريخ الامتحان
-                            </label>
-                            <input type="date" name="exam_date"
-                                value="{{ old('exam_date', $course->exam_date?->format('Y-m-d') ?? '') }}"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg">
-                            @error('exam_date')
-                            <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                            @enderror
+                    <div class="mb-4">
+                        <label for="course_exam_id" class="block font-bold mb-1">اختبار الدورة (اختياري):</label>
+                        <div class="flex items-center gap-2">
+                            <select name="course_exam_id" id="course_exam_id" class="form-select w-full">
+                                <option value="">بدون اختبار</option>
+                                @foreach($exams as $exam)
+                                <option value="{{ $exam->id }}" {{ old('course_exam_id', $course->course_exam_id) ==
+                                    $exam->id ? 'selected' : '' }}>{{ $exam->title }}</option>
+                                @endforeach
+                            </select>
+                            <a href="{{ route('admin.exams.create') }}" target="_blank"
+                                class="btn btn-sm btn-primary">إضافة اختبار جديد</a>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                <i class="fas fa-clock text-blue-600 ml-2"></i>
-                                توقيت الامتحان
-                            </label>
-                            <input type="time" name="exam_time" value="{{ old('exam_time', $course->exam_time ?? '') }}"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg">
-                            @error('exam_time')
-                            <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            <i class="fas fa-link text-blue-600 ml-2"></i>
-                            امتحان الدورة
-                        </label>
-                        <select name="course_exam_id"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                            <option value="">-- اختر امتحاناً --</option>
-                            @foreach($exams as $exam)
-                            <option value="{{ $exam->id }}" {{ old('course_exam_id', $course->course_exam_id) ==
-                                $exam->id ? 'selected' : '' }}>
-                                {{ $exam->title }}
-                            </option>
-                            @endforeach
-                        </select>
-                        @error('course_exam_id')
-                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
-                        @enderror
                     </div>
 
                     <div>
@@ -252,4 +222,12 @@
         });
     });
 </script>
+
+{{-- إخفاء حقلي تاريخ وتوقيت الامتحان من النموذج --}}
+<style>
+    #exam_date_group,
+    #exam_time_group {
+        display: none !important;
+    }
+</style>
 @endsection

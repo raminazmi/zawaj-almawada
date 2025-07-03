@@ -84,16 +84,12 @@ class SaveUserAnswer
         $column = $user->gender . '_answer';
         $isImportant = $isImportant == "true" ? 1 : 0;
 
-        UserAnswer::updateOrCreate(
-            [
-                'exam_id' => $exam->id,
-                'question_id' => $questionId,
-            ],
-            [
-                $column => $answer,
-                'important' => $isImportant
-            ]
-        );
+        UserAnswer::create([
+            'exam_id' => $exam->id,
+            'question_id' => $questionId,
+            $column => $answer,
+            'important' => $isImportant
+        ]);
     }
 
     private function handleQuestionsSession(User $user, int $questionsCount, Exam $exam): bool

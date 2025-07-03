@@ -24,14 +24,42 @@
                         </a>
                         @endif
 
-                        @if($course->exam_link)
-                        <a href="{{ $course->exam_link }}" target="_blank"
+                        @php
+                        $examEnded = false;
+                        $endDate = null;
+                        $endTime = null;
+                        if ($course->courseExam) {
+                        $examEnd = $course->courseExam->end_time;
+                        $examEnded = $examEnd && now()->gt($examEnd);
+                        $endDate = optional($examEnd)->translatedFormat('Y-m-d');
+                        $endTime = $examEnd ? str_replace(['AM', 'PM'], ['ص', 'م'], $examEnd->format('h:i A')) : null;
+                        } elseif ($course->exam_date && $course->exam_time) {
+                        $examEnd = \Carbon\Carbon::parse($course->exam_date->format('Y-m-d') . ' ' .
+                        $course->exam_time);
+                        $examEnded = now()->gt($examEnd);
+                        $endDate = $course->exam_date->translatedFormat('Y-m-d');
+                        $endTime = str_replace(['AM', 'PM'], ['ص', 'م'],
+                        \Carbon\Carbon::parse($course->exam_time)->format('h:i A'));
+                        }
+                        @endphp
+
+                        @if($course->exam_link && !$examEnded)
+                        <a href="{{ $course->exam_link }}"
                             class="card-hover p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-600 transition-all">
                             <div class="flex items-center">
                                 <i class="fas fa-clipboard-check text-green-600 text-xl ml-2"></i>
                                 <span class="text-gray-700">رابط دخول الامتحان</span>
                             </div>
                         </a>
+                        @elseif($examEnded)
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+                            <span class="text-red-700 font-bold text-lg">انتهى وقت الامتحان</span>
+                            <div class="text-gray-600 text-sm mt-1">
+                                انتهى في:<br>
+                                {{ $endDate }}<br>
+                                {{ $endTime }}
+                            </div>
+                        </div>
                         @endif
                     </div>
 
@@ -291,4 +319,5 @@
         if (currentEpisodeIndex < episodes.length - 1) showVideo(currentEpisodeIndex + 1);
     });
 </script>
+
 @endsection

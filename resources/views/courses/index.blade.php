@@ -17,6 +17,22 @@
         </div>
         @else
         @foreach($courses as $course)
+        @php
+        $examEnded = false;
+        $endDate = null;
+        $endTime = null;
+        if ($course->courseExam) {
+        $examEnd = $course->courseExam->end_time;
+        $examEnded = $examEnd && now()->gt($examEnd);
+        $endDate = optional($examEnd)->translatedFormat('Y-m-d');
+        $endTime = $examEnd ? str_replace(['AM', 'PM'], ['ص', 'م'], $examEnd->format('h:i A')) : null;
+        } elseif ($course->exam_date && $course->exam_time) {
+        $examEnd = \Carbon\Carbon::parse($course->exam_date->format('Y-m-d') . ' ' . $course->exam_time);
+        $examEnded = now()->gt($examEnd);
+        $endDate = $course->exam_date->translatedFormat('Y-m-d');
+        $endTime = str_replace(['AM', 'PM'], ['ص', 'م'], \Carbon\Carbon::parse($course->exam_time)->format('h:i A'));
+        }
+        @endphp
         <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl mb-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
                 <div class="lg:col-span-2 space-y-6">
@@ -40,7 +56,7 @@
                         </a>
                         @endif
 
-                        @if($course->courseExam)
+                        @if($course->courseExam && !$examEnded)
                         <a href="{{ route('course-exams.show', $course->courseExam) }}"
                             class="card-hover p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-600 transition-all">
                             <div class="flex items-center">
@@ -48,6 +64,15 @@
                                 <span class="text-gray-700">دخول الامتحان</span>
                             </div>
                         </a>
+                        @elseif($examEnded)
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-center mt-2">
+                            <span class="text-red-700 font-bold text-lg">انتهى وقت الامتحان</span>
+                            <div class="text-gray-600 text-sm mt-1">
+                                انتهى في:<br>
+                                {{ $endDate }}<br>
+                                {{ $endTime }}
+                            </div>
+                        </div>
                         @endif
                     </div>
 

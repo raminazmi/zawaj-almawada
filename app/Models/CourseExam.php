@@ -48,9 +48,8 @@ class CourseExam extends Model
     {
         return Cache::remember('active_exams', 60 * 60, function () {
             return self::where('is_active', true)
-                ->where('start_time', '<=', now())
                 ->where('end_time', '>=', now())
-                ->with('questions.options') // تحميل العلاقات مسبقًا
+                ->with('questions.options')
                 ->get();
         });
     }

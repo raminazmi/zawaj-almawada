@@ -17,6 +17,10 @@ class CourseController extends Controller
     public function show(Course $course)
     {
         $course->load('episodes');
-        return view('courses.show', compact('course'));
+        $exam = null;
+        if ($course->course_exam_id) {
+            $exam = \App\Models\CourseExam::find($course->course_exam_id);
+        }
+        return view('courses.show', compact('course', 'exam'));
     }
 }

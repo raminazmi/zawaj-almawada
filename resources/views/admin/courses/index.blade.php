@@ -64,7 +64,7 @@
                         @endif
 
                         @if($course->courseExam)
-                        <a href="{{ route('course-exams.show', $course->courseExam) }}" target="_blank"
+                        <a href="{{ route('course-exams.show', $course->courseExam) }}"
                             class="card-hover p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-600 transition-all">
                             <div class="flex items-center">
                                 <i class="fas fa-clipboard-check text-green-600 text-xl ml-2"></i>
