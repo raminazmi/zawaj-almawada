@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-12">
-    <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto px-2 sm:px-6 lg:px-8">
         <div class="bg-white shadow-xl rounded-2xl p-8 border border-[#3A8BCD]/20">
             <h2 class="text-3xl font-extrabold text-[#2A5C82] mb-8 text-center"
                 style="font-family: 'Almarai', sans-serif;">
@@ -100,9 +100,7 @@
         class="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full text-center border-2 border-[#3A8BCD]">
         <h3 class="text-xl font-bold text-[#2A5C82] mb-4" id="modalExamTitle"></h3>
         <p class="text-gray-700 mb-2">هذا الاختبار غير متاح حالياً.</p>
-        <p class="text-purple-700 font-semibold mb-4">سيبدأ في <span id="modalExamTime">{{ str_replace(['AM', 'PM'],
-                ['ص', 'م'],
-                $exam->start_time->format('h:i A')) }}</span></p>
+        <p class="text-purple-700 font-semibold mb-4">سيبدأ في <span id="modalExamTime"></span></p>
     </div>
 </div>
 <script>

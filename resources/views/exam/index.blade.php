@@ -5,7 +5,7 @@ $token = request('token') ?? request()->route('token');
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-12">
-    <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto px-2 sm:px-6 lg:px-8">
         <div class="text-center mb-8">
             <h2 class="font-bold text-4xl bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 مقياس التوافق الزواجي
@@ -55,7 +55,7 @@ $token = request('token') ?? request()->route('token');
 
         <!-- Questions Section (Hidden initially when token exists, shown immediately when no token) -->
         <div id="questions_section" class="{{ $token ? 'hidden' : '' }}">
-            <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto px-2 sm:px-6 lg:px-8">
                 <div id="questions_container" class="bg-white overflow-hidden shadow-sm rounded-lg py-4">
                     @include('exam.question')
                 </div>
