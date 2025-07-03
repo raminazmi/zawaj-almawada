@@ -55,10 +55,12 @@
                         </div>
                     </div>
                     @php
+                    $start = \Carbon\Carbon::parse($exam->start_time);
+                    $end = \Carbon\Carbon::parse($exam->end_time);
                     $now = now();
-                    $isAvailable = $exam->is_active && $now->between($exam->start_time, $exam->end_time);
-                    $isFuture = $exam->is_active && $now->lt($exam->start_time);
-                    $isEnded = $now->gt($exam->end_time);
+                    $isAvailable = $exam->is_active && $now->between($start, $end);
+                    $isFuture = $exam->is_active && $now->lt($start);
+                    $isEnded = $now->gt($end);
                     @endphp
                     @if(isset($exam->is_certified) && $exam->is_certified)
                     <span class="inline-block bg-green-100 text-green-700 px-2 py-1 rounded text-xs mb-2">معتمد من
