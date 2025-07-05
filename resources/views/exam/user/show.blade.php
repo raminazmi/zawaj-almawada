@@ -59,8 +59,11 @@
                 <h3 class="text-white text-lg font-semibold mb-2">نسبة التوافق الكلية</h3>
                 <div class="inline-block bg-white/20 py-2 px-4 rounded-full">
                     <div class="text-2xl font-bold text-white">
-                        @if($score == 0)
-                        <span class="text-yellow-300">...</span>
+                        @if(
+                        (auth()->user()->gender === 'male' && !$exam->female_finished) ||
+                        (auth()->user()->gender === 'female' && !$exam->male_finished)
+                        )
+                        ...
                         @else
                         {{ $score }}%
                         @endif
@@ -80,8 +83,8 @@
                             <h4 class="font-semibold text-purple-900">أسئلة حاسمة للخاطب</h4>
                         </div>
                         <div class="text-lg font-medium text-gray-700">
-                            @if($maleImportantScore['total'] == 0)
-                            <span class="text-gray-400">بانتظار الإجابات</span>
+                            @if(auth()->user()->gender === 'female' && !$exam->male_finished)
+                            <span class="text-purple-600">بانتظار الإجابات</span>
                             @else
                             <span class="text-purple-600">{{ $maleImportantScore['score'] }}</span>
                             <span class="text-sm text-gray-500">/ {{ $maleImportantScore['total'] }}</span>
@@ -99,8 +102,8 @@
                             <h4 class="font-semibold text-pink-900">أسئلة حاسمة للمخطوبة</h4>
                         </div>
                         <div class="text-lg font-medium text-gray-700">
-                            @if($femaleImportantScore['total'] == 0)
-                            <span class="text-gray-400">بانتظار الإجابات</span>
+                            @if(auth()->user()->gender === 'male' && !$exam->female_finished)
+                            <span class="text-pink-600">بانتظار الإجابات</span>
                             @else
                             <span class="text-pink-600">{{ $femaleImportantScore['score'] }}</span>
                             <span class="text-sm text-gray-500">/ {{ $femaleImportantScore['total'] }}</span>
@@ -124,25 +127,25 @@
                     <div class="bg-white p-3 rounded-lg border border-purple-100">
                         <div class="text-sm text-purple-600 mb-1">العمر</div>
                         <div class="font-medium text-gray-700">
-                            {{ $femaleAge }} / {{ $maleAge }}
+                            {{ $maleAge }} / {{ $femaleAge }}
                         </div>
                     </div>
                     <div class="bg-white p-3 rounded-lg border border-purple-100">
                         <div class="text-sm text-purple-600 mb-1">الوزن</div>
                         <div class="font-medium text-gray-700">
-                            {{ $femaleWeight }} / {{ $maleWeight }}
+                            {{ $maleWeight }} / {{ $femaleWeight }}
                         </div>
                     </div>
                     <div class="bg-white p-3 rounded-lg border border-purple-100">
                         <div class="text-sm text-purple-600 mb-1">الطول</div>
                         <div class="font-medium text-gray-700">
-                            {{ $femaleHeight }} / {{ $maleHeight }}
+                            {{ $maleHeight }} / {{ $femaleHeight }}
                         </div>
                     </div>
                     <div class="bg-white p-3 rounded-lg border border-purple-100">
                         <div class="text-sm text-purple-600 mb-1">لون البشرة</div>
                         <div class="font-medium text-gray-700">
-                            {{ $femaleSkinColor }} / {{ $maleSkinColor }}
+                            {{ $maleSkinColor }} / {{ $femaleSkinColor }}
                         </div>
                     </div>
                 </div>
@@ -184,7 +187,7 @@
                             <h4 class="font-semibold text-red-700 mb-1">تنبيه مهم</h4>
                             <p class="text-red-600 text-sm">1- الرقم الذي قبل الشرطة في نتيجة الاسئلة الحاسمة
                                 يعني النقاط التي ليس بها توافق، والرقم بعد الشرطة يعني مجموع
-                                العبارات الحاسمة التي تم تحديدها.
+                                العبارات الحاسمة التي تم تحديدها.
                             </p>
                             <p class="text-red-600 text-sm">
                                 2- يرجى حفظ هذه النتائج أو تصوير الشاشة وإرسالها للطرف الآخر

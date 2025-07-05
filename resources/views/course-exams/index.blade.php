@@ -8,6 +8,10 @@
                 style="font-family: 'Almarai', sans-serif;">
                 اختبارات الدورات
             </h2>
+            <div class="text-start mb-2 px-1">
+                <span class="text-xs text-gray-500">جميع الأوقات المعروضة حسب توقيت مسقط، سلطنة عُمان
+                    (Asia/Muscat)</span>
+            </div>
             @if($exams->isEmpty())
             <p class="text-gray-500 text-center py-8">لا توجد اختبارات متاحة حالياً.</p>
             @else
@@ -93,6 +97,7 @@
             </div>
             @endif
         </div>
+
     </div>
 </div>
 {{-- نافذة منبثقة لعرض رسالة متى سيتاح الاختبار --}}
@@ -105,6 +110,7 @@
         <p class="text-purple-700 font-semibold mb-4">سيبدأ في <span id="modalExamTime"></span></p>
     </div>
 </div>
+
 <script>
     function showExamModal(title, time) {
         document.getElementById('modalExamTitle').innerText = title;
