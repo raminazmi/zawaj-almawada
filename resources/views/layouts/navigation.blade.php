@@ -1,5 +1,5 @@
 <nav x-data="{ open: false }" class="bg-white shadow-lg">
-    <div class="container mx-auto px-8">
+    <div class="container mx-auto px-2 pe-4 min-md:px-8">
         <div class="flex justify-between items-center h-20">
             <div class="flex items-center">
                 <a href="{{ route('index') }}" class="flex items-center hover:opacity-90 transition-opacity">
@@ -237,8 +237,16 @@
             </div>
             @endauth
 
-            <button @click="open = !open" class="lg:hidden text-gray-600">
-                <i class="fas fa-bars text-2xl"></i>
+            <button @click="open = !open" class="lg:hidden flex flex-col justify-center items-center w-10 h-8 group"
+                aria-label="فتح القائمة">
+                <span aria-hidden="true" class="block h-[3.5px] w-8 bg-gray-800 rounded transition-all duration-300"
+                    :class="open ? 'rotate-45 translate-y-2.5' : ''"></span>
+                <span aria-hidden="true"
+                    class="block h-[3.5px] w-8 mt-1.5 bg-gray-800 rounded transition-all duration-300"
+                    :class="open ? 'opacity-0' : ''"></span>
+                <span aria-hidden="true"
+                    class="block h-[3.5px] w-8 mt-1.5 bg-gray-800 rounded transition-all duration-300"
+                    :class="open ? '-rotate-45 -translate-y-2.5' : ''"></span>
             </button>
         </div>
     </div>
