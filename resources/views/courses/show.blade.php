@@ -152,6 +152,16 @@
                             </a>
                             @endif
 
+                            @if($course->courseExam)
+                            <a href="{{ route('course-exams.show', $course->courseExam->id) }}"
+                                class="w-full text-right p-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-between group mb-2">
+                                <div class="flex items-center">
+                                    <span class="text-white mr-2 text-sm font-bold">اختبار الدورة مع شهادة</span>
+                                </div>
+                                <i class="fas fa-certificate text-yellow-300 group-hover:text-yellow-500 ml-2"></i>
+                            </a>
+                            @endif
+
                             @foreach($course->episodes as $episode)
                             <button type="button"
                                 class="episode-btn w-full text-right p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-all flex items-center justify-between group mb-2"

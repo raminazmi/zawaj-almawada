@@ -17,10 +17,6 @@
                 <a href="{{ route('cv') }}" class="nav-link {{ request()->routeIs('cv') ? 'active' : '' }}">
                     السيرة الذاتية
                 </a>
-                <a href="{{ route('course-exams.index') }}"
-                    class="nav-link {{ request()->routeIs('course-exams.*') ? 'active' : '' }}">
-                    اختبارات الدورات
-                </a>
                 <div class="relative" x-data="{ isOpen: false }" @click.away="isOpen = false">
                     <button @click="isOpen = !isOpen" class="nav-link flex items-center gap-2">
                         المقاييس
@@ -81,6 +77,10 @@
                         </a>
                         @endforeach
                         @endif
+                        <a href="{{ route('course-exams.index') }}"
+                            class="block px-4 py-2 text-sm hover:bg-blue-50 {{ request()->routeIs('course-exams.*') ? 'text-blue-700 font-bold' : 'text-gray-900' }}">
+                            اختبارات الدورات
+                        </a>
                     </div>
                 </div>
                 <div class="relative" x-data="{ isOpen: false }" @click.away="isOpen = false">
@@ -300,6 +300,10 @@
                 </a>
                 @endforeach
                 @endif
+                <a href="{{ route('course-exams.index') }}"
+                    class="block text-sm hover:bg-blue-50 py-2 px-1 {{ request()->routeIs('course-exams.*') ? 'text-blue-700 font-bold' : 'text-gray-900' }}">
+                    اختبارات الدورات
+                </a>
             </div>
         </div>
         <div x-data="{ isOpen: false }">
@@ -367,9 +371,6 @@
                         </a>
                         @endauth
                     </div>
-                    <a href="{{ route('course-exams.index') }}" class="block text-sm hover:bg-pink-50 py-2 px-1">
-                        اختبارات الدورات
-                    </a>
                 </div>
             </div>
         </div>

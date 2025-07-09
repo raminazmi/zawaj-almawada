@@ -82,6 +82,7 @@ Route::middleware('auth', 'verified')->group(function () {
         Route::post('/course-exams/{exam}/submit', [CourseExamController::class, 'submit'])->name('course-exams.submit');
         Route::get('/course-exams/results/{result}', [CourseExamController::class, 'result'])->name('course-exams.result');
         Route::get('/course-exams/results/{result}/download', [CourseExamController::class, 'downloadCertificate'])->name('course-exams.certificate.download');
+        Route::get('/course-exams/results/{result}/download-certificate', [CourseExamController::class, 'downloadCertificate'])->name('course-exams.downloadCertificate');
 
         Route::prefix('marriage-requests')->group(function () {
             Route::get('/', [MarriageRequestController::class, 'index'])->name('marriage-requests.index');

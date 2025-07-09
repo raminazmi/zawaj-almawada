@@ -12,19 +12,26 @@ class ExamCertificate extends Mailable
     use Queueable, SerializesModels;
 
     public $result;
-    public $pdfPath;
+    public $path;
+    public $type;
 
-    public function __construct($result, $pdfPath)
+    public function __construct($result, $path, $type = 'success')
     {
         $this->result = $result;
-        $this->pdfPath = $pdfPath;
+        $this->path = $path;
+        $this->type = $type;
     }
 
     public function build()
     {
+        $subject = $this->type === 'attendance'
+            ? 'شهادة حضور الدورة'
+            : 'شهادة اجتياز الدورة';
+
         return $this->view('emails.exam-certificate')
-            ->subject('شهادة إتمام الاختبار')
-            ->attach($this->pdfPath, [
+            ->subject($subject)
+            ->with(['type' => $this->type])
+            ->attach($this->path, [
                 'as' => 'certificate.pdf',
                 'mime' => 'application/pdf',
             ]);

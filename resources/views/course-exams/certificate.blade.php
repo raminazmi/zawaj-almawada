@@ -203,12 +203,46 @@
 <body>
     <div class="certificate-container">
         <div class="certificate-container-inside">
+            @php
+            $type = $type ?? 'success';
+            @endphp
             <div class="certificate-header">
                 <img src="{{ public_path('assets/images/logo.png') }}" alt="شعار منصة زواج المودة">
+                @if($type === 'attendance')
+                <div class="certificate-title">شهادة حضور</div>
+                @else
                 <div class="certificate-title">شهادة إجتياز</div>
+                @endif
                 <div class="certificate-site">منصة زواج المودة</div>
             </div>
 
+            @if($type === 'attendance')
+            <div class="certificate-content">
+                <table class="certificate-content-table">
+                    <tr>
+                        <td class="certificate-content-right">
+                            <table class="inline-table">
+                                <tr>
+                                    <td>
+                                        <div class="certificate-duration">ولمدة شهرين</div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="certificate-date">بتاريخ {{ $result->created_at->format('Y/m/d') }}</div>
+                            <p>ونسأل الله أن يمن عليه بحياة أسرية سعيدة</p>
+                        </td>
+                        <td class="vertical-divider"></td>
+                        <td class="certificate-content-left">
+                            <p>تشهد منصة زواج المودة أن الفاضل/ة</p>
+                            <div class="certificate-name">{{ $result->user->full_name ?? 'غير متوفر' }}</div>
+                            <p>قد حضر عن بُعد</p>
+                            <div class="certificate-course">{{ $result->exam->title ?? 'دورة التأهيل للحياة الزوجية' }}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            @else
             <div class="certificate-content">
                 <table class="certificate-content-table">
                     <tr>
@@ -238,7 +272,7 @@
                     </tr>
                 </table>
             </div>
-
+            @endif
             <table class="certificate-footer">
                 <tr>
                     <td class="footer-left">
@@ -248,7 +282,7 @@
                         </div>
                     </td>
                     <td class="footer-right">
-                        شهادة معتمدة من منصة زواج المودة للاستشارات الزوجية والأسرية
+                        شهادة من منصة زواج المودة للاستشارات الزوجية والأسرية
                     </td>
                 </tr>
             </table>

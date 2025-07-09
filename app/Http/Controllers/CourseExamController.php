@@ -27,6 +27,10 @@ class CourseExamController extends Controller
 
         $user = auth()->user();
         $result = $exam->results()->where('user_id', $user->id)->first();
+        if ($result) {
+            return redirect()->route('course-exams.result', $result)
+                ->with('error', 'لقد أتممت هذا الاختبار مسبقًا ولا يمكنك إعادة المحاولة. يمكنك تحميل الشهادة الخاصة بك.');
+        }
         if (!$result) {
             $result = $exam->results()->create([
                 'user_id' => $user->id,
@@ -115,7 +119,11 @@ class CourseExamController extends Controller
             ]);
 
             try {
-                $certificateSent = $this->sendCertificate($result);
+                if ($score < 60) {
+                    $this->sendCertificate($result, 'attendance');
+                } else {
+                    $this->sendCertificate($result, 'success');
+                }
             } catch (\Exception $e) {
             }
 
@@ -128,10 +136,11 @@ class CourseExamController extends Controller
 
     public function result(CourseExamResult $result)
     {
-        return view('course-exams.result', compact('result'));
+        $score = $result->score;
+        return view('course-exams.result', compact('result', 'score'));
     }
 
-    private function sendCertificate($result)
+    private function sendCertificate($result, $type = 'success')
     {
         try {
             $result->loadMissing(['user', 'exam']);
@@ -147,7 +156,8 @@ class CourseExamController extends Controller
             $gpdf = new Gpdf($config);
             $html = view('course-exams.certificate', [
                 'result' => $result,
-                'title' => 'شهادة إجتياز - منصة زواج المودة'
+                'title' => $type === 'attendance' ? 'شهادة حضور - منصة زواج المودة' : 'شهادة إجتياز - منصة زواج المودة',
+                'type' => $type
             ])->render();
 
             $pdfContent = $gpdf->generate($html);
@@ -157,10 +167,10 @@ class CourseExamController extends Controller
                 throw new \Exception('Failed to generate valid PDF file');
             }
 
-            $mailSent = Mail::to($result->user->email)->send(new ExamCertificate($result, $path));
+            Mail::to($result->user->email)->send(new \App\Mail\ExamCertificate($result, $path, $type));
             $result->update(['certificate_sent' => true]);
             unlink($path);
-            return $mailSent !== null;
+            return true;
         } catch (\Exception $e) {
             return false;
         }
@@ -179,6 +189,7 @@ class CourseExamController extends Controller
     public function downloadCertificate(CourseExamResult $result)
     {
         try {
+            $type = request('type', 'success');
             $result->loadMissing(['user', 'exam']);
             $filename = 'certificate_' . $result->id . '.pdf';
             $path = storage_path('app/public/certificates/' . $filename);
@@ -193,7 +204,8 @@ class CourseExamController extends Controller
                 $gpdf = new Gpdf($config);
                 $html = view('course-exams.certificate', [
                     'result' => $result,
-                    'title' => 'شهادة إجتياز - منصة زواج المودة'
+                    'title' => $type === 'attendance' ? 'شهادة حضور - منصة زواج المودة' : 'شهادة إجتياز - منصة زواج المودة',
+                    'type' => $type
                 ])->render();
 
                 $pdfContent = $gpdf->generate($html);

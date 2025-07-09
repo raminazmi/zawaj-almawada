@@ -56,14 +56,25 @@
                         </a>
                         @endif
 
-                        @if($course->courseExam && !$examEnded)
-                        <a href="{{ route('course-exams.show', $course->courseExam) }}"
-                            class="card-hover p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-600 transition-all">
-                            <div class="flex items-center">
-                                <i class="fas fa-clipboard-check text-green-600 text-xl ml-2"></i>
-                                <span class="text-gray-700">دخول الامتحان</span>
-                            </div>
+                        @php
+                        $exam = $course->courseExam;
+                        $examAvailable = false;
+                        if ($exam) {
+                        $now = now();
+                        $examAvailable = $exam->is_active && $now->between($exam->start_time, $exam->end_time);
+                        }
+                        @endphp
+                        @if($exam && $examAvailable)
+                        <a href="{{ route('course-exams.show', $exam) }}"
+                            class="block w-full text-center bg-gradient-to-r from-green-500 to-blue-500 text-white px-6 py-3 rounded-lg font-bold shadow hover:from-green-600 hover:to-blue-600 transition mb-2">
+                            <i class="fas fa-clipboard-check ml-2"></i>
+                            الذهاب إلى اختبار الدورة
                         </a>
+                        @elseif($exam && !$examAvailable && !$examEnded)
+                        <div
+                            class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center mt-2 text-yellow-700 font-bold">
+                            الاختبار غير متاح حالياً
+                        </div>
                         @elseif($examEnded)
                         <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-center mt-2">
                             <span class="text-red-700 font-bold text-lg">انتهى وقت الامتحان</span>

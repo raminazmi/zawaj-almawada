@@ -65,12 +65,15 @@
                     $isAvailable = $exam->is_active && $now->between($start, $end);
                     $isFuture = $exam->is_active && $now->lt($start);
                     $isEnded = $now->gt($end);
+                    $user = auth()->user();
+                    $userResult = $exam->results()->where('user_id', $user->id)->first();
                     @endphp
-                    @if(isset($exam->is_certified) && $exam->is_certified)
-                    <span class="inline-block bg-green-100 text-green-700 px-2 py-1 rounded text-xs mb-2">معتمد من
-                        الشهادة</span>
-                    @endif
-                    @if($isAvailable)
+                    @if($userResult)
+                    <a href="{{ route('course-exams.show', $exam) }}"
+                        class="block w-full text-center bg-green-100 text-green-700 px-3 py-2 rounded-full text-sm">
+                        عرض الشهادة
+                    </a>
+                    @elseif($isAvailable)
                     <a href="{{ route('course-exams.show', $exam) }}"
                         class="block w-full text-center bg-gradient-to-l from-[#3A8BCD] to-[#553566] text-white px-6 py-2 rounded-full font-bold hover:opacity-90 transition">
                         ابدأ الاختبار
@@ -102,7 +105,7 @@
 </div>
 {{-- نافذة منبثقة لعرض رسالة متى سيتاح الاختبار --}}
 <div id="examModal" onclick="closeExamModal()"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+    class="fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-40 hidden">
     <div onclick="event.stopPropagation()"
         class="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full text-center border-2 border-[#3A8BCD]">
         <h3 class="text-xl font-bold text-[#2A5C82] mb-4" id="modalExamTitle"></h3>
