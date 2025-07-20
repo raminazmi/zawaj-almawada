@@ -36,6 +36,7 @@ use App\Http\Controllers\Admin\ReadinessTestLinkController;
 use App\Http\Controllers\ReadinessTest\ReadinessTestController;
 use App\Http\Controllers\CourseExamController;
 use App\Http\Controllers\Admin\AdminCourseExamController;
+use App\Http\Controllers\Admin\CertificateController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -156,6 +157,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/exams/{exam}/results', [AdminCourseExamController::class, 'results'])->name('exams.results');
         Route::post('/exams/resend-certificate/{result}', [AdminCourseExamController::class, 'resendCertificate'])->name('exams.resend-certificate');
         Route::get('exams/{exam}/questions', [AdminCourseExamController::class, 'questions'])->name('exams.questions');
+
+        // إدارة الشهادات
+        Route::prefix('certificates')->group(function () {
+            Route::get('/', [CertificateController::class, 'index'])->name('certificates.index');
+            Route::get('/{result}', [CertificateController::class, 'show'])->name('certificates.show');
+            Route::get('/{result}/download/{type?}', [CertificateController::class, 'download'])->name('certificates.download');
+            Route::get('/export', [CertificateController::class, 'export'])->name('certificates.export');
+            Route::delete('/{result}', [CertificateController::class, 'delete'])->name('certificates.delete');
+        });
 
         Route::prefix('profile-approvals')->group(function () {
             Route::get('/', [ProfileApprovalController::class, 'index'])->name('profile-approvals.index');

@@ -51,6 +51,10 @@
             class="sidebar-link {{ request()->routeIs('admin.exams.*') ? 'active' : '' }}">
             <i class="fas fa-clipboard-list ml-3 fa-fw"></i> إدارة الاختبارات
         </a>
+        <a href="{{ route('admin.certificates.index') }}"
+            class="sidebar-link {{ request()->routeIs('admin.certificates.*') ? 'active' : '' }}">
+            <i class="fas fa-certificate ml-3 fa-fw"></i> إدارة الشهادات
+        </a>
         <a href="{{ route('admin.shops') }}"
             class="sidebar-link {{ request()->routeIs('admin.shops') ? 'active' : '' }}">
             <i class="fas fa-store ml-3 fa-fw"></i> المحلات
